@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { ChevronLeft, Trash2 } from 'lucide-react'
-//import { Navbar2 } from '@/components/navbar2'
+import { ChevronLeft } from 'lucide-react'
 import { Footer } from '@/components/footer'
 import { Button } from '@/components/ui/button'
-import { useWishlist, WishlistItem } from '@/hooks/use-wishlist'
-import Image from 'next/image'
+import { useWishlist } from '@/hooks/use-wishlist'
+import { ProductCard } from '@/components/product-card'
 import Navbar2 from '@/components/navbar2'
+import type { WishlistItem } from '@/lib/Types'
 
 export default function WishlistPage() {
     const { wishlist, removeFromWishlist } = useWishlist()
@@ -73,57 +73,16 @@ export default function WishlistPage() {
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {wishlist.map((item: WishlistItem) => (
-                            <div
+                            <ProductCard
                                 key={item.id}
-                                className="border border-border rounded-lg overflow-hidden hover:shadow-lg transition-shadow group"
-                            >
-                                {/* Image */}
-                                <Link
-                                    href={item.slug ? `/products/${item.slug}` : `/products/${item.id}`}
-                                    className="block relative aspect-square overflow-hidden bg-secondary/20"
-                                >
-                                    <Image
-                                        src={item.image || '/placeholder.svg'}
-                                        alt={item.name}
-                                        fill
-                                        className="object-cover group-hover:scale-105 transition-transform duration-300"
-                                    />
-                                </Link>
-
-                                {/* Content */}
-                                <div className="p-4">
-                                    <Link
-                                        href={item.slug ? `/products/${item.slug}` : `/products/${item.id}`}
-                                        className="block mb-2"
-                                    >
-                                        <h3 className="text-sm font-medium text-foreground group-hover:text-accent transition-colors text-balance">
-                                            {item.name}
-                                        </h3>
-                                    </Link>
-
-                                    <p className="text-base font-semibold text-accent mb-4">${item.price}</p>
-
-                                    <div className="flex gap-2">
-                                        <Link
-                                            href={item.slug ? `/products/${item.slug}` : `/products/${item.id}`}
-                                            className="flex-1"
-                                        >
-                                            <Button className="w-full bg-foreground text-background hover:bg-foreground/90 rounded-full">
-                                                View Product
-                                            </Button>
-                                        </Link>
-
-                                        <button
-                                            onClick={() => removeFromWishlist(item.id)}
-                                            className="p-2 border border-border rounded-full text-foreground hover:bg-destructive hover:border-destructive hover:text-background transition-all"
-                                            title="Remove from wishlist"
-                                        >
-                                            <Trash2 className="h-5 w-5" />
-                                            <span className="sr-only">Remove from wishlist</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
+                                id={item.id}
+                                title={item.title}
+                                price={item.price}
+                                image={item.image}
+                                slug={item.slug}
+                                inStock={item.inStock ?? true}
+                                onSale={false}
+                            />
                         ))}
                     </div>
                 )}

@@ -1,117 +1,3 @@
-// "use client"
-
-// import { useState } from "react"
-// import Image from "next/image"
-// import Link from "next/link"
-// import { ChevronLeft, ChevronRight } from "lucide-react"
-// import { Card, CardContent } from "@/components/ui/card"
-// import type { ProductCardProps } from "@/components/product-card"
-
-// interface FeaturedCarouselProps {
-//     products: ProductCardProps[]
-// }
-
-// export function FeaturedCarousel({ products }: FeaturedCarouselProps) {
-//     const [currentIndex, setCurrentIndex] = useState(0)
-
-//     const cardsPerView = {
-//         sm: 1,
-//         md: 2,
-//         lg: 3,
-//     }
-
-//     const handlePrevious = () => {
-//         setCurrentIndex((prev) => Math.max(0, prev - 1))
-//     }
-
-//     const handleNext = () => {
-//         const maxIndex = Math.max(0, products.length - cardsPerView.lg)
-//         setCurrentIndex((prev) => Math.min(maxIndex, prev + 1))
-//     }
-
-//     if (!products || products.length === 0) return null
-
-//     return (
-//         <section className="mb-16">
-//             <h2 className="text-3xl font-bold text-foreground mb-8 text-balance">Featured Products</h2>
-
-//             <div className="relative">
-//                 {/* Carousel Container */}
-//                 <div className="overflow-hidden">
-//                     <div
-//                         className="flex transition-transform duration-500 ease-out"
-//                         style={{
-//                             transform: `translateX(-${currentIndex * (100 / cardsPerView.lg)}%)`,
-//                         }}
-//                     >
-//                         {products.map((product) => (
-//                             <div
-//                                 key={product.id}
-//                                 className="flex-shrink-0 px-2
-//                   w-full sm:w-1/2 md:w-1/2 lg:w-1/3"
-//                             >
-//                                 <Link href={product.slug ? `/products/${product.slug}` : `/products/${product.id}`}>
-//                                     <Card className="overflow-hidden border-border hover:shadow-lg transition-shadow duration-300 h-full">
-//                                         <CardContent className="p-0">
-//                                             <div className="relative aspect-square overflow-hidden bg-secondary/20">
-//                                                 <Image
-//                                                     src={product.image || "/placeholder.svg"}
-//                                                     alt={product.name}
-//                                                     fill
-//                                                     className="object-cover"
-//                                                 />
-//                                             </div>
-//                                             <div className="p-4">
-//                                                 <h3 className="text-lg font-semibold text-foreground mb-2 text-balance">{product.name}</h3>
-//                                                 <p className="text-lg font-bold text-accent">${product.price}</p>
-//                                             </div>
-//                                         </CardContent>
-//                                     </Card>
-//                                 </Link>
-//                             </div>
-//                         ))}
-//                     </div>
-//                 </div>
-
-//                 {/* Navigation Buttons */}
-//                 {currentIndex > 0 && (
-//                     <button
-//                         onClick={handlePrevious}
-//                         className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 p-2 rounded-full bg-foreground text-background hover:bg-foreground/90 transition-colors"
-//                         aria-label="Previous product"
-//                     >
-//                         <ChevronLeft className="h-6 w-6" />
-//                     </button>
-//                 )}
-
-//                 {currentIndex < Math.max(0, products.length - cardsPerView.lg) && (
-//                     <button
-//                         onClick={handleNext}
-//                         className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 p-2 rounded-full bg-foreground text-background hover:bg-foreground/90 transition-colors"
-//                         aria-label="Next product"
-//                     >
-//                         <ChevronRight className="h-6 w-6" />
-//                     </button>
-//                 )}
-
-//                 {/* Indicators */}
-//                 <div className="flex justify-center gap-2 mt-6">
-//                     {Array.from({ length: Math.max(0, products.length - cardsPerView.lg + 1) }).map((_, index) => (
-//                         <button
-//                             key={index}
-//                             onClick={() => setCurrentIndex(index)}
-//                             className={`h-2 rounded-full transition-all ${index === currentIndex ? "bg-accent w-8" : "bg-border w-2"
-//                                 }`}
-//                             aria-label={`Go to product ${index + 1}`}
-//                         />
-//                     ))}
-//                 </div>
-//             </div>
-//         </section>
-//     )
-// }
-
-
 "use client"
 
 import { useState, useEffect } from "react"
@@ -119,117 +5,114 @@ import Image from "next/image"
 import Link from "next/link"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
-import type { Product } from "@/lib/Types"
-import { buildImageUrl } from "@/lib/utils"
+import { Badge } from "@/components/ui/badge"
+import { CarouselProduct } from "@/lib/Types"
 
-interface CarouselProduct {
-    id: string
-    name: string
-    price: number
-    image: string
-    slug?: string
+interface FeaturedCarouselProps {
+    products: CarouselProduct[]
 }
 
-export function FeaturedCarousel() {
-    const [products, setProducts] = useState<CarouselProduct[]>([])
+function calculateInStock(inStock?: boolean, inventory?: { quantity: number }): boolean {
+    if (inStock !== undefined) return inStock
+    return (inventory?.quantity ?? 0) > 0
+}
+
+export function FeaturedCarousel({ products }: FeaturedCarouselProps) {
     const [currentIndex, setCurrentIndex] = useState(0)
-    const [loading, setLoading] = useState(true)
+    const [maxIndex, setMaxIndex] = useState(0)
+
+    const cardsPerView = { sm: 1, md: 2, lg: 4, xl: 5 }
+
+    const getCardsPerView = () => {
+        if (typeof window === 'undefined') return cardsPerView.lg
+        if (window.innerWidth >= 1280) return cardsPerView.xl
+        if (window.innerWidth >= 1024) return cardsPerView.lg
+        if (window.innerWidth >= 768) return cardsPerView.md
+        return cardsPerView.sm
+    }
+
+    const getTranslatePercentage = () => {
+        return 100 / getCardsPerView()
+    }
 
     useEffect(() => {
-        const fetchProducts = async () => {
-            const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"
-
-            try {
-                const response = await fetch(`${baseUrl}/api/products?limit=12`, {
-                    cache: "no-store",
-                    headers: { "Content-Type": "application/json" },
-                })
-
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch products (${response.status})`)
-                }
-
-                const data = await response.json()
-                const normalized: CarouselProduct[] =
-                    data.docs?.map((product: Product) => ({
-                        id: product.id,
-                        name: product.title,
-                        price: product.pricing?.price ?? 0,
-                        image: buildImageUrl(product.images?.[0]?.image?.url, baseUrl) ?? "/placeholder.svg",
-                        slug: product.slug,
-                    })) ?? []
-
-                setProducts(normalized.slice(0, 6))
-            } catch (error) {
-                console.error("Failed to fetch products for carousel:", error)
-            } finally {
-                setLoading(false)
-            }
+        const updateMaxIndex = () => {
+            const cards = getCardsPerView()
+            setMaxIndex(Math.max(0, products.length - cards))
         }
 
-        fetchProducts()
-    }, [])
+        updateMaxIndex()
+        window.addEventListener('resize', updateMaxIndex)
+        return () => window.removeEventListener('resize', updateMaxIndex)
+    }, [products.length])
 
-    const cardsPerView = { sm: 1, md: 2, lg: 3 }
-
-    const handlePrevious = () => {
-        setCurrentIndex((prev) => Math.max(0, prev - 1))
-    }
-
-    const handleNext = () => {
-        const maxIndex = Math.max(0, products.length - cardsPerView.lg)
-        setCurrentIndex((prev) => Math.min(maxIndex, prev + 1))
-    }
-
-    if (loading) {
-        return (
-            <section className="mb-16">
-                <div className="h-64 bg-secondary/20 rounded-lg animate-pulse"></div>
-            </section>
-        )
-    }
+    const handlePrevious = () => setCurrentIndex((prev) => Math.max(0, prev - 1))
+    const handleNext = () => setCurrentIndex((prev) => Math.min(maxIndex, prev + 1))
 
     if (!products || products.length === 0) return null
 
     return (
-        <section className="mb-16">
-            <h2 className="text-3xl font-bold text-foreground mb-8 text-balance">Featured Products</h2>
+        <div>
+            <h2 className="text-3xl font-bold text-foreground mb-8">
+                Featured Products
+            </h2>
 
             <div className="relative">
-                {/* Carousel Container */}
+                {/* Container */}
                 <div className="overflow-hidden">
                     <div
                         className="flex transition-transform duration-500 ease-out"
                         style={{
-                            transform: `translateX(-${currentIndex * (100 / cardsPerView.lg)}%)`,
+                            transform: `translateX(-${currentIndex * getTranslatePercentage()}%)`,
                         }}
                     >
-                        {products.map((product) => (
-                            <div key={product.id} className="flex-shrink-0 px-2 w-full sm:w-1/2 md:w-1/2 lg:w-1/3">
-                                <Link href={product.slug ? `/products/${product.slug}` : `/products/${product.id}`}>
-                                    <Card className="overflow-hidden border-border hover:shadow-lg transition-shadow duration-300 h-full">
-                                        <CardContent className="p-0">
-                                            <div className="relative aspect-square overflow-hidden bg-secondary/20">
-                                                <Image
-                                                    src={product.image || "/placeholder.svg"}
-                                                    alt={product.name}
-                                                    fill
-                                                    className="object-cover"
-                                                />
-                                            </div>
-                                            <div className="p-4">
-                                                <h3 className="text-lg font-semibold text-foreground mb-2 text-balance line-clamp-2">
-                                                    {product.name}
-                                                </h3>
-                                                <p className="text-lg font-bold text-accent">
-                                                    Rs {product.price.toLocaleString()}
-                                                </p>
-                                            </div>
-                                        </CardContent>
-                                    </Card>
-                                </Link>
-                            </div>
-                        ))}
+                        {products.map((product) => {
+                            const isInStock = calculateInStock(product.inStock, product.inventory)
+                            
+                            return (
+                                <div
+                                    key={product.id}
+                                    className="shrink-0 px-2 w-full sm:w-1/2 md:w-1/2 lg:w-1/4 xl:w-1/5"
+                                >
+                                    <Link
+                                        href={`/products/${product.slug || product.id}`}
+                                        className="block"
+                                    >
+                                        <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 h-full border-0 rounded-none group">
+                                            <CardContent className="p-0">
+                                                <div className="relative aspect-square bg-gray-100 overflow-hidden">
+                                                    <Image
+                                                        src={product.image}
+                                                        alt={product.name}
+                                                        fill
+                                                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                                                    />
+                                                    {!isInStock && (
+                                                        <div className="absolute top-3 left-3">
+                                                            <Badge
+                                                                className="text-[#F2F0E5]"
+                                                                style={{ backgroundColor: '#BB4E2C' }}
+                                                            >
+                                                                Out of Stock
+                                                            </Badge>
+                                                        </div>
+                                                    )}
+                                                </div>
+
+                                                <div className="p-4">
+                                                    <h3 className="text-base font-semibold mb-2 line-clamp-2 min-h-12">
+                                                        {product.name}
+                                                    </h3>
+                                                    <p className="text-lg font-bold text-[#1a3126]">
+                                                        Rs. {product.price.toLocaleString()}
+                                                    </p>
+                                                </div>
+                                            </CardContent>
+                                        </Card>
+                                    </Link>
+                                </div>
+                            )
+                        })}
                     </div>
                 </div>
 
@@ -237,36 +120,39 @@ export function FeaturedCarousel() {
                 {currentIndex > 0 && (
                     <button
                         onClick={handlePrevious}
-                        className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 p-2 rounded-full bg-foreground text-background hover:bg-foreground/90 transition-colors"
-                        aria-label="Previous product"
+                        className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 sm:-translate-x-4 z-10 p-2 sm:p-3 rounded-full bg-[#1a3126] text-white shadow-lg hover:bg-[#0f1f16] transition-colors"
+                        aria-label="Previous products"
                     >
-                        <ChevronLeft className="h-6 w-6" />
+                        <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
                     </button>
                 )}
 
-                {currentIndex < Math.max(0, products.length - cardsPerView.lg) && (
+                {currentIndex < maxIndex && (
                     <button
                         onClick={handleNext}
-                        className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 p-2 rounded-full bg-foreground text-background hover:bg-foreground/90 transition-colors"
-                        aria-label="Next product"
+                        className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 sm:translate-x-4 z-10 p-2 sm:p-3 rounded-full bg-[#1a3126] text-white shadow-lg hover:bg-[#0f1f16] transition-colors"
+                        aria-label="Next products"
                     >
-                        <ChevronRight className="h-6 w-6" />
+                        <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
                     </button>
                 )}
 
                 {/* Indicators */}
                 <div className="flex justify-center gap-2 mt-6">
-                    {Array.from({ length: Math.max(0, products.length - cardsPerView.lg + 1) }).map((_, index) => (
+                    {Array.from({ length: maxIndex + 1 }).map((_, i) => (
                         <button
-                            key={index}
-                            onClick={() => setCurrentIndex(index)}
-                            className={`h-2 rounded-full transition-all ${index === currentIndex ? "bg-accent w-8" : "bg-border w-2"
-                                }`}
-                            aria-label={`Go to product ${index + 1}`}
+                            key={i}
+                            onClick={() => setCurrentIndex(i)}
+                            className={`h-2 rounded-full transition-all ${
+                                i === currentIndex 
+                                    ? "bg-[#1a3126] w-8" 
+                                    : "bg-gray-300 w-2 hover:bg-gray-400"
+                            }`}
+                            aria-label={`Go to slide ${i + 1}`}
                         />
                     ))}
                 </div>
             </div>
-        </section>
+        </div>
     )
 }

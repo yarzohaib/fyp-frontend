@@ -1,0 +1,1898 @@
+// "use client"
+
+// import { useState, useEffect } from "react"
+// import Image from "next/image"
+// import { Button } from "@/components/ui/button"
+// import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+// import { Edit2, Save, X, Upload, Trash2 } from "lucide-react"
+
+// interface VendorProfile {
+//   id: string
+//   email: string
+//   storeName: string
+//   slug: string
+//   storeDescription: string
+//   status: string
+//   role: string
+//   contactInfo: {
+//     phone: string
+//     address: string
+//     city: string
+//     country: string
+//   }
+//   businessInfo: {
+//     businessLicense: string
+//     taxId: string
+//     businessType: string
+//   }
+//   storeLogo: {
+//     id: string
+//     url: string
+//     alt: string
+//     filename: string
+//   } | null
+//   createdAt: string
+//   updatedAt: string
+// }
+
+// const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"
+
+// export default function VendorProfilePage() {
+//   const [vendor, setVendor] = useState<VendorProfile | null>(null)
+//   const [loading, setLoading] = useState(true)
+//   const [error, setError] = useState<string | null>(null)
+//   const [isEditing, setIsEditing] = useState(false)
+//   const [isSaving, setIsSaving] = useState(false)
+//   const [logoPreview, setLogoPreview] = useState<string | null>(null)
+//   const [logoFile, setLogoFile] = useState<File | null>(null)
+
+//   // Form state
+//   const [formData, setFormData] = useState<VendorProfile>({
+//     id: "",
+//     email: "",
+//     storeName: "",
+//     slug: "",
+//     storeDescription: "",
+//     status: "pending",
+//     role: "vendor",
+//     contactInfo: {
+//       phone: "",
+//       address: "",
+//       city: "",
+//       country: "",
+//     },
+//     businessInfo: {
+//       businessLicense: "",
+//       taxId: "",
+//       businessType: "",
+//     },
+//     storeLogo: null,
+//     createdAt: "",
+//     updatedAt: "",
+//   })
+
+//   const getAuthToken = (): string | null => {
+//     if (typeof window === "undefined") return null
+//     const keys = ["authToken", "token", "jwt", "accessToken", "payload-token"]
+//     for (const key of keys) {
+//       const token = localStorage.getItem(key)
+//       if (token) return token
+//     }
+//     return null
+//   }
+
+//   // Fetch vendor profile
+//   const fetchVendorProfile = async () => {
+//     try {
+//       setLoading(true)
+//       const token = getAuthToken()
+
+//       if (!token) {
+//         setError("Not authenticated")
+//         return
+//       }
+
+//       const response = await fetch(`/api/vendor/profile`, {
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `JWT ${token}`,
+//         },
+//       })
+
+//       if (!response.ok) {
+//         throw new Error("Failed to fetch profile")
+//       }
+
+//       const data = await response.json()
+//       setVendor(data.vendor)
+//       setFormData(data.vendor)
+//       if (data.vendor.storeLogo?.url) {
+//         setLogoPreview(data.vendor.storeLogo.url)
+//       }
+//     } catch (err) {
+//       setError(err instanceof Error ? err.message : "Failed to load profile")
+//     } finally {
+//       setLoading(false)
+//     }
+//   }
+
+//   useEffect(() => {
+//     fetchVendorProfile()
+//   }, [])
+
+//   // Handle input changes
+//   const handleInputChange = (
+//     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+//     section?: "contactInfo" | "businessInfo"
+//   ) => {
+//     const { name, value } = e.target
+
+//     if (section) {
+//       setFormData((prev) => ({
+//         ...prev,
+//         [section]: {
+//           ...prev[section],
+//           [name]: value,
+//         },
+//       }))
+//     } else {
+//       setFormData((prev) => ({
+//         ...prev,
+//         [name]: value,
+//       }))
+//     }
+//   }
+
+//   // Handle logo upload
+//   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+//     const file = e.target.files?.[0]
+//     if (file) {
+//       setLogoFile(file)
+//       const reader = new FileReader()
+//       reader.onloadend = () => {
+//         setLogoPreview(reader.result as string)
+//       }
+//       reader.readAsDataURL(file)
+//     }
+//   }
+
+//   // Remove logo
+//   const handleRemoveLogo = () => {
+//     setLogoFile(null)
+//     setLogoPreview(null)
+//     setFormData((prev) => ({
+//       ...prev,
+//       storeLogo: null,
+//     }))
+//   }
+
+//   // Save changes
+//   const handleSave = async () => {
+//     try {
+//       setIsSaving(true)
+//       setError(null)
+//       const token = getAuthToken()
+
+//       if (!token) {
+//         setError("Not authenticated")
+//         return
+//       }
+
+//       let logoId = formData.storeLogo?.id || null
+
+//       // Upload logo if new file selected
+//       if (logoFile) {
+//         const formDataLogo = new FormData()
+//         formDataLogo.append("file", logoFile)
+
+//         const uploadRes = await fetch(`${BACKEND_URL}/api/upload/media`, {
+//           method: "POST",
+//           headers: {
+//             Authorization: `JWT ${token}`,
+//           },
+//           body: formDataLogo,
+//         })
+
+//         if (uploadRes.ok) {
+//           const uploadData = await uploadRes.json()
+//           logoId = uploadData.media.id
+//         } else {
+//           throw new Error("Failed to upload logo")
+//         }
+//       }
+
+//       const response = await fetch(`/api/vendor/profile`, {
+//         method: "PUT",
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `JWT ${token}`,
+//         },
+//         body: JSON.stringify({
+//           storeName: formData.storeName,
+//           storeDescription: formData.storeDescription,
+//           contactInfo: formData.contactInfo,
+//           businessInfo: formData.businessInfo,
+//           storeLogo: logoId,
+//         }),
+//       })
+
+//       if (!response.ok) {
+//         const data = await response.json()
+//         throw new Error(data.error || "Failed to update profile")
+//       }
+
+//       const updatedData = await response.json()
+//       setVendor(updatedData.vendor)
+//       setFormData(updatedData.vendor)
+//       setLogoFile(null)
+//       setIsEditing(false)
+//     } catch (err) {
+//       setError(err instanceof Error ? err.message : "Failed to save profile")
+//     } finally {
+//       setIsSaving(false)
+//     }
+//   }
+
+//   if (loading) {
+//     return (
+//       <div className="min-h-screen bg-[#F2F0E5] py-8">
+//         <div className="max-w-4xl mx-auto px-4">
+//           <p className="text-center text-[#1a3126]">Loading profile...</p>
+//         </div>
+//       </div>
+//     )
+//   }
+
+//   if (!vendor) {
+//     return (
+//       <div className="min-h-screen bg-[#F2F0E5] py-8">
+//         <div className="max-w-4xl mx-auto px-4">
+//           <p className="text-center text-red-600">Failed to load profile</p>
+//         </div>
+//       </div>
+//     )
+//   }
+
+//   return (
+//     <div className="min-h-screen bg-[#F2F0E5] py-8 px-4 sm:px-6 lg:px-8">
+//       <div className="max-w-4xl mx-auto">
+//         {/* Header */}
+//         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+//           <h1 className="text-3xl sm:text-4xl font-bold text-[#1a3126]">Store Profile</h1>
+//           {!isEditing ? (
+//             <Button
+//               onClick={() => setIsEditing(true)}
+//               className="bg-[#BB4E2C] hover:bg-[#A03D1F] text-white rounded-lg flex items-center gap-2 px-6 py-2 w-full sm:w-auto justify-center"
+//             >
+//               <Edit2 size={18} />
+//               Edit Profile
+//             </Button>
+//           ) : (
+//             <div className="flex gap-2 flex-col sm:flex-row w-full sm:w-auto">
+//               <Button
+//                 onClick={handleSave}
+//                 disabled={isSaving}
+//                 className="bg-[#1a3126] hover:bg-[#0f1f16] text-white rounded-lg flex items-center gap-2 px-6 py-2 justify-center flex-1"
+//               >
+//                 <Save size={18} />
+//                 {isSaving ? "Saving..." : "Save"}
+//               </Button>
+//               <Button
+//                 onClick={() => {
+//                   setIsEditing(false)
+//                   setFormData(vendor)
+//                   setLogoFile(null)
+//                   setLogoPreview(vendor.storeLogo?.url || null)
+//                 }}
+//                 className="bg-gray-400 hover:bg-gray-500 text-white rounded-lg flex items-center gap-2 px-6 py-2 justify-center flex-1"
+//               >
+//                 <X size={18} />
+//                 Cancel
+//               </Button>
+//             </div>
+//           )}
+//         </div>
+
+//         {/* Error Message */}
+//         {error && (
+//           <div className="mb-6 p-4 rounded-lg bg-red-100 text-red-700 border border-red-300">
+//             {error}
+//           </div>
+//         )}
+
+//         {/* Store Logo Section */}
+//         <Card className="mb-6 rounded-lg border-0 shadow-md">
+//           <CardHeader className="bg-[#1a3126] text-white rounded-t-lg">
+//             <CardTitle>Store Logo</CardTitle>
+//           </CardHeader>
+//           <CardContent className="p-6">
+//             <div className="flex flex-col sm:flex-row gap-6 items-start">
+//               {/* Logo Preview */}
+//               <div className="w-full sm:w-40 h-40 rounded-lg border-2 border-gray-300 flex items-center justify-center bg-gray-50 shrink-0">
+//                 {logoPreview ? (
+//                   <Image
+//                     src={logoPreview}
+//                     alt="Store Logo"
+//                     width={160}
+//                     height={160}
+//                     className="w-full h-full object-contain p-2"
+//                   />
+//                 ) : (
+//                   <div className="text-center text-gray-400">
+//                     <Upload size={32} className="mx-auto mb-2" />
+//                     <p className="text-sm">No logo</p>
+//                   </div>
+//                 )}
+//               </div>
+
+//               {/* Upload Section */}
+//               {isEditing && (
+//                 <div className="flex-1 space-y-3">
+//                   <label className="flex items-center justify-center w-full px-4 py-6 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-[#BB4E2C] transition-colors">
+//                     <div className="text-center">
+//                       <Upload className="mx-auto h-8 w-8 text-gray-400 mb-2" />
+//                       <p className="text-sm text-gray-600">Click to upload logo</p>
+//                       <p className="text-xs text-gray-500">PNG, JPG up to 5MB</p>
+//                     </div>
+//                     <input
+//                       type="file"
+//                       accept="image/*"
+//                       onChange={handleLogoUpload}
+//                       className="hidden"
+//                     />
+//                   </label>
+
+//                   {logoPreview && (
+//                     <Button
+//                       onClick={handleRemoveLogo}
+//                       className="w-full bg-red-600 hover:bg-red-700 text-white rounded-lg flex items-center gap-2 justify-center py-2"
+//                     >
+//                       <Trash2 size={18} />
+//                       Remove Logo
+//                     </Button>
+//                   )}
+//                 </div>
+//               )}
+//             </div>
+//           </CardContent>
+//         </Card>
+
+//         {/* Store Information */}
+//         <Card className="mb-6 rounded-lg border-0 shadow-md">
+//           <CardHeader className="bg-[#1a3126] text-white rounded-t-lg">
+//             <CardTitle>Store Information</CardTitle>
+//           </CardHeader>
+//           <CardContent className="p-6 space-y-4">
+//             {/* Store Name */}
+//             <div>
+//               <label className="block text-sm font-medium text-[#1a3126] mb-2">Store Name</label>
+//               <input
+//                 type="text"
+//                 name="storeName"
+//                 value={formData.storeName}
+//                 onChange={handleInputChange}
+//                 disabled={!isEditing}
+//                 className={`w-full px-4 py-2 border border-gray-300 rounded-lg ${
+//                   isEditing
+//                     ? "bg-white text-[#1a3126] focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent"
+//                     : "bg-gray-100 text-gray-600 cursor-not-allowed"
+//                 }`}
+//               />
+//             </div>
+
+//             {/* Store Slug (Read-only) */}
+//             <div>
+//               <label className="block text-sm font-medium text-[#1a3126] mb-2">Store URL Slug</label>
+//               <input
+//                 type="text"
+//                 value={formData.slug}
+//                 disabled
+//                 className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
+//               />
+//             </div>
+
+//             {/* Store Description */}
+//             <div>
+//               <label className="block text-sm font-medium text-[#1a3126] mb-2">Store Description</label>
+//               <textarea
+//                 name="storeDescription"
+//                 value={formData.storeDescription}
+//                 onChange={handleInputChange}
+//                 disabled={!isEditing}
+//                 rows={4}
+//                 className={`w-full px-4 py-2 border border-gray-300 rounded-lg resize-none ${
+//                   isEditing
+//                     ? "bg-white text-[#1a3126] focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent"
+//                     : "bg-gray-100 text-gray-600 cursor-not-allowed"
+//                 }`}
+//                 placeholder="Describe your store..."
+//               />
+//             </div>
+
+//             {/* Status (Read-only) */}
+//             <div>
+//               <label className="block text-sm font-medium text-[#1a3126] mb-2">Account Status</label>
+//               <div className="px-4 py-2 bg-gray-100 rounded-lg text-[#1a3126] capitalize font-medium inline-block">
+//                 {formData.status}
+//               </div>
+//             </div>
+//           </CardContent>
+//         </Card>
+
+//         {/* Contact Information */}
+//         <Card className="mb-6 rounded-lg border-0 shadow-md">
+//           <CardHeader className="bg-[#1a3126] text-white rounded-t-lg">
+//             <CardTitle>Contact Information</CardTitle>
+//           </CardHeader>
+//           <CardContent className="p-6 space-y-4">
+//             {/* Phone */}
+//             <div>
+//               <label className="block text-sm font-medium text-[#1a3126] mb-2">Phone Number</label>
+//               <input
+//                 type="tel"
+//                 name="phone"
+//                 value={formData.contactInfo.phone}
+//                 onChange={(e) => handleInputChange(e, "contactInfo")}
+//                 disabled={!isEditing}
+//                 placeholder="Enter phone number"
+//                 className={`w-full px-4 py-2 border border-gray-300 rounded-lg ${
+//                   isEditing
+//                     ? "bg-white text-[#1a3126] focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent"
+//                     : "bg-gray-100 text-gray-600 cursor-not-allowed"
+//                 }`}
+//               />
+//             </div>
+
+//             {/* Address */}
+//             <div>
+//               <label className="block text-sm font-medium text-[#1a3126] mb-2">Business Address</label>
+//               <textarea
+//                 name="address"
+//                 value={formData.contactInfo.address}
+//                 onChange={(e) => handleInputChange(e, "contactInfo")}
+//                 disabled={!isEditing}
+//                 rows={3}
+//                 placeholder="Enter your business address"
+//                 className={`w-full px-4 py-2 border border-gray-300 rounded-lg resize-none ${
+//                   isEditing
+//                     ? "bg-white text-[#1a3126] focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent"
+//                     : "bg-gray-100 text-gray-600 cursor-not-allowed"
+//                 }`}
+//               />
+//             </div>
+
+//             {/* City and Country */}
+//             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+//               <div>
+//                 <label className="block text-sm font-medium text-[#1a3126] mb-2">City</label>
+//                 <input
+//                   type="text"
+//                   name="city"
+//                   value={formData.contactInfo.city}
+//                   onChange={(e) => handleInputChange(e, "contactInfo")}
+//                   disabled={!isEditing}
+//                   placeholder="Enter city"
+//                   className={`w-full px-4 py-2 border border-gray-300 rounded-lg ${
+//                     isEditing
+//                       ? "bg-white text-[#1a3126] focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent"
+//                       : "bg-gray-100 text-gray-600 cursor-not-allowed"
+//                   }`}
+//                 />
+//               </div>
+
+//               <div>
+//                 <label className="block text-sm font-medium text-[#1a3126] mb-2">Country</label>
+//                 <input
+//                   type="text"
+//                   name="country"
+//                   value={formData.contactInfo.country}
+//                   onChange={(e) => handleInputChange(e, "contactInfo")}
+//                   disabled={!isEditing}
+//                   placeholder="Enter country"
+//                   className={`w-full px-4 py-2 border border-gray-300 rounded-lg ${
+//                     isEditing
+//                       ? "bg-white text-[#1a3126] focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent"
+//                       : "bg-gray-100 text-gray-600 cursor-not-allowed"
+//                   }`}
+//                 />
+//               </div>
+//             </div>
+//           </CardContent>
+//         </Card>
+
+//         {/* Additional Information */}
+//         <Card className="rounded-lg border-0 shadow-md">
+//           <CardHeader className="bg-[#1a3126] text-white rounded-t-lg">
+//             <CardTitle>Business Information</CardTitle>
+//           </CardHeader>
+//           <CardContent className="p-6 space-y-4">
+//             {/* Business License */}
+//             <div>
+//               <label className="block text-sm font-medium text-[#1a3126] mb-2">Business License</label>
+//               <input
+//                 type="text"
+//                 name="businessLicense"
+//                 value={formData.businessInfo.businessLicense}
+//                 onChange={(e) => handleInputChange(e, "businessInfo")}
+//                 disabled={!isEditing}
+//                 placeholder="Enter business license number"
+//                 className={`w-full px-4 py-2 border border-gray-300 rounded-lg ${
+//                   isEditing
+//                     ? "bg-white text-[#1a3126] focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent"
+//                     : "bg-gray-100 text-gray-600 cursor-not-allowed"
+//                 }`}
+//               />
+//             </div>
+
+//             {/* Tax ID */}
+//             <div>
+//               <label className="block text-sm font-medium text-[#1a3126] mb-2">Tax ID</label>
+//               <input
+//                 type="text"
+//                 name="taxId"
+//                 value={formData.businessInfo.taxId}
+//                 onChange={(e) => handleInputChange(e, "businessInfo")}
+//                 disabled={!isEditing}
+//                 placeholder="Enter tax ID"
+//                 className={`w-full px-4 py-2 border border-gray-300 rounded-lg ${
+//                   isEditing
+//                     ? "bg-white text-[#1a3126] focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent"
+//                     : "bg-gray-100 text-gray-600 cursor-not-allowed"
+//                 }`}
+//               />
+//             </div>
+
+//             {/* Business Type */}
+//             <div>
+//               <label className="block text-sm font-medium text-[#1a3126] mb-2">Business Type</label>
+//               <select
+//                 name="businessType"
+//                 value={formData.businessInfo.businessType}
+//                 onChange={(e) => handleInputChange(e, "businessInfo")}
+//                 disabled={!isEditing}
+//                 className={`w-full px-4 py-2 border border-gray-300 rounded-lg ${
+//                   isEditing
+//                     ? "bg-white text-[#1a3126] focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent"
+//                     : "bg-gray-100 text-gray-600 cursor-not-allowed"
+//                 }`}
+//               >
+//                 <option value="">Select business type</option>
+//                 <option value="individual">Individual</option>
+//                 <option value="company">Company</option>
+//                 <option value="partnership">Partnership</option>
+//               </select>
+//             </div>
+//           </CardContent>
+//         </Card>
+//       </div>
+//     </div>
+//   )
+// }
+
+
+"use client"
+
+import { useState, useEffect } from "react"
+import Image from "next/image"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Edit2, Save, X, Upload, Trash2 } from "lucide-react"
+
+// Type Definitions
+type StoreLogo = {
+  id: string
+  url: string
+  alt: string
+  filename: string
+}
+
+type ContactInfo = {
+  phone: string
+  address: string
+  city: string
+  country: string
+}
+
+type BusinessInfo = {
+  businessLicense: string
+  taxId: string
+  businessType: string
+}
+
+type VendorProfile = {
+  id: string
+  email: string
+  storeName: string
+  slug: string
+  storeDescription: string
+  status: string
+  role: string
+  contactInfo: ContactInfo
+  businessInfo: BusinessInfo
+  storeLogo: StoreLogo | null
+  createdAt: string
+  updatedAt: string
+}
+
+type UpdatePayload = {
+  storeName: string
+  storeDescription: string
+  contactInfo: ContactInfo
+  businessInfo: BusinessInfo
+  storeLogo?: string | null
+}
+
+type UploadResponse = {
+  success: boolean
+  message: string
+  media: StoreLogo
+}
+
+type ProfileResponse = {
+  success: boolean
+  vendor: VendorProfile
+}
+
+type ErrorResponse = {
+  error?: string
+  message?: string
+  details?: string
+}
+
+const BACKEND_URL: string = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"
+
+export default function VendorProfilePage() {
+  const [vendor, setVendor] = useState<VendorProfile | null>(null)
+  const [loading, setLoading] = useState<boolean>(true)
+  const [error, setError] = useState<string | null>(null)
+  const [isEditing, setIsEditing] = useState<boolean>(false)
+  const [isSaving, setIsSaving] = useState<boolean>(false)
+  const [logoPreview, setLogoPreview] = useState<string | null>(null)
+  const [logoFile, setLogoFile] = useState<File | null>(null)
+
+  // Form state
+  const [formData, setFormData] = useState<VendorProfile>({
+    id: "",
+    email: "",
+    storeName: "",
+    slug: "",
+    storeDescription: "",
+    status: "pending",
+    role: "vendor",
+    contactInfo: {
+      phone: "",
+      address: "",
+      city: "",
+      country: "",
+    },
+    businessInfo: {
+      businessLicense: "",
+      taxId: "",
+      businessType: "",
+    },
+    storeLogo: null,
+    createdAt: "",
+    updatedAt: "",
+  })
+
+  // Get auth token - check authToken first (primary), then fallback options
+  const getAuthToken = (): string | null => {
+    if (typeof window === "undefined") return null
+    
+    const authToken: string | null = localStorage.getItem('authToken')
+    if (authToken) return authToken
+    
+    // Fallback to other possible keys
+    const keys: string[] = ["vendor-token", "token", "jwt", "accessToken", "payload-token"]
+    for (const key of keys) {
+      const token: string | null = localStorage.getItem(key)
+      if (token) return token
+    }
+    return null
+  }
+
+  // Fetch vendor profile
+  const fetchVendorProfile = async (): Promise<void> => {
+    try {
+      setLoading(true)
+      setError(null)
+      
+      const token: string | null = getAuthToken()
+
+      if (!token) {
+        setError("Not authenticated. Please log in as a vendor.")
+        return
+      }
+
+      console.log('🔍 Fetching vendor profile...')
+
+      const response: Response = await fetch(`${BACKEND_URL}/api/vendor/profile`, {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `JWT ${token}`,
+        },
+      })
+
+      console.log('📡 Response status:', response.status)
+
+      if (!response.ok) {
+        const errorData: ErrorResponse = await response.json().catch(() => ({}))
+        console.error('❌ Error response:', errorData)
+        throw new Error(errorData.error || errorData.message || `HTTP ${response.status}: Failed to fetch profile`)
+      }
+
+      const data: ProfileResponse = await response.json()
+      console.log('✅ Profile fetched:', data)
+      
+      const profileData: VendorProfile = data.vendor || data
+      
+      setVendor(profileData)
+      setFormData(profileData)
+      
+      if (profileData.storeLogo?.url) {
+        setLogoPreview(profileData.storeLogo.url)
+      }
+    } catch (err) {
+      console.error('❌ Failed to fetch profile:', err)
+      setError(err instanceof Error ? err.message : "Failed to load profile")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchVendorProfile()
+  }, [])
+
+  // Handle input changes
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+    section?: "contactInfo" | "businessInfo"
+  ): void => {
+    const { name, value } = e.target
+
+    if (section) {
+      setFormData((prev: VendorProfile) => ({
+        ...prev,
+        [section]: {
+          ...prev[section],
+          [name]: value,
+        },
+      }))
+    } else {
+      setFormData((prev: VendorProfile) => ({
+        ...prev,
+        [name]: value,
+      }))
+    }
+  }
+
+  // Handle logo upload
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const file: File | undefined = e.target.files?.[0]
+    if (file) {
+      // Validate file type
+      const allowedTypes: string[] = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/jpg']
+      if (!allowedTypes.includes(file.type)) {
+        setError('Invalid file type. Only JPEG, PNG, GIF, and WebP are allowed.')
+        return
+      }
+      
+      // Validate file size (5MB max)
+      const maxSize: number = 5 * 1024 * 1024
+      if (file.size > maxSize) {
+        setError('File too large. Maximum size is 5MB.')
+        return
+      }
+      
+      setLogoFile(file)
+      setError(null)
+      
+      const reader: FileReader = new FileReader()
+      reader.onloadend = () => {
+        setLogoPreview(reader.result as string)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  // Remove logo
+  const handleRemoveLogo = (): void => {
+    setLogoFile(null)
+    setLogoPreview(null)
+    setFormData((prev: VendorProfile) => ({
+      ...prev,
+      storeLogo: null,
+    }))
+  }
+
+  // Save changes
+  const handleSave = async (): Promise<void> => {
+    try {
+      setIsSaving(true)
+      setError(null)
+      
+      const token: string | null = getAuthToken()
+      if (!token) {
+        setError("Not authenticated")
+        return
+      }
+
+      // Validate required fields
+      if (!formData.storeName.trim()) {
+        setError('Store name is required')
+        return
+      }
+
+      let logoData: StoreLogo | null = formData.storeLogo
+
+      // Upload logo if new file selected
+      if (logoFile) {
+        console.log('📤 Uploading logo...')
+        
+        const formDataLogo: FormData = new FormData()
+        formDataLogo.append("file", logoFile)
+
+        const uploadRes: Response = await fetch(`${BACKEND_URL}/api/vendor/upload-logo`, {
+          method: "POST",
+          headers: {
+            Authorization: `JWT ${token}`,
+          },
+          body: formDataLogo,
+        })
+
+        if (uploadRes.ok) {
+          const uploadData: UploadResponse = await uploadRes.json()
+          logoData = uploadData.media
+          console.log('✅ Logo uploaded:', logoData)
+        } else {
+          const errorData: ErrorResponse = await uploadRes.json().catch(() => ({}))
+          throw new Error(errorData.error || "Failed to upload logo")
+        }
+      }
+
+      console.log('📝 Updating profile...')
+
+      // Prepare update data
+      const updatePayload: UpdatePayload = {
+        storeName: formData.storeName.trim(),
+        storeDescription: formData.storeDescription.trim(),
+        contactInfo: formData.contactInfo,
+        businessInfo: formData.businessInfo,
+      }
+
+      if (logoData) {
+        updatePayload.storeLogo = logoData.id
+      } else if (formData.storeLogo === null) {
+        updatePayload.storeLogo = null
+      }
+
+      const response: Response = await fetch(`${BACKEND_URL}/api/vendor/profile`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `JWT ${token}`,
+        },
+        body: JSON.stringify(updatePayload),
+      })
+
+      if (!response.ok) {
+        const data: ErrorResponse = await response.json().catch(() => ({}))
+        throw new Error(data.error || data.message || "Failed to update profile")
+      }
+
+      const updatedData: ProfileResponse = await response.json()
+      console.log('✅ Profile updated successfully')
+      
+      const profileData: VendorProfile = updatedData.vendor || updatedData
+      setVendor(profileData)
+      setFormData(profileData)
+      setLogoFile(null)
+      setIsEditing(false)
+      
+      // Refresh to get latest data
+      await fetchVendorProfile()
+      
+    } catch (err) {
+      console.error('❌ Failed to save profile:', err)
+      setError(err instanceof Error ? err.message : "Failed to save profile")
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#F2F0E5] py-8">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-[#BB4E2C] mx-auto"></div>
+            <p className="mt-4 text-[#1a3126]">Loading profile...</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (error && !vendor) {
+    return (
+      <div className="min-h-screen bg-[#F2F0E5] py-8">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+            <p className="text-red-600 font-medium text-lg mb-2">Failed to load profile</p>
+            <p className="text-red-500 text-sm">{error}</p>
+            <button 
+              onClick={fetchVendorProfile}
+              className="mt-4 px-6 py-2 bg-[#BB4E2C] text-white rounded-lg hover:bg-[#A03D1F]"
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-[#F2F0E5] py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+          <h1 className="text-3xl sm:text-4xl font-bold text-[#1a3126]">Store Profile</h1>
+          {!isEditing ? (
+            <Button
+              onClick={() => setIsEditing(true)}
+              className="bg-[#BB4E2C] hover:bg-[#A03D1F] text-white rounded-lg flex items-center gap-2 px-6 py-2 w-full sm:w-auto justify-center"
+            >
+              <Edit2 size={18} />
+              Edit Profile
+            </Button>
+          ) : (
+            <div className="flex gap-2 flex-col sm:flex-row w-full sm:w-auto">
+              <Button
+                onClick={handleSave}
+                disabled={isSaving}
+                className="bg-[#1a3126] hover:bg-[#0f1f16] text-white rounded-lg flex items-center gap-2 px-6 py-2 justify-center flex-1"
+              >
+                <Save size={18} />
+                {isSaving ? "Saving..." : "Save"}
+              </Button>
+              <Button
+                onClick={() => {
+                  setIsEditing(false)
+                  setFormData(vendor!)
+                  setLogoFile(null)
+                  setLogoPreview(vendor?.storeLogo?.url || null)
+                  setError(null)
+                }}
+                className="bg-gray-400 hover:bg-gray-500 text-white rounded-lg flex items-center gap-2 px-6 py-2 justify-center flex-1"
+              >
+                <X size={18} />
+                Cancel
+              </Button>
+            </div>
+          )}
+        </div>
+
+        {/* Error Message */}
+        {error && (
+          <div className="mb-6 p-4 rounded-lg bg-red-100 text-red-700 border border-red-300">
+            {error}
+          </div>
+        )}
+
+        {/* Store Logo Section */}
+        <Card className="mb-6 rounded-lg border-0 shadow-md">
+          <CardHeader className="bg-[#1a3126] text-white rounded-t-lg">
+            <CardTitle>Store Logo</CardTitle>
+          </CardHeader>
+          <CardContent className="p-6">
+            <div className="flex flex-col sm:flex-row gap-6 items-start">
+              {/* Logo Preview */}
+              <div className="w-full sm:w-40 h-40 rounded-lg border-2 border-gray-300 flex items-center justify-center bg-gray-50 shrink-0">
+                {logoPreview ? (
+                  <Image
+                    src={logoPreview}
+                    alt="Store Logo"
+                    width={160}
+                    height={160}
+                    className="w-full h-full object-contain p-2"
+                  />
+                ) : (
+                  <div className="text-center text-gray-400">
+                    <Upload size={32} className="mx-auto mb-2" />
+                    <p className="text-sm">No logo</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Upload Section */}
+              {isEditing && (
+                <div className="flex-1 space-y-3">
+                  <label className="flex items-center justify-center w-full px-4 py-6 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-[#BB4E2C] transition-colors">
+                    <div className="text-center">
+                      <Upload className="mx-auto h-8 w-8 text-gray-400 mb-2" />
+                      <p className="text-sm text-gray-600">Click to upload logo</p>
+                      <p className="text-xs text-gray-500">PNG, JPG up to 5MB</p>
+                    </div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleLogoUpload}
+                      className="hidden"
+                    />
+                  </label>
+
+                  {logoPreview && (
+                    <Button
+                      onClick={handleRemoveLogo}
+                      className="w-full bg-red-600 hover:bg-red-700 text-white rounded-lg flex items-center gap-2 justify-center py-2"
+                    >
+                      <Trash2 size={18} />
+                      Remove Logo
+                    </Button>
+                  )}
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Store Information */}
+        <Card className="mb-6 rounded-lg border-0 shadow-md">
+          <CardHeader className="bg-[#1a3126] text-white rounded-t-lg">
+            <CardTitle>Store Information</CardTitle>
+          </CardHeader>
+          <CardContent className="p-6 space-y-4">
+            {/* Store Name */}
+            <div>
+              <label className="block text-sm font-medium text-[#1a3126] mb-2">Store Name</label>
+              <input
+                type="text"
+                name="storeName"
+                value={formData.storeName}
+                onChange={handleInputChange}
+                disabled={!isEditing}
+                className={`w-full px-4 py-2 border border-gray-300 rounded-lg ${
+                  isEditing
+                    ? "bg-white text-[#1a3126] focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent"
+                    : "bg-gray-100 text-gray-600 cursor-not-allowed"
+                }`}
+              />
+            </div>
+
+            {/* Store Slug (Read-only) */}
+            <div>
+              <label className="block text-sm font-medium text-[#1a3126] mb-2">Store URL Slug</label>
+              <input
+                type="text"
+                value={formData.slug}
+                disabled
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
+              />
+            </div>
+
+            {/* Store Description */}
+            <div>
+              <label className="block text-sm font-medium text-[#1a3126] mb-2">Store Description</label>
+              <textarea
+                name="storeDescription"
+                value={formData.storeDescription}
+                onChange={handleInputChange}
+                disabled={!isEditing}
+                rows={4}
+                className={`w-full px-4 py-2 border border-gray-300 rounded-lg resize-none ${
+                  isEditing
+                    ? "bg-white text-[#1a3126] focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent"
+                    : "bg-gray-100 text-gray-600 cursor-not-allowed"
+                }`}
+                placeholder="Describe your store..."
+              />
+            </div>
+
+            {/* Status (Read-only) */}
+            <div>
+              <label className="block text-sm font-medium text-[#1a3126] mb-2">Account Status</label>
+              <div className="px-4 py-2 bg-gray-100 rounded-lg text-[#1a3126] capitalize font-medium inline-block">
+                {formData.status}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Contact Information */}
+        <Card className="mb-6 rounded-lg border-0 shadow-md">
+          <CardHeader className="bg-[#1a3126] text-white rounded-t-lg">
+            <CardTitle>Contact Information</CardTitle>
+          </CardHeader>
+          <CardContent className="p-6 space-y-4">
+            {/* Phone */}
+            <div>
+              <label className="block text-sm font-medium text-[#1a3126] mb-2">Phone Number</label>
+              <input
+                type="tel"
+                name="phone"
+                value={formData.contactInfo.phone}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(e, "contactInfo")}
+                disabled={!isEditing}
+                placeholder="Enter phone number"
+                className={`w-full px-4 py-2 border border-gray-300 rounded-lg ${
+                  isEditing
+                    ? "bg-white text-[#1a3126] focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent"
+                    : "bg-gray-100 text-gray-600 cursor-not-allowed"
+                }`}
+              />
+            </div>
+
+            {/* Address */}
+            <div>
+              <label className="block text-sm font-medium text-[#1a3126] mb-2">Business Address</label>
+              <textarea
+                name="address"
+                value={formData.contactInfo.address}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleInputChange(e, "contactInfo")}
+                disabled={!isEditing}
+                rows={3}
+                placeholder="Enter your business address"
+                className={`w-full px-4 py-2 border border-gray-300 rounded-lg resize-none ${
+                  isEditing
+                    ? "bg-white text-[#1a3126] focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent"
+                    : "bg-gray-100 text-gray-600 cursor-not-allowed"
+                }`}
+              />
+            </div>
+
+            {/* City and Country */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-[#1a3126] mb-2">City</label>
+                <input
+                  type="text"
+                  name="city"
+                  value={formData.contactInfo.city}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(e, "contactInfo")}
+                  disabled={!isEditing}
+                  placeholder="Enter city"
+                  className={`w-full px-4 py-2 border border-gray-300 rounded-lg ${
+                    isEditing
+                      ? "bg-white text-[#1a3126] focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent"
+                      : "bg-gray-100 text-gray-600 cursor-not-allowed"
+                  }`}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-[#1a3126] mb-2">Country</label>
+                <input
+                  type="text"
+                  name="country"
+                  value={formData.contactInfo.country}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(e, "contactInfo")}
+                  disabled={!isEditing}
+                  placeholder="Enter country"
+                  className={`w-full px-4 py-2 border border-gray-300 rounded-lg ${
+                    isEditing
+                      ? "bg-white text-[#1a3126] focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent"
+                      : "bg-gray-100 text-gray-600 cursor-not-allowed"
+                  }`}
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Business Information */}
+        <Card className="rounded-lg border-0 shadow-md">
+          <CardHeader className="bg-[#1a3126] text-white rounded-t-lg">
+            <CardTitle>Business Information</CardTitle>
+          </CardHeader>
+          <CardContent className="p-6 space-y-4">
+            {/* Business License */}
+            <div>
+              <label className="block text-sm font-medium text-[#1a3126] mb-2">Business License</label>
+              <input
+                type="text"
+                name="businessLicense"
+                value={formData.businessInfo.businessLicense}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(e, "businessInfo")}
+                disabled={!isEditing}
+                placeholder="Enter business license number"
+                className={`w-full px-4 py-2 border border-gray-300 rounded-lg ${
+                  isEditing
+                    ? "bg-white text-[#1a3126] focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent"
+                    : "bg-gray-100 text-gray-600 cursor-not-allowed"
+                }`}
+              />
+            </div>
+
+            {/* Tax ID */}
+            <div>
+              <label className="block text-sm font-medium text-[#1a3126] mb-2">Tax ID</label>
+              <input
+                type="text"
+                name="taxId"
+                value={formData.businessInfo.taxId}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(e, "businessInfo")}
+                disabled={!isEditing}
+                placeholder="Enter tax ID"
+                className={`w-full px-4 py-2 border border-gray-300 rounded-lg ${
+                  isEditing
+                    ? "bg-white text-[#1a3126] focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent"
+                    : "bg-gray-100 text-gray-600 cursor-not-allowed"
+                }`}
+              />
+            </div>
+
+            {/* Business Type */}
+            <div>
+              <label className="block text-sm font-medium text-[#1a3126] mb-2">Business Type</label>
+              <select
+                name="businessType"
+                value={formData.businessInfo.businessType}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleInputChange(e, "businessInfo")}
+                disabled={!isEditing}
+                className={`w-full px-4 py-2 border border-gray-300 rounded-lg ${
+                  isEditing
+                    ? "bg-white text-[#1a3126] focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent"
+                    : "bg-gray-100 text-gray-600 cursor-not-allowed"
+                }`}
+              >
+                <option value="">Select business type</option>
+                <option value="individual">Individual</option>
+                <option value="company">Company</option>
+                <option value="partnership">Partnership</option>
+              </select>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  )
+}
+
+
+// "use client"
+
+// import { useState, useEffect } from "react"
+// import Image from "next/image"
+// import { Button } from "@/components/ui/button"
+// import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+// import { Edit2, Save, X, Upload, Trash2 } from "lucide-react"
+
+// interface VendorProfile {
+//   id: string
+//   email: string
+//   storeName: string
+//   slug: string
+//   storeDescription: string
+//   status: string
+//   role: string
+//   contactInfo: {
+//     phone: string
+//     address: string
+//     city: string
+//     country: string
+//   }
+//   businessInfo: {
+//     businessLicense: string
+//     taxId: string
+//     businessType: string
+//   }
+//   storeLogo: {
+//     id: string
+//     url: string
+//     alt: string
+//     filename: string
+//   } | null
+//   createdAt: string
+//   updatedAt: string
+// }
+
+// const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"
+
+// export default function VendorProfilePage() {
+//   const [vendor, setVendor] = useState<VendorProfile | null>(null)
+//   const [loading, setLoading] = useState(true)
+//   const [error, setError] = useState<string | null>(null)
+//   const [isEditing, setIsEditing] = useState(false)
+//   const [isSaving, setIsSaving] = useState(false)
+//   const [logoPreview, setLogoPreview] = useState<string | null>(null)
+//   const [logoFile, setLogoFile] = useState<File | null>(null)
+
+//   // Form state
+//   const [formData, setFormData] = useState<VendorProfile>({
+//     id: "",
+//     email: "",
+//     storeName: "",
+//     slug: "",
+//     storeDescription: "",
+//     status: "pending",
+//     role: "vendor",
+//     contactInfo: {
+//       phone: "",
+//       address: "",
+//       city: "",
+//       country: "",
+//     },
+//     businessInfo: {
+//       businessLicense: "",
+//       taxId: "",
+//       businessType: "",
+//     },
+//     storeLogo: null,
+//     createdAt: "",
+//     updatedAt: "",
+//   })
+
+//   // FIXED: Use the correct token key that matches your backend
+//   const getAuthToken = (): string | null => {
+//     if (typeof window === "undefined") return null
+//     // Check for authToken first (as shown in your Application tab)
+//     const authToken = localStorage.getItem('authToken')
+//     if (authToken) return authToken
+    
+//     // Fallback to other possible keys
+//     const keys = ["vendor-token", "token", "jwt", "accessToken", "payload-token"]
+//     for (const key of keys) {
+//       const token = localStorage.getItem(key)
+//       if (token) return token
+//     }
+//     return null
+//   }
+
+//   // Fetch vendor profile
+//   const fetchVendorProfile = async () => {
+//     try {
+//       setLoading(true)
+//       setError(null)
+      
+//       const token = getAuthToken()
+
+//       if (!token) {
+//         setError("Not authenticated. Please log in as a vendor.")
+//         return
+//       }
+
+//       console.log('🔍 Fetching vendor profile...')
+//       console.log('🔑 Token found:', token ? 'Yes' : 'No')
+
+//       // FIXED: Use the correct endpoint format that matches your backend
+//       const response = await fetch(`${BACKEND_URL}/api/vendor/profile`, {
+//         method: 'GET',
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${token}`,
+//         },
+//       })
+
+//       console.log('📡 Response status:', response.status)
+
+//       if (!response.ok) {
+//         const errorData = await response.json().catch(() => ({}))
+//         console.error('❌ Error response:', errorData)
+//         throw new Error(errorData.error || errorData.message || `HTTP ${response.status}: Failed to fetch profile`)
+//       }
+
+//       const data = await response.json()
+//       console.log('✅ Profile fetched:', data)
+      
+//       // Handle both response formats: {vendor: ...} or direct profile object
+//       const profileData = data.vendor || data
+      
+//       setVendor(profileData)
+//       setFormData(profileData)
+      
+//       if (profileData.storeLogo?.url) {
+//         setLogoPreview(profileData.storeLogo.url)
+//       }
+//     } catch (err) {
+//       console.error('❌ Failed to fetch profile:', err)
+//       setError(err instanceof Error ? err.message : "Failed to load profile")
+//     } finally {
+//       setLoading(false)
+//     }
+//   }
+
+//   useEffect(() => {
+//     fetchVendorProfile()
+//   }, [])
+
+//   // Handle input changes
+//   const handleInputChange = (
+//     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+//     section?: "contactInfo" | "businessInfo"
+//   ) => {
+//     const { name, value } = e.target
+
+//     if (section) {
+//       setFormData((prev) => ({
+//         ...prev,
+//         [section]: {
+//           ...prev[section],
+//           [name]: value,
+//         },
+//       }))
+//     } else {
+//       setFormData((prev) => ({
+//         ...prev,
+//         [name]: value,
+//       }))
+//     }
+//   }
+
+//   // Handle logo upload
+//   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+//     const file = e.target.files?.[0]
+//     if (file) {
+//       // Validate file type
+//       const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/jpg']
+//       if (!allowedTypes.includes(file.type)) {
+//         setError('Invalid file type. Only JPEG, PNG, GIF, and WebP are allowed.')
+//         return
+//       }
+      
+//       // Validate file size (5MB max)
+//       const maxSize = 5 * 1024 * 1024
+//       if (file.size > maxSize) {
+//         setError('File too large. Maximum size is 5MB.')
+//         return
+//       }
+      
+//       setLogoFile(file)
+//       setError(null)
+      
+//       const reader = new FileReader()
+//       reader.onloadend = () => {
+//         setLogoPreview(reader.result as string)
+//       }
+//       reader.readAsDataURL(file)
+//     }
+//   }
+
+//   // Remove logo
+//   const handleRemoveLogo = () => {
+//     setLogoFile(null)
+//     setLogoPreview(null)
+//     setFormData((prev) => ({
+//       ...prev,
+//       storeLogo: null,
+//     }))
+//   }
+
+//   // Save changes
+//   const handleSave = async () => {
+//     try {
+//       setIsSaving(true)
+//       setError(null)
+      
+//       const token = getAuthToken()
+//       if (!token) {
+//         setError("Not authenticated")
+//         return
+//       }
+
+//       // Validate required fields
+//       if (!formData.storeName.trim()) {
+//         setError('Store name is required')
+//         return
+//       }
+
+//       let logoId = formData.storeLogo?.id || null
+
+//       // Upload logo if new file selected
+//       if (logoFile) {
+//         console.log('📤 Uploading logo...')
+        
+//         const formDataLogo = new FormData()
+//         formDataLogo.append("file", logoFile)
+
+//         const uploadRes = await fetch(`${BACKEND_URL}/api/upload`, {
+//           method: "POST",
+//           headers: {
+//             Authorization: `Bearer ${token}`, // FIXED: Changed from JWT to Bearer
+//           },
+//           body: formDataLogo,
+//         })
+
+//         if (uploadRes.ok) {
+//           const uploadData = await uploadRes.json()
+//           logoId = uploadData.id || uploadData.media?.id
+//           console.log('✅ Logo uploaded:', logoId)
+//         } else {
+//           const errorData = await uploadRes.json().catch(() => ({}))
+//           throw new Error(errorData.error || "Failed to upload logo")
+//         }
+//       }
+
+//       console.log('📝 Updating profile...')
+
+//       // FIXED: Use the correct update endpoint
+//       const response = await fetch(`${BACKEND_URL}/api/vendor/profile`, {
+//         method: "PUT",
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${token}`, // FIXED: Changed from JWT to Bearer
+//         },
+//         body: JSON.stringify({
+//           storeName: formData.storeName.trim(),
+//           storeDescription: formData.storeDescription.trim(),
+//           contactInfo: formData.contactInfo,
+//           businessInfo: formData.businessInfo,
+//           ...(logoId && { storeLogo: logoId }), // Send just the ID
+//         }),
+//       })
+
+//       if (!response.ok) {
+//         const data = await response.json().catch(() => ({}))
+//         throw new Error(data.error || data.message || "Failed to update profile")
+//       }
+
+//       const updatedData = await response.json()
+//       console.log('✅ Profile updated successfully')
+      
+//       const profileData = updatedData.vendor || updatedData
+//       setVendor(profileData)
+//       setFormData(profileData)
+//       setLogoFile(null)
+//       setIsEditing(false)
+      
+//       // Refresh to get latest data
+//       await fetchVendorProfile()
+      
+//     } catch (err) {
+//       console.error('❌ Failed to save profile:', err)
+//       setError(err instanceof Error ? err.message : "Failed to save profile")
+//     } finally {
+//       setIsSaving(false)
+//     }
+//   }
+
+//   if (loading) {
+//     return (
+//       <div className="min-h-screen bg-[#F2F0E5] py-8">
+//         <div className="max-w-4xl mx-auto px-4">
+//           <div className="text-center">
+//             <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-[#BB4E2C] mx-auto"></div>
+//             <p className="mt-4 text-[#1a3126]">Loading profile...</p>
+//           </div>
+//         </div>
+//       </div>
+//     )
+//   }
+
+//   if (error && !vendor) {
+//     return (
+//       <div className="min-h-screen bg-[#F2F0E5] py-8">
+//         <div className="max-w-4xl mx-auto px-4">
+//           <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+//             <p className="text-red-600 font-medium text-lg mb-2">Failed to load profile</p>
+//             <p className="text-red-500 text-sm">{error}</p>
+//             <button 
+//               onClick={fetchVendorProfile}
+//               className="mt-4 px-6 py-2 bg-[#BB4E2C] text-white rounded-lg hover:bg-[#A03D1F]"
+//             >
+//               Retry
+//             </button>
+//           </div>
+//         </div>
+//       </div>
+//     )
+//   }
+
+//   return (
+//     <div className="min-h-screen bg-[#F2F0E5] py-8 px-4 sm:px-6 lg:px-8">
+//       <div className="max-w-4xl mx-auto">
+//         {/* Header */}
+//         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+//           <h1 className="text-3xl sm:text-4xl font-bold text-[#1a3126]">Store Profile</h1>
+//           {!isEditing ? (
+//             <Button
+//               onClick={() => setIsEditing(true)}
+//               className="bg-[#BB4E2C] hover:bg-[#A03D1F] text-white rounded-lg flex items-center gap-2 px-6 py-2 w-full sm:w-auto justify-center"
+//             >
+//               <Edit2 size={18} />
+//               Edit Profile
+//             </Button>
+//           ) : (
+//             <div className="flex gap-2 flex-col sm:flex-row w-full sm:w-auto">
+//               <Button
+//                 onClick={handleSave}
+//                 disabled={isSaving}
+//                 className="bg-[#1a3126] hover:bg-[#0f1f16] text-white rounded-lg flex items-center gap-2 px-6 py-2 justify-center flex-1"
+//               >
+//                 <Save size={18} />
+//                 {isSaving ? "Saving..." : "Save"}
+//               </Button>
+//               <Button
+//                 onClick={() => {
+//                   setIsEditing(false)
+//                   setFormData(vendor!)
+//                   setLogoFile(null)
+//                   setLogoPreview(vendor?.storeLogo?.url || null)
+//                   setError(null)
+//                 }}
+//                 className="bg-gray-400 hover:bg-gray-500 text-white rounded-lg flex items-center gap-2 px-6 py-2 justify-center flex-1"
+//               >
+//                 <X size={18} />
+//                 Cancel
+//               </Button>
+//             </div>
+//           )}
+//         </div>
+
+//         {/* Error Message */}
+//         {error && (
+//           <div className="mb-6 p-4 rounded-lg bg-red-100 text-red-700 border border-red-300">
+//             {error}
+//           </div>
+//         )}
+
+//         {/* Store Logo Section */}
+//         <Card className="mb-6 rounded-lg border-0 shadow-md">
+//           <CardHeader className="bg-[#1a3126] text-white rounded-t-lg">
+//             <CardTitle>Store Logo</CardTitle>
+//           </CardHeader>
+//           <CardContent className="p-6">
+//             <div className="flex flex-col sm:flex-row gap-6 items-start">
+//               {/* Logo Preview */}
+//               <div className="w-full sm:w-40 h-40 rounded-lg border-2 border-gray-300 flex items-center justify-center bg-gray-50 shrink-0">
+//                 {logoPreview ? (
+//                   <Image
+//                     src={logoPreview}
+//                     alt="Store Logo"
+//                     width={160}
+//                     height={160}
+//                     className="w-full h-full object-contain p-2"
+//                   />
+//                 ) : (
+//                   <div className="text-center text-gray-400">
+//                     <Upload size={32} className="mx-auto mb-2" />
+//                     <p className="text-sm">No logo</p>
+//                   </div>
+//                 )}
+//               </div>
+
+//               {/* Upload Section */}
+//               {isEditing && (
+//                 <div className="flex-1 space-y-3">
+//                   <label className="flex items-center justify-center w-full px-4 py-6 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-[#BB4E2C] transition-colors">
+//                     <div className="text-center">
+//                       <Upload className="mx-auto h-8 w-8 text-gray-400 mb-2" />
+//                       <p className="text-sm text-gray-600">Click to upload logo</p>
+//                       <p className="text-xs text-gray-500">PNG, JPG up to 5MB</p>
+//                     </div>
+//                     <input
+//                       type="file"
+//                       accept="image/*"
+//                       onChange={handleLogoUpload}
+//                       className="hidden"
+//                     />
+//                   </label>
+
+//                   {logoPreview && (
+//                     <Button
+//                       onClick={handleRemoveLogo}
+//                       className="w-full bg-red-600 hover:bg-red-700 text-white rounded-lg flex items-center gap-2 justify-center py-2"
+//                     >
+//                       <Trash2 size={18} />
+//                       Remove Logo
+//                     </Button>
+//                   )}
+//                 </div>
+//               )}
+//             </div>
+//           </CardContent>
+//         </Card>
+
+//         {/* Store Information */}
+//         <Card className="mb-6 rounded-lg border-0 shadow-md">
+//           <CardHeader className="bg-[#1a3126] text-white rounded-t-lg">
+//             <CardTitle>Store Information</CardTitle>
+//           </CardHeader>
+//           <CardContent className="p-6 space-y-4">
+//             {/* Store Name */}
+//             <div>
+//               <label className="block text-sm font-medium text-[#1a3126] mb-2">Store Name</label>
+//               <input
+//                 type="text"
+//                 name="storeName"
+//                 value={formData.storeName}
+//                 onChange={handleInputChange}
+//                 disabled={!isEditing}
+//                 className={`w-full px-4 py-2 border border-gray-300 rounded-lg ${
+//                   isEditing
+//                     ? "bg-white text-[#1a3126] focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent"
+//                     : "bg-gray-100 text-gray-600 cursor-not-allowed"
+//                 }`}
+//               />
+//             </div>
+
+//             {/* Store Slug (Read-only) */}
+//             <div>
+//               <label className="block text-sm font-medium text-[#1a3126] mb-2">Store URL Slug</label>
+//               <input
+//                 type="text"
+//                 value={formData.slug}
+//                 disabled
+//                 className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
+//               />
+//             </div>
+
+//             {/* Store Description */}
+//             <div>
+//               <label className="block text-sm font-medium text-[#1a3126] mb-2">Store Description</label>
+//               <textarea
+//                 name="storeDescription"
+//                 value={formData.storeDescription}
+//                 onChange={handleInputChange}
+//                 disabled={!isEditing}
+//                 rows={4}
+//                 className={`w-full px-4 py-2 border border-gray-300 rounded-lg resize-none ${
+//                   isEditing
+//                     ? "bg-white text-[#1a3126] focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent"
+//                     : "bg-gray-100 text-gray-600 cursor-not-allowed"
+//                 }`}
+//                 placeholder="Describe your store..."
+//               />
+//             </div>
+
+//             {/* Status (Read-only) */}
+//             <div>
+//               <label className="block text-sm font-medium text-[#1a3126] mb-2">Account Status</label>
+//               <div className="px-4 py-2 bg-gray-100 rounded-lg text-[#1a3126] capitalize font-medium inline-block">
+//                 {formData.status}
+//               </div>
+//             </div>
+//           </CardContent>
+//         </Card>
+
+//         {/* Contact Information */}
+//         <Card className="mb-6 rounded-lg border-0 shadow-md">
+//           <CardHeader className="bg-[#1a3126] text-white rounded-t-lg">
+//             <CardTitle>Contact Information</CardTitle>
+//           </CardHeader>
+//           <CardContent className="p-6 space-y-4">
+//             {/* Phone */}
+//             <div>
+//               <label className="block text-sm font-medium text-[#1a3126] mb-2">Phone Number</label>
+//               <input
+//                 type="tel"
+//                 name="phone"
+//                 value={formData.contactInfo.phone}
+//                 onChange={(e) => handleInputChange(e, "contactInfo")}
+//                 disabled={!isEditing}
+//                 placeholder="Enter phone number"
+//                 className={`w-full px-4 py-2 border border-gray-300 rounded-lg ${
+//                   isEditing
+//                     ? "bg-white text-[#1a3126] focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent"
+//                     : "bg-gray-100 text-gray-600 cursor-not-allowed"
+//                 }`}
+//               />
+//             </div>
+
+//             {/* Address */}
+//             <div>
+//               <label className="block text-sm font-medium text-[#1a3126] mb-2">Business Address</label>
+//               <textarea
+//                 name="address"
+//                 value={formData.contactInfo.address}
+//                 onChange={(e) => handleInputChange(e, "contactInfo")}
+//                 disabled={!isEditing}
+//                 rows={3}
+//                 placeholder="Enter your business address"
+//                 className={`w-full px-4 py-2 border border-gray-300 rounded-lg resize-none ${
+//                   isEditing
+//                     ? "bg-white text-[#1a3126] focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent"
+//                     : "bg-gray-100 text-gray-600 cursor-not-allowed"
+//                 }`}
+//               />
+//             </div>
+
+//             {/* City and Country */}
+//             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+//               <div>
+//                 <label className="block text-sm font-medium text-[#1a3126] mb-2">City</label>
+//                 <input
+//                   type="text"
+//                   name="city"
+//                   value={formData.contactInfo.city}
+//                   onChange={(e) => handleInputChange(e, "contactInfo")}
+//                   disabled={!isEditing}
+//                   placeholder="Enter city"
+//                   className={`w-full px-4 py-2 border border-gray-300 rounded-lg ${
+//                     isEditing
+//                       ? "bg-white text-[#1a3126] focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent"
+//                       : "bg-gray-100 text-gray-600 cursor-not-allowed"
+//                   }`}
+//                 />
+//               </div>
+
+//               <div>
+//                 <label className="block text-sm font-medium text-[#1a3126] mb-2">Country</label>
+//                 <input
+//                   type="text"
+//                   name="country"
+//                   value={formData.contactInfo.country}
+//                   onChange={(e) => handleInputChange(e, "contactInfo")}
+//                   disabled={!isEditing}
+//                   placeholder="Enter country"
+//                   className={`w-full px-4 py-2 border border-gray-300 rounded-lg ${
+//                     isEditing
+//                       ? "bg-white text-[#1a3126] focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent"
+//                       : "bg-gray-100 text-gray-600 cursor-not-allowed"
+//                   }`}
+//                 />
+//               </div>
+//             </div>
+//           </CardContent>
+//         </Card>
+
+//         {/* Additional Information */}
+//         <Card className="rounded-lg border-0 shadow-md">
+//           <CardHeader className="bg-[#1a3126] text-white rounded-t-lg">
+//             <CardTitle>Business Information</CardTitle>
+//           </CardHeader>
+//           <CardContent className="p-6 space-y-4">
+//             {/* Business License */}
+//             <div>
+//               <label className="block text-sm font-medium text-[#1a3126] mb-2">Business License</label>
+//               <input
+//                 type="text"
+//                 name="businessLicense"
+//                 value={formData.businessInfo.businessLicense}
+//                 onChange={(e) => handleInputChange(e, "businessInfo")}
+//                 disabled={!isEditing}
+//                 placeholder="Enter business license number"
+//                 className={`w-full px-4 py-2 border border-gray-300 rounded-lg ${
+//                   isEditing
+//                     ? "bg-white text-[#1a3126] focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent"
+//                     : "bg-gray-100 text-gray-600 cursor-not-allowed"
+//                 }`}
+//               />
+//             </div>
+
+//             {/* Tax ID */}
+//             <div>
+//               <label className="block text-sm font-medium text-[#1a3126] mb-2">Tax ID</label>
+//               <input
+//                 type="text"
+//                 name="taxId"
+//                 value={formData.businessInfo.taxId}
+//                 onChange={(e) => handleInputChange(e, "businessInfo")}
+//                 disabled={!isEditing}
+//                 placeholder="Enter tax ID"
+//                 className={`w-full px-4 py-2 border border-gray-300 rounded-lg ${
+//                   isEditing
+//                     ? "bg-white text-[#1a3126] focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent"
+//                     : "bg-gray-100 text-gray-600 cursor-not-allowed"
+//                 }`}
+//               />
+//             </div>
+
+//             {/* Business Type */}
+//             <div>
+//               <label className="block text-sm font-medium text-[#1a3126] mb-2">Business Type</label>
+//               <select
+//                 name="businessType"
+//                 value={formData.businessInfo.businessType}
+//                 onChange={(e) => handleInputChange(e, "businessInfo")}
+//                 disabled={!isEditing}
+//                 className={`w-full px-4 py-2 border border-gray-300 rounded-lg ${
+//                   isEditing
+//                     ? "bg-white text-[#1a3126] focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent"
+//                     : "bg-gray-100 text-gray-600 cursor-not-allowed"
+//                 }`}
+//               >
+//                 <option value="">Select business type</option>
+//                 <option value="individual">Individual</option>
+//                 <option value="company">Company</option>
+//                 <option value="partnership">Partnership</option>
+//               </select>
+//             </div>
+//           </CardContent>
+//         </Card>
+//       </div>
+//     </div>
+//   )
+// }

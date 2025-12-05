@@ -2,23 +2,12 @@
 
 import { ShoppingCart } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useCart } from '@/hooks/use-cart'
-
-interface AddToCartButtonProps {
-    id: string | number
-    name: string
-    price: number
-    image: string
-    slug?: string
-    quantity: number
-    color?: string
-    inStock: boolean
-    variant?: 'default' | 'hover'
-}
+import { useBackendCart } from '@/hooks/use-backend-cart'
+import type { AddToCartButtonProps } from '@/lib/Types'
 
 export function AddToCartButton({
     id,
-    name,
+    title,
     price,
     image,
     slug,
@@ -27,23 +16,17 @@ export function AddToCartButton({
     inStock,
     variant = 'default',
 }: AddToCartButtonProps) {
-    const { addToCart } = useCart()
+    const { addToCart, loading } = useBackendCart()
 
-    const handleAddToCart = (e: React.MouseEvent) => {
+    const handleAddToCart = async (e: React.MouseEvent) => {
         e.preventDefault()
         e.stopPropagation()
 
-        if (inStock) {
-            addToCart({
-                id,
-                name,
-                price,
-                image,
-                slug,
-                quantity,
-                color,
-                inStock,
-            })
+        if (inStock && id) {
+            const success = await addToCart(String(id), quantity)
+            if (success) {
+                console.log('Item added to cart successfully')
+            }
         }
     }
 
@@ -51,11 +34,11 @@ export function AddToCartButton({
         return (
             <Button
                 onClick={handleAddToCart}
-                disabled={!inStock}
+                disabled={!inStock || loading}
                 className="w-full bg-foreground text-background hover:bg-foreground/90 rounded-full py-2 text-sm font-semibold flex items-center justify-center gap-2"
             >
                 <ShoppingCart className="h-4 w-4" />
-                Add to Cart
+                {loading ? 'Adding...' : 'Add to Cart'}
             </Button>
         )
     }
@@ -63,11 +46,11 @@ export function AddToCartButton({
     return (
         <Button
             onClick={handleAddToCart}
-            disabled={!inStock}
+            disabled={!inStock || loading}
             className="flex-1 bg-foreground text-background hover:bg-foreground/90 rounded-full py-6 text-base font-semibold flex items-center justify-center gap-2"
         >
             <ShoppingCart className="h-5 w-5" />
-            {inStock ? 'Add to Cart' : 'Out of Stock'}
+            {loading ? 'Adding...' : inStock ? 'Add to Cart' : 'Out of Stock'}
         </Button>
     )
 }

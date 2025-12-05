@@ -1,19 +1,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Card, CardContent } from "@/components/ui/card"
-
-interface RelatedProduct {
-    id: string
-    slug: string
-    title: string
-    price: number
-    image: string
-    inStock: boolean
-}
-
-interface RelatedProductsProps {
-    products: RelatedProduct[]
-}
+import type { RelatedProductsProps } from "@/lib/Types"
 
 export function RelatedProducts({ products }: RelatedProductsProps) {
     return (

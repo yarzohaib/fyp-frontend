@@ -139,48 +139,16 @@
 
 import type React from "react"
 import { createContext, useContext, useState, useEffect } from "react"
+import type {
+    UserRole,
+    UserStatus,
 
-export type UserRole = "customer" | "vendor"
-export type UserStatus = "approved" | "pending" | "rejected"
+    AuthUser,
+    AuthContextType,
+} from "@/lib/Types"
+import { loginUser, signupUser } from "@/lib/payload"
 
-interface SignupBaseBody {
-    email: string
-    password: string
-    name: string
-}
-
-type SignupRequestBody =
-    | SignupBaseBody
-    | (SignupBaseBody & {
-        role: "vendor"
-        status: UserStatus
-        storeName?: string
-        storeDescription?: string
-    })
-
-export interface AuthUser {
-    id: string
-    email: string
-    role: UserRole
-    name: string
-    status: UserStatus
-}
-
-interface AuthContextType {
-    user: AuthUser | null
-    token: string | null
-    isLoading: boolean
-    login: (email: string, password: string, role: UserRole) => Promise<void>
-    signup: (
-        email: string,
-        password: string,
-        name: string,
-        role: UserRole,
-        vendorData?: { storeName: string; storeDescription: string },
-    ) => Promise<void>
-    logout: () => void
-    isAuthenticated: boolean
-}
+export type { UserRole, UserStatus, AuthUser }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
@@ -229,20 +197,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         try {
             setIsLoading(true)
 
-            const response = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/api/${role}/login`,
-                {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ email, password }),
-                },
-            )
-
-            if (!response.ok) {
-                throw new Error("Login failed")
-            }
-
-            const data = await response.json()
+            const data = await loginUser(email, password, role)
             setToken(data.token)
             setUser(data.user)
             localStorage.setItem("authToken", data.token)
@@ -263,34 +218,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         try {
             setIsLoading(true)
 
-            let body: SignupRequestBody = { email, password, name }
-
-            if (role === "vendor") {
-                body = {
-                    ...body,
-                    role: "vendor",          // REQUIRED
-                    status: "pending",        // REQUIRED
-                    storeName: vendorData?.storeName,
-                    storeDescription: vendorData?.storeDescription,
-                }
-            }
-
-            const response = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/api/${role}/register`,
-                {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(body),
-                },
-            )
-
-            if (!response.ok) {
-                const error = await response.json().catch(() => null)
-                throw new Error(error?.message || "Signup failed")
-            }
-
-            const data = await response.json()
-
+            const data = await signupUser(email, password, name, role, vendorData)
             setToken(data.token)
             setUser(data.user)
 

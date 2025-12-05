@@ -11,7 +11,7 @@ export function Footer() {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
                     {/* Brand */}
                     <div>
-                        <Image src="/logo.webp" alt="DOMA" width={100} height={40} className="h-10 w-auto mb-4" />
+                        <Image src="/NavbarLogo.webp" alt="DOMA" width={100} height={40} className="h-10 w-auto mb-4" />
                         <p className="text-sm text-background/70">Discover beautiful furniture and home decor for your space.</p>
                     </div>
 

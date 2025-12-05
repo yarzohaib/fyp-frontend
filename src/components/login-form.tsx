@@ -5,12 +5,9 @@ import type React from "react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { useAuth, type UserRole } from "@/contexts/auth-context"
+import { useAuth } from "@/contexts/auth-context"
 import { Button } from "@/components/ui/button"
-
-interface LoginFormProps {
-    role: UserRole
-}
+import type { LoginFormProps } from "@/lib/Types"
 
 export function LoginForm({ role }: LoginFormProps) {
     const [email, setEmail] = useState("")
