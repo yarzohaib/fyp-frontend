@@ -572,16 +572,12 @@ export async function updateOrderStatus(
             clearOrdersCache();
             return true;
         }
-        return false;
+        return false;   
     } catch (err) {
         console.error("Error updating order status:", err);
         return false;
     }
 }
-
-// ============================================================================
-// Customer Profile Functions
-// ============================================================================
 
 /**
  * Fetch customer profile
@@ -726,10 +722,6 @@ export async function fetchCustomerOrders(
     }
 }
 
-// ============================================================================
-// Checkout Functions
-// ============================================================================
-
 /**
  * Fetch cart for current user
  */
@@ -743,7 +735,7 @@ export async function fetchUserCart(): Promise<Cart | null> {
     }
 
     try {
-        const response = await fetch(`${BASE_URL}/api/cart`, {
+        const response = await fetch(`${BASE_URL}/api/customer/cart`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `JWT ${token}`,
@@ -777,6 +769,11 @@ export async function processCheckout(
     }
 
     try {
+        console.log('=== CHECKOUT DEBUG ===');
+        console.log('Full checkout data:', JSON.stringify(checkoutData, null, 2));
+        console.log('Shipping address:', checkoutData.shippingAddress);
+        console.log('Items count:', checkoutData.items?.length);
+        
         const response = await fetch(`${BASE_URL}/api/customer/checkout`, {
             method: 'POST',
             headers: {
@@ -786,12 +783,24 @@ export async function processCheckout(
             body: JSON.stringify(checkoutData),
         });
 
+        console.log('Response status:', response.status);
+        console.log('Response headers:', response.headers);
+
+        const responseText = await response.text();
+        console.log('Raw response:', responseText);
+
         if (!response.ok) {
-            const errorData = await response.json().catch(() => ({}));
+            let errorData;
+            try {
+                errorData = JSON.parse(responseText);
+            } catch {
+                errorData = { error: responseText };
+            }
+            console.error('Checkout error response:', errorData);
             throw new Error(errorData.error || `Failed to process checkout: ${response.status}`);
         }
 
-        return response.json();
+        return JSON.parse(responseText);
     } catch (error) {
         console.error("Error processing checkout:", error);
         throw error;

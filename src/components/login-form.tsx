@@ -25,7 +25,7 @@ export function LoginForm({ role }: LoginFormProps) {
 
         try {
             await login(email, password, role)
-            const redirectPath = role === "vendor" ? "/products" : "/"
+            const redirectPath = role === "vendor" ? "/dashboard" : "/products"
             router.push(redirectPath)
         } catch (err) {
             setError(err instanceof Error ? err.message : "Login failed. Please try again.")

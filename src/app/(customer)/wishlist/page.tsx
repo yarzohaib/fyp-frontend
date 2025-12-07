@@ -3,15 +3,15 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { ChevronLeft } from 'lucide-react'
-import { Footer } from '@/components/footer'
+//import { Footer } from '@/components/footer'
 import { Button } from '@/components/ui/button'
 import { useWishlist } from '@/hooks/use-wishlist'
 import { ProductCard } from '@/components/product-card'
-import Navbar2 from '@/components/navbar2'
+//import Navbar2 from '@/components/navbar2'
 import type { WishlistItem } from '@/lib/Types'
 
 export default function WishlistPage() {
-    const { wishlist, removeFromWishlist } = useWishlist()
+    const { wishlist } = useWishlist()
     const [mounted, setMounted] = useState(false)
 
     useEffect(() => {
@@ -24,7 +24,7 @@ export default function WishlistPage() {
 
     return (
         <div className="min-h-screen bg-background flex flex-col">
-            <Navbar2 />
+            {/* <Navbar2 /> */}
 
             <main className="flex-1 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 w-full">
                 {/* Breadcrumb */}
@@ -88,7 +88,7 @@ export default function WishlistPage() {
                 )}
             </main>
 
-            <Footer />
+            {/* <Footer /> */}
         </div>
     )
 }

@@ -57,7 +57,7 @@ export function ProductGallery({ images }: ProductGalleryProps) {
                         <button
                             key={index}
                             onClick={() => setSelectedIndex(index)}
-                            className={`relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg border-2 transition-colors ${selectedIndex === index ? "border-accent" : "border-border"
+                            className={`relative h-20 w-20 shrink-0 overflow-hidden rounded-lg border-2 transition-colors ${selectedIndex === index ? "border-accent" : "border-border"
                                 }`}
                         >
                             <Image src={image.url || "/placeholder.svg"} alt={image.alt} fill className="object-cover" />

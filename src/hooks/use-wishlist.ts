@@ -1,17 +1,12 @@
 'use client'
 
 import { useState, useEffect } from 'react';
+import type { ProductItem } from '@/lib/Types';
 
-export interface WishlistItem {
-    id: string | number;
-    name: string;
-    price: number;
-    image: string;
-    slug?: string;
-}
+export type { ProductItem };
 
 export function useWishlist() {
-    const [wishlist, setWishlist] = useState<WishlistItem[]>([]);
+    const [wishlist, setWishlist] = useState<ProductItem[]>([]);
     const [mounted, setMounted] = useState(false);
 
     //Loading wishlist from local storage
@@ -31,7 +26,7 @@ export function useWishlist() {
     }, [wishlist, mounted]);
 
     //Adding a product to the wishlist
-    const addToWishlist = (item: WishlistItem) => {
+    const addToWishlist = (item: ProductItem) => {
         setWishlist((prev) => {
             const exists = prev.some((w) => w.id === item.id);
             if (exists) {
@@ -46,7 +41,7 @@ export function useWishlist() {
     const isInWishlist = (id: string | number) => {
         return wishlist.some((w) => w.id === id);
     }
-    const toggleWishlist = (item: WishlistItem) => {
+    const toggleWishlist = (item: ProductItem) => {
         if (isInWishlist(item.id)) {
             removeFromWishlist(item.id);
         } else {

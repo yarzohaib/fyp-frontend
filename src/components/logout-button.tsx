@@ -55,8 +55,8 @@ export function LogoutButton() {
     return (
         <Button
             onClick={handleLogout}
-            className="bg-[#1a3126] text-white px-5 py-2.5 rounded-lg font-semibold 
-                     hover:bg-[#27493a] transition-all duration-300 
+            className="bg-[#BB4E2C] text-white px-5 py-2.5 rounded-lg font-semibold 
+                     hover:bg-orange-500 transition-all duration-300 
                      shadow-sm hover:shadow-md transform hover:-translate-y-0.5
                      flex items-center gap-2"
         >

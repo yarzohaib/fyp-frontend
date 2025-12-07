@@ -34,7 +34,6 @@
 //     );
 // }
 
-
 import Image from "next/image";
 
 export default function Hero() {
@@ -52,7 +51,7 @@ export default function Hero() {
 
             {/* Desktop Background Image */}
             <Image
-                src="/Hero2.2.jpg"
+                src="/test.jpg"
                 alt="Hero Background"
                 fill
                 priority
@@ -60,18 +59,15 @@ export default function Hero() {
                 quality={90}
             />
 
-            {/* Gradient Overlay for better text visibility */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent md:bg-gradient-to-r md:from-black/50 md:via-black/20 md:to-transparent" />
-
             {/* Hero Content */}
-            <div className="relative h-full container mx-auto max-w-7xl px-6 md:px-10 lg:px-12">
-                <div className="h-full flex flex-col justify-end md:justify-end-safe pb-16 md:pb-20 lg:pb-24">
+            <div className="relative h-full container mx-auto max-w-7xl px-6 md:px-10 lg:px-6">
+                <div className="h-full flex flex-col justify-start md:justify-start pt-16 md:pt-20 lg:pt-24">
                     <div className="max-w-2xl">
-                        <h1 className="text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-4">
+                        <h1 className="text-[#F2F0E5] text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif font-medium leading-tight mb-4">
                             Design &amp; Buy
                         </h1>
-                        <p className="text-white/90 text-lg sm:text-xl md:text-2xl font-light max-w-xl">
-                            Discover unparalleled designs crafted for you
+                        <p className="text-[#BB4E2C] text-lg font-bold tracking-[0.3em]">
+                            Discover unparalleled <br/>designs crafted for you
                         </p>
                     </div>
                 </div>

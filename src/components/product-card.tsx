@@ -195,7 +195,7 @@ export function ProductCard({
 
     return (
         <Link href={href}>
-            <Card className="group overflow-hidden border-0 rounded-none transition-shadow duration-300">
+            <Card className="group overflow-hidden border-0 rounded-xl transition-shadow duration-300">
                 <CardContent className="p-0">
                     <div className="relative aspect-square overflow-hidden bg-secondary/20">
                         <Image

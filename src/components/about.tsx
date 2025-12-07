@@ -3,10 +3,10 @@ import Link from "next/link";
 
 export default function AboutSection() {
     return (
-        <div className="relative h-[400px] md:h-[450px] lg:h-[500px] w-full overflow-hidden rounded-none">
+        <div className="relative h-[400px] md:h-[450px] lg:h-[500px] w-full overflow-hidden rounded-2xl">
             {/* Background Image */}
             <Image
-                src="/about.webp"
+                src="/aboutORG.webp"
                 alt="About Doma"
                 fill
                 className="object-cover"
@@ -19,7 +19,7 @@ export default function AboutSection() {
             {/* Content Card */}
             <div className="absolute inset-0 flex items-center">
                 <div className="ml-6 md:ml-12 lg:ml-16 max-w-md">
-                    <div className="bg-[#BB4E2C] p-8 md:p-10 rounded-lg shadow-2xl">
+                    <div className="bg-[#1a3126] p-8 md:p-10 rounded-lg shadow-2xl">
                         <h2 className="text-white text-3xl md:text-4xl font-bold mb-4">
                             About Doma
                         </h2>

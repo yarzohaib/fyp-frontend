@@ -1,6 +1,6 @@
 import AboutSection from "@/components/about"
 import { FeaturedCarousel } from "@/components/featured-carousel"
-import { Footer } from "@/components/footer"
+//import { Footer } from "@/components/footer"
 import Hero from "@/components/Hero"
 import Navbar from "@/components/navbar"
 
@@ -49,20 +49,20 @@ export default async function Home() {
       <Hero />
 
       {/* Featured Products Section */}
-      <section className="bg-[#F2F0E5] py-12 md:py-16">
+      <section className="bg-[#E6E4DF] py-12 md:py-16">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
           <FeaturedCarousel products={carouselProducts} />
         </div>
       </section>
 
       {/* About Section */}
-      <section className="bg-[#F2F0E5] py-12 md:py-16">
+      <section className="bg-[#E6E4DF] py-12 md:py-16">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
           <AboutSection />
         </div>
       </section>
 
-      <Footer />
+      {/* <Footer /> */}
     </main>
   )
 }

@@ -1,3 +1,4 @@
+// mobile-sidebar.tsx
 import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import Sidebar from "./sidebar";
@@ -7,9 +8,9 @@ export default function MobileSidebar() {
     <div className="lg:hidden p-4">
       <Sheet>
         <SheetTrigger>
-          <Menu size={28} />
+          <Menu size={28} style={{ color: '#1A3126' }} />
         </SheetTrigger>
-        <SheetContent side="left" className="w-64 p-0">
+        <SheetContent side="left" className="w-64 p-0" style={{ backgroundColor: '#1A3126' }}>
           <Sidebar />
         </SheetContent>
       </Sheet>

@@ -17,16 +17,7 @@ import type {
 } from '@/lib/Types'
 import Link from 'next/link'
 
-// Generate metadata for SEO
-export async function generateMetadata() {
-    return {
-        title: 'My Profile - Account Settings',
-        description:
-            'Manage your account profile, update personal information, view your order history, and manage your preferences.',
-        keywords:
-            'profile, account settings, order history, personal information, customer account',
-    }
-}
+
 
 export default function CustomerProfilePage() {
     const { isAuthenticated, user } = useAuth()
@@ -188,7 +179,7 @@ export default function CustomerProfilePage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+            <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#F2F0E5' }}>
                 <div className="text-center">
                     <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600"></div>
                     <p className="mt-4 text-gray-600">Loading your profile...</p>
@@ -199,7 +190,7 @@ export default function CustomerProfilePage() {
 
     if (!profile) {
         return (
-            <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+            <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#F2F0E5' }}>
                 <div className="text-center">
                     <p className="text-gray-600">Unable to load profile. Please try again.</p>
                 </div>
@@ -208,11 +199,11 @@ export default function CustomerProfilePage() {
     }
 
     return (
-        <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 py-8 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8" style={{ backgroundColor: '#F2F0E5' }}>
             <div className="max-w-4xl mx-auto">
                 {/* Header */}
                 <div className="mb-8">
-                    <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">My Profile</h1>
+                    <h1 className="text-3xl sm:text-4xl font-serif font-medium text-gray-900">My Profile</h1>
                     <p className="text-gray-600 mt-2">Manage your account settings and view your orders</p>
                 </div>
 
@@ -408,7 +399,7 @@ export default function CustomerProfilePage() {
                                                     })}
                                                 </td>
                                                 <td className="py-4 px-4 text-gray-900 font-semibold">
-                                                    ${order.total.toFixed(2)}
+                                                    Rs. {order.total.toFixed(2)}
                                                 </td>
                                                 <td className="py-4 px-4">
                                                     <span
@@ -507,12 +498,12 @@ export default function CustomerProfilePage() {
                                 </button>
                             </div>
 
-                            <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                            {/* <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
                                 <p className="text-sm text-blue-800">
                                     💡 <strong>Tip:</strong> Use a strong password with a mix of uppercase,
                                     lowercase, numbers, and special characters for better security.
                                 </p>
-                            </div>
+                            </div> */}
                         </form>
                     </div>
                 )}

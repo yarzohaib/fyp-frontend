@@ -286,6 +286,7 @@ export interface ShippingAddress {
     street: string;
     city: string;
     country: string;
+    state: string;
     phone?: string;
 }
 
@@ -396,6 +397,7 @@ export interface CustomerProfileResponse {
 // ============================================================================
 
 export interface CheckoutItem {
+    lineTotal: number;
     product: string;
     productTitle: string;
     vendor?: string;
@@ -416,13 +418,17 @@ export interface CheckoutShippingAddress {
 }
 
 export interface CheckoutRequest {
-    shippingAddress?: CheckoutShippingAddress;
-    billingAddress?: CheckoutShippingAddress;
-    paymentMethod: string;
-    paymentStatus?: string;
-    paymentId?: string;
-    tax?: number;
-    shippingCost?: number;
+    items?: Array<{
+        product: string
+        quantity: number
+        unitPrice: number
+        lineTotal: number
+    }>
+    shippingAddress: CheckoutShippingAddress
+    paymentMethod: string
+    paymentStatus: string
+    shippingCost: number
+    tax: number
 }
 
 export interface CheckoutResponse {
@@ -472,7 +478,7 @@ export interface ActiveFilters {
 }
 
 // ============================================================================
-// Grid Component Types
+// Product Grid Types
 // ============================================================================
 
 export interface ProductsGridProps {

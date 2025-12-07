@@ -78,7 +78,7 @@ export function FeaturedCarousel({ products }: FeaturedCarouselProps) {
                                         href={`/products/${product.slug || product.id}`}
                                         className="block"
                                     >
-                                        <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 h-full border-0 rounded-none group">
+                                        <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 h-full border-0 rounded-xl group">
                                             <CardContent className="p-0">
                                                 <div className="relative aspect-square bg-gray-100 overflow-hidden">
                                                     <Image

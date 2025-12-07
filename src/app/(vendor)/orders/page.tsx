@@ -9,13 +9,16 @@ import type { Order } from "@/lib/Types";
 import { Mail, MapPin, Package, Calendar, Loader2 } from "lucide-react";
 
 const ORDER_STATUS_OPTIONS = [
-  { label: "Pending", value: "pending", color: "bg-yellow-100 text-yellow-800" },
-  { label: "Paid", value: "paid", color: "bg-blue-100 text-blue-800" },
-  { label: "Processing", value: "processing", color: "bg-purple-100 text-purple-800" },
-  { label: "Shipped", value: "shipped", color: "bg-cyan-100 text-cyan-800" },
-  { label: "Delivered", value: "delivered", color: "bg-green-100 text-green-800" },
-  { label: "Cancelled", value: "cancelled", color: "bg-red-100 text-red-800" },
-];
+  { label: "Pending", value: "pending" },
+  { label: "Delivered", value: "delivered" },
+  { label: "Cancelled", value: "cancelled" },
+] as Array<{ label: string; value: string }>;
+
+const STATUS_COLORS: Record<string, string> = {
+  pending: "bg-yellow-100 text-yellow-800",
+  delivered: "bg-green-100 text-green-800",
+  cancelled: "bg-red-100 text-red-800",
+};
 
 export default function VendorOrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -66,10 +69,11 @@ export default function VendorOrdersPage() {
       : orders.filter((order) => order.orderStatus === filter);
 
   const getStatusColor = (status: string) => {
-    return (
-      ORDER_STATUS_OPTIONS.find((opt) => opt.value === status)?.color ||
-      "bg-gray-100 text-gray-800"
-    );
+    return STATUS_COLORS[status] || "bg-gray-100 text-gray-800";
+  };
+
+  const getStatusLabel = (status: string) => {
+    return ORDER_STATUS_OPTIONS.find((opt) => opt.value === status)?.label || status;
   };
 
   return (
@@ -103,18 +107,18 @@ export default function VendorOrdersPage() {
             </CardContent>
           </Card>
 
-          {["pending", "processing", "delivered"].map((status) => (
-            <Card key={status} className="rounded-xl shadow-sm">
+          {ORDER_STATUS_OPTIONS.map((status) => (
+            <Card key={status.value} className="rounded-xl shadow-sm">
               <CardContent className="pt-6">
                 <div className="text-center">
                   <div
                     className="text-3xl font-bold mb-2"
                     style={{ color: "#1A3126" }}
                   >
-                    {orders.filter((o) => o.orderStatus === status).length}
+                    {orders.filter((o) => o.orderStatus === status.value).length}
                   </div>
                   <p className="text-sm" style={{ color: "#666" }}>
-                    {status.charAt(0).toUpperCase() + status.slice(1)}
+                    {status.label}
                   </p>
                 </div>
               </CardContent>
@@ -204,8 +208,7 @@ export default function VendorOrdersPage() {
                     </div>
                   </div>
                   <Badge className={`rounded-full px-3 py-1 ${getStatusColor(order.orderStatus)}`}>
-                    {ORDER_STATUS_OPTIONS.find((opt) => opt.value === order.orderStatus)
-                      ?.label || order.orderStatus}
+                    {getStatusLabel(order.orderStatus)}
                   </Badge>
                 </div>
               </CardHeader>
@@ -238,6 +241,7 @@ export default function VendorOrdersPage() {
                         <div style={{ color: "#666", fontSize: "13px" }}>
                           {order.shippingAddress.firstName} {order.shippingAddress.lastName}
                           <br />
+                          {order.shippingAddress.state}, 
                           {order.shippingAddress.street}
                           <br />
                           {order.shippingAddress.city}, {order.shippingAddress.country}
