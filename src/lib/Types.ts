@@ -293,7 +293,7 @@ export interface ShippingAddress {
 export interface Customer {
     id: string;
     email: string;
-    name: string;
+    Name: string;
 }
 
 export interface Order {

@@ -37,7 +37,7 @@ export function LoginForm({ role }: LoginFormProps) {
     return (
         <form onSubmit={handleSubmit} className="w-full max-w-md space-y-6">
             <div>
-                <h1 className="text-4xl font-bold text-foreground mb-2">Welcome back!</h1>
+                <h1 className="text-4xl font-medium font-serif text-foreground mb-2">Welcome back!</h1>
                 <p className="text-foreground/70">Enter your credentials to access your {role} account</p>
             </div>
 

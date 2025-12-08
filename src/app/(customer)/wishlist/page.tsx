@@ -24,19 +24,19 @@ export default function WishlistPage() {
         <div className="min-h-screen bg-background flex flex-col">
             {/* <Navbar2 /> */}
 
-            <main className="flex-1 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 w-full">
+            <main className="flex-1 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 w-full">
                 {/* Breadcrumb */}
                 <Link
                     href="/"
-                    className="inline-flex items-center gap-2 text-sm text-foreground/70 hover:text-foreground mb-8 transition-colors"
+                    className="inline-flex items-center gap-2 text-sm text-foreground/70 hover:text-foreground mb-4 transition-colors"
                 >
                     <ChevronLeft className="h-4 w-4" />
                     Back to Home
                 </Link>
 
                 {/* Header */}
-                <div className="mb-12">
-                    <h1 className="text-4xl font-bold text-foreground mb-2">My Wishlist</h1>
+                <div className="mb-6">
+                    <h1 className="text-4xl font-medium font-serif text-foreground mb-2">My Wishlist</h1>
                     <p className="text-foreground/70">
                         {wishlist.length} {wishlist.length === 1 ? 'item' : 'items'} saved
                     </p>

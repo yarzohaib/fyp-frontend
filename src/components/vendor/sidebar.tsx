@@ -46,7 +46,7 @@ const menu = [
 export default function Sidebar() {
   return (
     <div className="h-full p-6 space-y-6" style={{ backgroundColor: '#1A3126' }}>
-      <h2 className="text-xl font-medium font-serif" style={{ color: 'white' }}>Admin Panel</h2>
+      <h2 className="text-xl font-medium font-serif" style={{ color: 'white' }}>Vendor Controls</h2>
       <nav className="space-y-2">
         {menu.map((item) => (
           <Link

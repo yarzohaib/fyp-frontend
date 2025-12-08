@@ -25,12 +25,12 @@ export function Footer() {
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/rooms" className="text-background/70 hover:text-background transition-colors">
+                                <Link href="/" className="text-background/70 hover:text-background transition-colors">
                                     Rooms
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/about" className="text-background/70 hover:text-background transition-colors">
+                                <Link href="/" className="text-background/70 hover:text-background transition-colors">
                                     About
                                 </Link>
                             </li>
@@ -42,17 +42,17 @@ export function Footer() {
                         <h4 className="font-semibold mb-4">Customer Service</h4>
                         <ul className="space-y-2 text-sm">
                             <li>
-                                <Link href="#" className="text-background/70 hover:text-background transition-colors">
+                                <Link href="/" className="text-background/70 hover:text-background transition-colors">
                                     Contact Us
                                 </Link>
                             </li>
                             <li>
-                                <Link href="#" className="text-background/70 hover:text-background transition-colors">
+                                <Link href="/" className="text-background/70 hover:text-background transition-colors">
                                     Shipping Info
                                 </Link>
                             </li>
                             <li>
-                                <Link href="#" className="text-background/70 hover:text-background transition-colors">
+                                <Link href="/" className="text-background/70 hover:text-background transition-colors">
                                     Returns
                                 </Link>
                             </li>
@@ -79,10 +79,10 @@ export function Footer() {
                 <div className="border-t border-background/20 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-background/70">
                     <p>&copy; 2025 DOMA. All rights reserved.</p>
                     <div className="flex gap-6 mt-4 md:mt-0">
-                        <Link href="#" className="hover:text-background transition-colors">
+                        <Link href="/" className="hover:text-background transition-colors">
                             Privacy Policy
                         </Link>
-                        <Link href="#" className="hover:text-background transition-colors">
+                        <Link href="/" className="hover:text-background transition-colors">
                             Terms of Service
                         </Link>
                     </div>
