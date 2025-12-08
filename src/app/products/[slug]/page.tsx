@@ -9,7 +9,6 @@ import { RelatedProducts } from "@/components/related-products"
 import React from "react"
 import { buildImageUrl } from "@/lib/utils"
 import { fetchProductBySlugOrId, fetchRelatedProducts } from "@/lib/payload"
-import type { Product } from "@/lib/Types"
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
@@ -26,11 +25,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
     return {
       title: `${product.title} - Premium Furniture & Home Décor`,
-      description: product.shortDescription || product.description || `Discover ${product.title} - a premium furniture piece from our exclusive collection. High-quality design and craftsmanship.`,
+      description: product.shortDescription || product.Description || `Discover ${product.title} - a premium furniture piece from our exclusive collection. High-quality design and craftsmanship.`,
       keywords: `${product.title}, furniture, home décor, ${product.category?.name || 'premium furniture'}, buy online`,
       openGraph: {
         title: product.title,
-        description: product.shortDescription || product.description,
+        description: product.shortDescription || product.Description,
         images: product.images?.[0]?.image?.url ? [{ url: buildImageUrl(product.images[0].image.url, process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000') }] : [],
       },
     }
@@ -87,6 +86,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                             price: product.pricing.price,
                             comparePrice: product.pricing.comparePrice,
                             shortDescription: product.shortDescription || "",
+                            Description: product.Description || "",
                             inStock: inStock,
                             colors: product.colors,
                             category: product.category?.name, 

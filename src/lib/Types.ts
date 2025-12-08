@@ -37,7 +37,7 @@ export interface Product {
     title: string;
     slug: string;
     shortDescription?: string;
-    description?: string;
+    Description?: string;
     pricing: ProductPricing;
     images?: ProductImage[];
     category?: Category;

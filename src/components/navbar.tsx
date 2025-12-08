@@ -7,15 +7,18 @@ import { Menu, X, Search, ShoppingCart, Heart } from "lucide-react";
 import { LogoutButton } from "@/components/logout-button";
 import { useAuth } from "@/contexts/auth-context";
 import { useBackendCart } from "@/hooks/use-backend-cart";
+import { useWishlist } from "@/hooks/use-wishlist";
 
 export default function Navbar() {
     const [scrollY, setScrollY] = useState(0);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const { isAuthenticated } = useAuth();
     const { cart } = useBackendCart();
+    const { wishlist } = useWishlist();
 
     // Calculate total items in cart
     const cartItemCount = cart?.items?.reduce((total, item) => total + item.quantity, 0) || 0;
+    const wishlistItemCount = wishlist?.length || 0;
 
     useEffect(() => {
         const handleScroll = () => setScrollY(window.scrollY);
@@ -82,7 +85,7 @@ export default function Navbar() {
                                             : "text-white hover:text-white/80"
                                     }`}
                                 >
-                                    Collections
+                                    Products
                                 </Link>
                             </div>
                         </div>
@@ -95,13 +98,18 @@ export default function Navbar() {
                                     {/* Wishlist - Show for authenticated users */}
                                     <Link 
                                         href="/wishlist" 
-                                        className={`transition-colors ${
+                                        className={`relative transition-colors ${
                                             isScrolled 
                                                 ? "text-gray-700 hover:text-[#1a3126]" 
                                                 : "text-white hover:text-white/80"
                                         }`}
                                     >
                                         <Heart className="h-5 w-5" />
+                                        {wishlistItemCount > 0 && (
+                                            <span className="absolute -top-2 -right-2 bg-accent text-black text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                                                {wishlistItemCount > 99 ? '99+' : wishlistItemCount}
+                                            </span>
+                                        )}
                                         <span className="sr-only">Wishlist</span>
                                     </Link>
 
@@ -227,9 +235,14 @@ export default function Navbar() {
                                     <Link 
                                         href="/wishlist" 
                                         onClick={() => setMobileMenuOpen(false)}
-                                        className="text-gray-700 hover:text-[#1a3126] transition-colors"
+                                        className="relative text-gray-700 hover:text-[#1a3126] transition-colors"
                                     >
                                         <Heart className="h-5 w-5" />
+                                        {wishlistItemCount > 0 && (
+                                            <span className="absolute -top-2 -right-2 bg-accent text-black text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                                                {wishlistItemCount > 99 ? '99+' : wishlistItemCount}
+                                            </span>
+                                        )}
                                     </Link>
                                     <Link 
                                         href="/cart"

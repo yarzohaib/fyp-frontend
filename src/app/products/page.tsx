@@ -156,7 +156,7 @@ import { fetchProducts, fetchCategories } from "@/lib/payload"
 
 // Server Component - fetches data
 export default async function ProductsPage() {
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
+   
 
     let initialProducts: Product[] = []
     let categories: Category[] = []

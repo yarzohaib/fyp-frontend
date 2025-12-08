@@ -131,6 +131,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { ShoppingCart, Heart } from "lucide-react"
 import { useBackendCart } from "@/hooks/use-backend-cart"
+import { useWishlist } from "@/hooks/use-wishlist"
 
 interface ProductColor {
     color?: string
@@ -143,7 +144,8 @@ interface ProductDetailsProps {
         title: string
         price: number
         comparePrice?: number
-        shortDescription: string
+        shortDescription?: string
+        Description?: string
         inStock: boolean
         colors?: ProductColor[]
         category?: string 
@@ -154,8 +156,10 @@ export function ProductDetails({ product }: ProductDetailsProps) {
     const colorOptions = product.colors || []
     const [selectedColor, setSelectedColor] = useState(colorOptions[0]?.color || "")
     const [quantity, setQuantity] = useState(1)
-    const [isSaved, setIsSaved] = useState(false)
     const { addToCart, loading, error } = useBackendCart()
+    const { isInWishlist, toggleWishlist } = useWishlist()
+    
+    const inWishlist = isInWishlist(product.id)
 
     const handleAddToCart = async () => {
         console.log("Adding to cart:", {
@@ -171,10 +175,14 @@ export function ProductDetails({ product }: ProductDetailsProps) {
         }
     }
 
-    const handleSaveToWishlist = () => {
-        setIsSaved(!isSaved)
-        console.log(isSaved ? "Removed from wishlist" : "Saved to wishlist")
-        // Implement your wishlist logic here
+    const handleToggleWishlist = () => {
+        toggleWishlist({
+            id: product.id,
+            title: product.title,
+            price: product.price,
+            image: product.shortDescription || '', // Use a placeholder if no image available
+            inStock: product.inStock,
+        })
     }
 
     return (
@@ -191,9 +199,9 @@ export function ProductDetails({ product }: ProductDetailsProps) {
                 {product.title}
             </h1>
 
-            {/* shortDescription */}
+            {/* shortDescription or Description */}
             <p className="text-foreground/70 leading-relaxed text-base">
-                {product.shortDescription}
+                {product.shortDescription || product.Description || 'No description available'}
             </p>
 
             {/* Colors */}
@@ -268,13 +276,13 @@ export function ProductDetails({ product }: ProductDetailsProps) {
 
             {/* Save to Wishlist */}
             <button
-                onClick={handleSaveToWishlist}
+                onClick={handleToggleWishlist}
                 className="w-full flex items-center justify-center gap-2 py-3 text-foreground hover:text-foreground/80 transition-colors text-sm font-medium"
             >
                 <Heart 
-                    className={`h-5 w-5 transition-all ${isSaved ? 'fill-foreground' : ''}`}
+                    className={`h-5 w-5 transition-all ${inWishlist ? 'fill-foreground' : ''}`}
                 />
-                {isSaved ? 'Saved to Wishlist' : 'Save to Wishlist'}
+                {inWishlist ? 'Saved to Wishlist' : 'Save to Wishlist'}
             </button>
 
             {/* Error Message */}

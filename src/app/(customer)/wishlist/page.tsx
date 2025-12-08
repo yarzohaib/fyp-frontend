@@ -3,11 +3,9 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { ChevronLeft } from 'lucide-react'
-//import { Footer } from '@/components/footer'
 import { Button } from '@/components/ui/button'
 import { useWishlist } from '@/hooks/use-wishlist'
 import { ProductCard } from '@/components/product-card'
-//import Navbar2 from '@/components/navbar2'
 import type { WishlistItem } from '@/lib/Types'
 
 export default function WishlistPage() {
@@ -72,7 +70,7 @@ export default function WishlistPage() {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {wishlist.map((item: WishlistItem) => (
+                        {wishlist.map((item) => (
                             <ProductCard
                                 key={item.id}
                                 id={item.id}
@@ -88,7 +86,6 @@ export default function WishlistPage() {
                 )}
             </main>
 
-            {/* <Footer /> */}
         </div>
     )
 }
