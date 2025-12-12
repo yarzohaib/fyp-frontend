@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { useAuth, type UserRole } from "@/contexts/auth-context"
 import { Button } from "@/components/ui/button"
@@ -20,9 +20,6 @@ export function SignupForm() {
     const [isLoading, setIsLoading] = useState(false)
     const { signup } = useAuth()
     const router = useRouter()
-    const searchParams = useSearchParams()
-
-    const initialRole = (searchParams.get("role") as UserRole) || "customer"
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()

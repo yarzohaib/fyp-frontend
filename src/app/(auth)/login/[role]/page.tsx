@@ -3,8 +3,13 @@ import Link from "next/link";
 import { LoginForm } from "@/components/login-form"
 import type { UserRole } from "@/contexts/auth-context"
 
-export default function LoginPage({ params }: { params: { role: string } }) {
-    const role = (params.role as UserRole) === "vendor" ? "vendor" : "customer"
+export default async function LoginPage({ 
+    params 
+}: { 
+    params: Promise<{ role: string }> 
+}) {
+    const { role: roleParam } = await params;
+    const role = (roleParam as UserRole) === "vendor" ? "vendor" : "customer"
 
     return (
         <div className="min-h-screen flex flex-col lg:flex-row">
