@@ -306,6 +306,66 @@ console.log('Final items for backend:', itemsForBackend)
                 />
             </div>
 
+            {/* Success Popup Modal */}
+            {successMessage && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+                    <div className="bg-white rounded-lg shadow-2xl p-8 sm:p-12 max-w-md w-full mx-4 animate-in fade-in zoom-in duration-300">
+                        {/* Success Icon */}
+                        <div className="flex justify-center mb-6">
+                            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
+                                <svg
+                                    className="w-10 h-10 text-green-600"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M5 13l4 4L19 7"
+                                    />
+                                </svg>
+                            </div>
+                        </div>
+
+                        {/* Success Message */}
+                        <h2 className="text-2xl sm:text-3xl font-bold text-center text-[#1a3126] mb-3">
+                            Order Placed Successfully!
+                        </h2>
+                        <p className="text-center text-[#1a3126] text-opacity-70 mb-6">
+                            Thank you for your purchase. Your order has been confirmed and will be processed soon.
+                        </p>
+
+                        {/* Order Details */}
+                        <div className="bg-[#F2F0E5] rounded-lg p-4 mb-8">
+                            <div className="space-y-3">
+                                <div className="flex justify-between text-sm">
+                                    <span className="text-[#1a3126] text-opacity-70">Items:</span>
+                                    <span className="font-semibold text-[#1a3126]">{cartItems.length}</span>
+                                </div>
+                                <div className="flex justify-between text-sm">
+                                    <span className="text-[#1a3126] text-opacity-70">Total Amount:</span>
+                                    <span className="font-semibold text-[#BB4E2C]">Rs. {totals.total.toFixed(2)}</span>
+                                </div>
+                                <div className="flex justify-between text-sm">
+                                    <span className="text-[#1a3126] text-opacity-70">Payment Method:</span>
+                                    <span className="font-semibold text-[#1a3126]">Cash on Delivery</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Action Button */}
+                        <button
+                            onClick={() => router.push('/products')}
+                            className="w-full bg-[#BB4E2C] hover:bg-[#1a3126] text-white font-bold py-3 px-4 rounded-lg transition duration-200"
+                        >
+                            Continue Shopping
+                        </button>
+                    </div>
+                </div>
+            )}
+
             <div className="relative z-10 max-w-7xl mx-auto">
                 {/* Header */}
                 <div className="mb-8">
@@ -320,12 +380,6 @@ console.log('Final items for backend:', itemsForBackend)
                 {error && (
                     <div className="mb-6 p-4 bg-red-50 border-2 border-red-200 rounded-lg">
                         <p className="text-red-800 font-medium">{error}</p>
-                    </div>
-                )}
-
-                {successMessage && (
-                    <div className="mb-6 p-4 bg-green-50 border-2 border-green-200 rounded-lg">
-                        <p className="text-green-800 font-medium">{successMessage}</p>
                     </div>
                 )}
 
