@@ -54,7 +54,7 @@ export async function fetchProducts(limit?: number): Promise<ProductsApiResponse
     const limitParam = limit ? `?limit=${limit}` : ""
 
     const response = await fetch(`${BASE_URL}/api/public-products${limitParam}`, {
-        cache: "no-store",
+        next: { revalidate: 60 }, // ✅ Changed from cache: "no-store"
         headers: { "Content-Type": "application/json" },
     })
 
@@ -216,7 +216,7 @@ export async function fetchCategories(limit?: number): Promise<CategoriesApiResp
     const limitParam = limit ? `?limit=${limit}` : ""
 
     const response = await fetch(`${BASE_URL}/api/public-categories${limitParam}`, {
-        cache: "no-store",
+        next: { revalidate: 60 }, // ✅ Changed from cache: "no-store"
         headers: {
             "Content-Type": "application/json",
         },

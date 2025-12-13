@@ -10,6 +10,8 @@ import React from "react"
 import { buildImageUrl } from "@/lib/utils"
 import { fetchProductBySlugOrId, fetchRelatedProducts } from "@/lib/payload"
 
+
+
 // Generate metadata for SEO
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   try {
