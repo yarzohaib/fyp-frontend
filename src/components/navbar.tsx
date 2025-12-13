@@ -215,14 +215,14 @@ export default function Navbar() {
                             onClick={() => setMobileMenuOpen(false)} 
                             className="text-gray-700 hover:text-[#1a3126] transition-colors font-medium py-2"
                         >
-                            Browse
+                            Products
                         </Link>
                         <Link 
-                            href="/about" 
+                            href="/profile" 
                             onClick={() => setMobileMenuOpen(false)} 
                             className="text-gray-700 hover:text-[#1a3126] transition-colors font-medium py-2"
                         >
-                            About
+                            Profile
                         </Link>
 
                         {/* Mobile Icons */}

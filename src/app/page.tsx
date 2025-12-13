@@ -7,7 +7,7 @@ import Navbar from "@/components/navbar"
 import { fetchProducts } from "@/lib/payload"
 import { Product, CarouselProduct } from "@/lib/Types"
 import { buildImageUrl } from "@/lib/utils"
-
+export const revalidate = 60;
 // Generate metadata for SEO
 export async function generateMetadata() {
   return {

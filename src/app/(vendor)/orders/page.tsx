@@ -7,6 +7,7 @@ import { fetchVendorOrders, updateOrderStatus } from "@/lib/payload";
 import type { Order } from "@/lib/Types";
 import { Mail, MapPin, Package, Calendar, Loader2, Phone, User, ChevronDown, TrendingUp } from "lucide-react";
 
+export const dynamic = 'force-dynamic'
 
 const COLOR_BACKGROUND = "#F2F0E5";
 const COLOR_PRIMARY = "#1A3126";

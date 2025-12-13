@@ -18,7 +18,7 @@ import type {
 } from '@/lib/Types'
 import Link from 'next/link'
 
-
+export const dynamic = 'force-dynamic'
 
 export default function CustomerProfilePage() {
     const { isAuthenticated, user } = useAuth()

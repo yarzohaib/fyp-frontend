@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { LoginForm } from "@/components/login-form"
 import type { UserRole } from "@/contexts/auth-context"
-
+export const dynamic = 'force-dynamic'
 export default async function LoginPage({ 
     params 
 }: { 

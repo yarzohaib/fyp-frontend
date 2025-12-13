@@ -6,7 +6,8 @@ import { ChevronLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useWishlist } from '@/hooks/use-wishlist'
 import { ProductCard } from '@/components/product-card'
-import type { WishlistItem } from '@/lib/Types'
+
+export const dynamic = 'force-dynamic'
 
 export default function WishlistPage() {
     const { wishlist } = useWishlist()
