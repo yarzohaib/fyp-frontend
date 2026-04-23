@@ -2,7 +2,7 @@ import { notFound } from "next/navigation"
 import Link from "next/link"
 import { ChevronLeft } from "lucide-react"
 import { ProductDetails } from "@/components/product-details"
-import { ProductTabs } from "@/components/product-tabs"
+import { ProductReviews } from "@/components/product-tabs"
 //import { Footer } from "@/components/footer"
 import { ProductGallery } from "@/components/product-gallery"
 import { RelatedProducts } from "@/components/related-products"
@@ -96,11 +96,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                     />
                 </div>
 
-                {/* Tabs Section */}
-                <ProductTabs
-                    specifications={product.specifications}
-                    reviews={product.reviews}
-                />
+                {/* Reviews Section */}
+                <ProductReviews productId={product.id} />
 
                 {/* Related Products */}
                 {relatedProducts.length > 0 && (

@@ -128,6 +128,7 @@ export interface AuthContextType {
     token: string | null
     isLoading: boolean
     login: (email: string, password: string, role: UserRole) => Promise<void>
+    loginWithGoogle: (idToken: string) => Promise<void>
     signup: (
         email: string,
         password: string,
@@ -250,12 +251,41 @@ export interface AddToCartButtonProps {
     variant?: 'default' | 'hover'
 }
 
+// export interface Review {
+//     id?: string
+//     user?: string
+//     rating: number
+//     comment?: string
+//     date?: string
+// }
+
 export interface Review {
-    id?: string
-    user?: string
+    id: string
     rating: number
-    comment?: string
-    date?: string
+    title?: string
+    description: string
+    createdAt: string
+    verifiedPurchase?: boolean
+    helpfulCount?: number
+    customer?: {
+        id: string
+        Name?: string | null
+    } | null
+}
+ 
+export interface ReviewsPaginationMeta {
+    page: number
+    limit: number
+    totalPages: number
+    totalDocs: number
+    hasNextPage: boolean
+    hasPrevPage: boolean
+}
+ 
+export interface PublicReviewsApiResponse {
+    success: boolean
+    reviews: Review[]
+    pagination: ReviewsPaginationMeta
 }
 
 export interface ProductTabsProps {

@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-
+import { GoogleLogin, type CredentialResponse } from "@react-oauth/google"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
@@ -15,8 +15,24 @@ export function LoginForm({ role }: LoginFormProps) {
     const [rememberMe, setRememberMe] = useState(false)
     const [error, setError] = useState("")
     const [isLoading, setIsLoading] = useState(false)
-    const { login } = useAuth()
+    const { login, loginWithGoogle } = useAuth()
     const router = useRouter()
+
+    //login with google handler
+const handleGoogleSuccess = async (credentialResponse: CredentialResponse) => {
+    if (!credentialResponse.credential) return
+    setError("")
+    setIsLoading(true)
+    try {
+        await loginWithGoogle(credentialResponse.credential)
+        const redirectPath = role === "vendor" ? "/dashboard" : "/products"
+        router.push(redirectPath)
+    } catch (err) {
+        setError(err instanceof Error ? err.message : "Google login failed.")
+    } finally {
+        setIsLoading(false)
+    }
+}
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -62,7 +78,7 @@ export function LoginForm({ role }: LoginFormProps) {
             <div>
                 <div className="flex justify-between items-center mb-2">
                     <label className="block text-sm font-semibold text-foreground">Password</label>
-                    <Link href="#" className="text-sm text-accent hover:underline">
+                    <Link href="/forgot-password" className="text-sm text-accent hover:underline">
                         Forgot password?
                     </Link>
                 </div>
@@ -106,7 +122,7 @@ export function LoginForm({ role }: LoginFormProps) {
                 </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            {/* <div className="grid grid-cols-2 gap-3">
                 <button
                     type="button"
                     className="flex items-center justify-center gap-2 px-4 py-2 border border-border rounded-lg hover:bg-muted transition-colors"
@@ -140,7 +156,20 @@ export function LoginForm({ role }: LoginFormProps) {
                     </svg>
                     <span className="text-sm font-medium">Apple</span>
                 </button>
-            </div>
+            </div> */}
+
+            <div className="w-full">
+    <GoogleLogin
+        onSuccess={handleGoogleSuccess}
+        onError={() => setError("Google sign-in failed or was cancelled")}
+        width="100%"
+        shape="rectangular"
+        theme="outline"
+        size="large"
+        text="continue_with"
+    />
+</div>
+
 
             <p className="text-center text-sm text-foreground/70">
                 Don&apos;t have an account?{" "}
