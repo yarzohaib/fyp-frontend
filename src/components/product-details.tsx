@@ -53,7 +53,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
             id: product.id,
             title: product.title,
             price: product.price,
-            image: product.shortDescription || '', // Use a placeholder if no image available
+            image: product.shortDescription || '', 
             inStock: product.inStock,
         })
     }
@@ -112,7 +112,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
                     >
                         −
                     </button>
-                    <span className="px-6 py-2 text-foreground font-medium min-w-[60px] text-center">
+                    <span className="px-6 py-2 text-foreground font-medium min-w-15 text-center">
                         {quantity}
                     </span>
                     <button
