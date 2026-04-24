@@ -4,7 +4,7 @@ export async function requestPasswordReset(email: string) {
     console.log("API URL:", process.env.NEXT_PUBLIC_API_URL)
   const res = await fetch(`${API}/api/customers/forgot-password`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {  },
     body: JSON.stringify({ email }),
   })
   const data = await res.json()
@@ -15,7 +15,7 @@ export async function requestPasswordReset(email: string) {
 export async function verifyOtpAndReset(email: string, otp: string, newPassword: string) {
   const res = await fetch(`${API}/api/customers/verify-otp`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { },
     body: JSON.stringify({ email, otp, newPassword }),
   })
   const data = await res.json()
