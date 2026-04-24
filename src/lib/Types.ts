@@ -270,6 +270,10 @@ export interface Review {
     customer?: {
         id: string
         Name?: string | null
+        avatar?: {
+            url?: string
+            filename?: string
+        } | null
     } | null
 }
  

@@ -525,13 +525,13 @@ export function ProductReviews({ productId }: ProductReviewsProps) {
             // Use the Payload backend URL directly (same as mobile app)
             const baseUrl = process.env.NEXT_PUBLIC_API_URL || ""
             const res = await fetch(
-                `${baseUrl}/api/reviews?where[product][equals]=${productId}&depth=2&sort=-createdAt&limit=50`,
+                `${baseUrl}/api/public-products/${productId}/reviews?limit=50`,
                 { credentials: "include" }
             )
             if (!res.ok) throw new Error(`HTTP ${res.status}`)
             const data = await res.json()
             // Payload REST returns { docs: [...] }
-            setReviews(data.docs ?? [])
+            setReviews(data.reviews ?? [])
         } catch (err) {
             setError("Could not load reviews.")
         } finally {
@@ -579,7 +579,7 @@ export function ProductReviews({ productId }: ProductReviewsProps) {
             {/* Rating Summary Card */}
             <div className="bg-secondary/20 rounded-2xl p-5 mb-6 flex items-center gap-6">
                 {/* Left: big number + stars + count */}
-                <div className="flex flex-col items-center min-w-[90px]">
+                <div className="flex flex-col items-center min-w-22.5">
                     <span className="text-5xl font-extrabold text-foreground leading-none">
                         {average.toFixed(1)}
                     </span>
@@ -710,27 +710,47 @@ function WriteReviewForm({
     const [submitting, setSubmitting] = useState(false)
     const [err, setErr] = useState<string | null>(null)
 
-    async function handleSubmit() {
-        if (!rating) return setErr("Please select a rating.")
-        if (!description.trim()) return setErr("Please write a review.")
-        setErr(null)
-        setSubmitting(true)
-        try {
-            const res = await fetch("/api/customer/reviews", {
-                method: "POST",
-                credentials: "include",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ productId, rating, title: title || undefined, description }),
-            })
-            const data = await res.json()
-            if (!res.ok) throw new Error(data.error ?? "Failed to submit review")
-            onSuccess()
-        } catch (e: any) {
-            setErr(e.message)
-        } finally {
-            setSubmitting(false)
-        }
+   async function handleSubmit() {
+  if (!rating) return setErr("Please select a rating.")
+  if (!description.trim()) return setErr("Please write a review.")
+  setErr(null)
+  setSubmitting(true)
+
+  try {
+    // Read token from localStorage — same as Flutter's secure storage
+    const token = localStorage.getItem("authToken") || localStorage.getItem("token")
+
+    if (!token) {
+      setErr("You must be logged in to submit a review.")
+      setSubmitting(false)
+      return
     }
+
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || ""
+
+    const res = await fetch(`${baseUrl}/api/customer/reviews`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `JWT ${token}`,  // ✅ send token in header
+      },
+      body: JSON.stringify({
+        productId,
+        rating,
+        title: title.trim() || undefined,  // ✅ omit if empty (backend rejects empty string)
+        description: description.trim(),
+      }),
+    })
+
+    const data = await res.json()
+    if (!res.ok) throw new Error(data.error ?? "Failed to submit review")
+    onSuccess()
+  } catch (e: any) {
+    setErr(e.message)
+  } finally {
+    setSubmitting(false)
+  }
+}
 
     return (
         <div className="bg-secondary/20 rounded-2xl p-5 mb-6 space-y-4">
