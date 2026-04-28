@@ -114,6 +114,28 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                         />
                     </div>
                 )}
+
+                
+ <script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      name: product.title,
+      description: product.shortDescription || product.Description,
+      image: productImages.map(img => img.url),
+      offers: {
+        '@type': 'Offer',
+        price: product.pricing.price,
+        priceCurrency: 'PKR',
+        availability: inStock
+          ? 'https://schema.org/InStock'
+          : 'https://schema.org/OutOfStock',
+      },
+    }),
+  }}
+/>
             </main>
 
             {/* <Footer /> */}

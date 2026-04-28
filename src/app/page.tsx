@@ -63,6 +63,21 @@ export default async function Home() {
       </section>
 
       {/* <Footer /> */}
+
+ <script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'OnlineStore',
+      name: 'DOMA',
+      description: 'Premium furniture and home décor',
+      url: process.env.NEXT_PUBLIC_SITE_URL,
+      logo: `${process.env.NEXT_PUBLIC_SITE_URL}/logoo.jpg`,
+      sameAs: [],
+    }),
+  }}
+/>
     </main>
   )
 }

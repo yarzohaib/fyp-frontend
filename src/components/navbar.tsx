@@ -62,6 +62,7 @@ export default function Navbar() {
                                     height={80}
                                     className="w-10 h-10 sm:w-12 sm:h-12 transition-transform hover:scale-105 object-contain"
                                     priority
+                                    sizes="(max-width: 640px) 40px, 48px" 
                                 />
                             </Link>
 

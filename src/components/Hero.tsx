@@ -15,13 +15,15 @@ export default function Hero() {
 
             {/* Desktop Background Image */}
             <Image
-                src="/test.jpg"
-                alt="Hero Background"
-                fill
-                priority
-                className="object-cover hidden md:block"
-                quality={90}
-            />
+  src="/test.jpg"
+  alt="Hero Background"
+  fill
+  priority                      
+  fetchPriority="high"          
+  sizes="100vw"               
+  quality={85}                   
+  className="object-cover hidden md:block"
+/>
 
             {/* Hero Content */}
             <div className="relative h-full container mx-auto max-w-7xl px-6 md:px-10 lg:px-6">

@@ -37,6 +37,8 @@ export function ProductCard({
                             src={displayImage}
                             alt={title}
                             fill
+                            loading="lazy"
+                            sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw" 
                             className="object-cover group-hover:scale-105 transition-transform duration-300"
                         />
                         <div className="absolute top-3 left-3 right-3 flex justify-between items-start">
