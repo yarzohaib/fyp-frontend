@@ -13,7 +13,7 @@ export function ChatHeader() {
         </h1>
       </div>
       <p className="text-[#1a3126]/70 text-sm md:text-base max-w-sm leading-relaxed border-l-2 border-[#1a3126]/10 pl-4">
-       Hey{', '}I am Genie. Your AI-powered interior design assistant. Describe your vibe{', '}and I&apos;ll find the pieces that match your home.
+       Hey{', '}I am DOMA Sense. Your AI-powered interior design assistant. Describe your vibe{', '}and I&apos;ll find the pieces that match your home.
       </p>
     </div>
   );

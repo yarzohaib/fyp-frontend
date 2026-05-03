@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { ShoppingCart, Heart } from "lucide-react"
 import { useBackendCart } from "@/hooks/use-backend-cart"
 import { useWishlist } from "@/hooks/use-wishlist"
+import { useToast } from "@/components/ui/toast"
 
 interface ProductColor {
     color?: string
@@ -31,6 +32,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
     const [quantity, setQuantity] = useState(1)
     const { addToCart, loading, error } = useBackendCart()
     const { isInWishlist, toggleWishlist } = useWishlist()
+    const { showToast } = useToast()
     
     const inWishlist = isInWishlist(product.id)
 
@@ -43,7 +45,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
         
         const success = await addToCart(product.id, quantity)
         if (success) {
-            console.log("✓ Item added to cart successfully")
+            showToast('Added to Cart', 'cart')
             setQuantity(1)
         }
     }
@@ -53,9 +55,10 @@ export function ProductDetails({ product }: ProductDetailsProps) {
             id: product.id,
             title: product.title,
             price: product.price,
-            image: product.shortDescription || '', 
+            image: product.shortDescription || '',
             inStock: product.inStock,
         })
+        showToast(inWishlist ? 'Removed from Wishlist' : 'Added to Wishlist', 'wishlist')
     }
 
     return (
@@ -152,8 +155,8 @@ export function ProductDetails({ product }: ProductDetailsProps) {
                 onClick={handleToggleWishlist}
                 className="w-full flex items-center justify-center gap-2 py-3 text-foreground hover:text-foreground/80 transition-colors text-sm font-medium"
             >
-                <Heart 
-                    className={`h-5 w-5 transition-all ${inWishlist ? 'fill-foreground' : ''}`}
+                <Heart
+                    className={`h-5 w-5 transition-all ${inWishlist ? 'fill-[#BB4E2C] text-[#BB4E2C]' : ''}`}
                 />
                 {inWishlist ? 'Saved to Wishlist' : 'Save to Wishlist'}
             </button>

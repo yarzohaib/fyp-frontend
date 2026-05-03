@@ -3,6 +3,7 @@
 import { ShoppingCart } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useBackendCart } from '@/hooks/use-backend-cart'
+import { useToast } from '@/components/ui/toast'
 import type { AddToCartButtonProps } from '@/lib/Types'
 
 export function AddToCartButton({
@@ -12,6 +13,7 @@ export function AddToCartButton({
     variant = 'default',
 }: AddToCartButtonProps) {
     const { addToCart, loading } = useBackendCart()
+    const { showToast } = useToast()
 
     const handleAddToCart = async (e: React.MouseEvent) => {
         e.preventDefault()
@@ -20,7 +22,7 @@ export function AddToCartButton({
         if (inStock && id) {
             const success = await addToCart(String(id), quantity)
             if (success) {
-                console.log('Item added to cart successfully')
+                showToast('Added to Cart', 'cart')
             }
         }
     }
