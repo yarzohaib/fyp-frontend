@@ -2,7 +2,6 @@
 
 import { useState, useMemo } from 'react'
 import Navbar from "@/components/navbar"
-import { HeroSearch } from "@/components/hero-search"
 import { FilterSidebar } from "@/components/filter-sidebar"
 import { ProductsGrid } from "@/components/product-grid"
 import type { ProductCardProps, Category, Product, ActiveFilters } from "@/lib/Types"
@@ -68,13 +67,8 @@ export default function ProductsPageClient({ initialProducts, categories }: Prod
         <div className="min-h-screen bg-background">
             <Navbar />
             <main className="mx-auto w-full max-w-7xl px-2 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8">
-                {/* Hero Search */}
-                <div className="mb-6 sm:mb-8 mt-16 sm:mt-20">
-                    <HeroSearch />
-                </div>
-
                 {/* Main Content */}
-                <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-8">
+                <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-8 mt-16 sm:mt-20">
                     {/* Mobile Filter Toggle */}
                     <button
                         onClick={() => setShowFilters(!showFilters)}

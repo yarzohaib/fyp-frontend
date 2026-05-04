@@ -1,92 +1,88 @@
 import Link from "next/link"
-import Image from "next/image"
-import { Mail } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 
 export function Footer() {
     return (
-        <footer className="bg-foreground text-background mt-0">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-                    {/* Brand */}
-                    <div>
-                        <Image src="/NavbarLogo.webp" alt="DOMA" width={100} height={40} className="h-10 w-auto mb-4" />
-                        <p className="text-sm text-background/70">Discover beautiful furniture and home decor for your space.</p>
+        <footer className="bg-foreground text-background">
+
+            {/* Top accent line */}
+            <div className="h-0.5 bg-gradient-to-r from-transparent via-[#BB4E2C] to-transparent" />
+
+            <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12 pt-14 pb-10">
+
+                {/* Main row */}
+                <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-12">
+
+                    {/* Brand block */}
+                    <div className="max-w-xs">
+                        <p className="text-3xl font-serif font-medium text-background tracking-wide mb-5">
+                            DOMA
+                        </p>
+                        <p className="text-sm text-background/60 leading-relaxed">
+                            Discover beautiful furniture and home decor for your space — powered by AI.
+                        </p>
+                        <p className="mt-5 text-xs font-bold tracking-[0.25em] uppercase text-[#BB4E2C]">
+                            Design &amp; Buy
+                        </p>
                     </div>
 
-                    {/* Links */}
-                    <div>
-                        <h4 className="font-semibold mb-4">Shop</h4>
-                        <ul className="space-y-2 text-sm">
-                            <li>
-                                <Link href="/" className="text-background/70 hover:text-background transition-colors">
-                                    All Products
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/" className="text-background/70 hover:text-background transition-colors">
-                                    Rooms
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/" className="text-background/70 hover:text-background transition-colors">
-                                    About
-                                </Link>
-                            </li>
-                        </ul>
-                    </div>
+                    {/* Link columns */}
+                    <div className="grid grid-cols-2 sm:grid-cols-2 gap-x-16 gap-y-10">
 
-                    {/* Customer Service */}
-                    <div>
-                        <h4 className="font-semibold mb-4">Customer Service</h4>
-                        <ul className="space-y-2 text-sm">
-                            <li>
-                                <Link href="/" className="text-background/70 hover:text-background transition-colors">
-                                    Contact Us
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/" className="text-background/70 hover:text-background transition-colors">
-                                    Shipping Info
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/" className="text-background/70 hover:text-background transition-colors">
-                                    Returns
-                                </Link>
-                            </li>
-                        </ul>
-                    </div>
-
-                    {/* Newsletter */}
-                    <div>
-                        <h4 className="font-semibold mb-4">Join Newsletter</h4>
-                        <div className="flex gap-2">
-                            <Input
-                                type="email"
-                                placeholder="Your email"
-                                className="bg-background/20 border-background/30 text-background placeholder:text-background/50"
-                            />
-                            <Button size="icon" className="bg-accent text-background hover:bg-accent/90">
-                                <Mail className="h-4 w-4" />
-                            </Button>
+                        {/* Shop */}
+                        <div>
+                            <h4 className="text-xs font-bold tracking-[0.2em] uppercase text-background/40 mb-5">
+                                Shop
+                            </h4>
+                            <ul className="space-y-3 text-sm">
+                                <li>
+                                    <Link href="/products" className="text-background/70 hover:text-background transition-colors duration-200">
+                                        All Products
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link href="/about" className="text-background/70 hover:text-background transition-colors duration-200">
+                                        About Us
+                                    </Link>
+                                </li>
+                            </ul>
                         </div>
+
+                        {/* Support */}
+                        <div>
+                            <h4 className="text-xs font-bold tracking-[0.2em] uppercase text-background/40 mb-5">
+                                Support
+                            </h4>
+                            <ul className="space-y-3 text-sm">
+                                <li>
+                                    <Link href="/contact" className="text-background/70 hover:text-background transition-colors duration-200">
+                                        Contact Us
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link href="/shipping" className="text-background/70 hover:text-background transition-colors duration-200">
+                                        Shipping Info
+                                    </Link>
+                                </li>
+                            </ul>
+                        </div>
+
                     </div>
                 </div>
 
-                {/* Bottom */}
-                <div className="border-t border-background/20 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-background/70">
-                    <p>&copy; 2025 DOMA. All rights reserved.</p>
-                    <div className="flex gap-6 mt-4 md:mt-0">
-                        <Link href="/" className="hover:text-background transition-colors">
+                {/* Bottom bar */}
+                <div className="mt-12 pt-6 border-t border-background/10 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-background/40">
+                    <p>&copy; 2026 DOMA. All rights reserved.</p>
+                    <div className="flex items-center gap-5">
+                        <Link href="/privacy" className="hover:text-background/70 transition-colors duration-200">
                             Privacy Policy
                         </Link>
-                        <Link href="/" className="hover:text-background transition-colors">
+                        <span className="w-px h-3 bg-background/20" />
+                        <Link href="/terms" className="hover:text-background/70 transition-colors duration-200">
                             Terms of Service
                         </Link>
                     </div>
                 </div>
+
             </div>
         </footer>
     )

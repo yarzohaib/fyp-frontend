@@ -1,8 +1,9 @@
 import AboutSection from "@/components/about"
+import { AboutStrip } from "@/components/about-strip"
 import { FeaturedCarousel } from "@/components/featured-carousel"
 import Hero from "@/components/Hero"
 import Navbar from "@/components/navbar"
-import { RedesignBanner } from "@/components/redesign-banner"   // ← ADD
+import { RedesignBanner } from "@/components/redesign-banner"
 import { fetchProducts } from "@/lib/payload"
 import { Product, CarouselProduct } from "@/lib/Types"
 import { buildImageUrl } from "@/lib/utils"
@@ -44,22 +45,25 @@ export default async function Home() {
       <Navbar />
       <Hero />
 
-      {/* ✅ AI Redesign Banner — sits between Hero and Products */}
-      <section className="bg-[#E6E4DF] pt-8 pb-0">
+      {/* AI Redesign Banner */}
+      <section className="bg-[#F2F0E5] pt-8 pb-0">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
           <RedesignBanner />
         </div>
       </section>
 
       {/* Featured Products */}
-      <section className="bg-[#E6E4DF] py-12 md:py-16">
+      <section className="bg-[#F2F0E5] py-12 md:py-16">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
           <FeaturedCarousel products={carouselProducts} />
         </div>
       </section>
 
+      {/* Perks strip */}
+      <AboutStrip />
+
       {/* About */}
-      <section className="bg-[#E6E4DF] py-12 md:py-16">
+      <section className="bg-[#F2F0E5] py-12 md:py-16">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
           <AboutSection />
         </div>

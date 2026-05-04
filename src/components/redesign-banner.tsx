@@ -4,53 +4,55 @@ import { Sparkles } from "lucide-react"
 export function RedesignBanner() {
   return (
     <Link href="/redesign">
-      <div className="relative overflow-hidden rounded-2xl cursor-pointer group
-                      bg-[#1A3126] hover:bg-[#27493a] transition-all duration-300
-                      shadow-lg hover:shadow-[#1A3126]/30 hover:shadow-xl">
+      <div className="relative overflow-hidden rounded-2xl cursor-pointer group bg-[#1A3126] min-h-[220px] flex items-center justify-center shadow-xl hover:shadow-2xl transition-shadow duration-500">
 
-        {/* Decorative circles */}
-        <div className="absolute -right-8 -top-8 w-40 h-40 rounded-full bg-white/10" />
-        <div className="absolute -right-4 -bottom-10 w-28 h-28 rounded-full bg-white/5" />
+        {/* Always-running shimmer sweep */}
+        <div className="absolute inset-y-0 w-1/3 bg-gradient-to-r from-transparent via-white/8 to-transparent animate-shimmer pointer-events-none" />
 
-        <div className="relative flex items-center justify-between px-6 py-5">
-          {/* Left: icon + text */}
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-white/10
-                            group-hover:bg-white/20 transition-colors duration-300
-                            flex items-center justify-center shrink-0">
-              <Sparkles className="w-6 h-6 text-white" />
-            </div>
+        {/* Large ambient orb — top right */}
+        <div className="absolute -right-20 -top-20 w-72 h-72 rounded-full bg-[#BB4E2C]/15 animate-pulse" />
 
-            <div>
-              <div className="flex items-center gap-2 mb-0.5">
-                <span className="text-white font-semibold text-base">
-                  AI Room Redesign
-                </span>
-                <span className="bg-[#BB4E2C] text-white text-[10px]
-                                 font-bold px-2 py-0.5 rounded-full tracking-wide">
-                  NEW
-                </span>
-              </div>
-              <p className="text-white/60 text-sm">
-                Upload a photo &amp; get your room styled instantly
-              </p>
-            </div>
-          </div>
+        {/* Smaller orb — bottom left */}
+        <div className="absolute -left-12 -bottom-12 w-48 h-48 rounded-full bg-white/5" />
 
-          {/* Right: CTA */}
-          <div className="shrink-0 ml-4">
-            <span className="inline-flex items-center gap-1.5
-                             bg-white text-[#BB4E2C] text-sm font-semibold
-                             px-4 py-2 rounded-full
-                             group-hover:bg-[#BB4E2C] group-hover:text-white
-                             transition-all duration-300">
-              Try it free
-              <span className="group-hover:translate-x-0.5 transition-transform duration-200">
-                →
-              </span>
+        {/* Twinkling dots */}
+        <span className="absolute top-8  right-[30%] w-1.5 h-1.5 rounded-full bg-[#BB4E2C] animate-twinkle-1" />
+        <span className="absolute top-14 right-[18%] w-1   h-1   rounded-full bg-white/50 animate-twinkle-2" />
+        <span className="absolute bottom-10 left-[22%] w-1.5 h-1.5 rounded-full bg-[#BB4E2C]/70 animate-twinkle-3" />
+        <span className="absolute bottom-7  left-[38%] w-1   h-1   rounded-full bg-white/40 animate-twinkle-4" />
+        <span className="absolute top-6   left-[15%] w-1   h-1   rounded-full bg-white/30 animate-twinkle-2" />
+
+        {/* Centred content */}
+        <div className="relative z-10 flex flex-col items-center text-center px-6 py-12 gap-4">
+
+          {/* Eyebrow */}
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-[#BB4E2C]" />
+            <span className="text-xs font-bold tracking-[0.3em] uppercase text-[#BB4E2C]">
+              AI Powered
             </span>
           </div>
+
+          {/* Heading */}
+          <h2 className="text-4xl md:text-5xl font-serif font-medium text-[#F2F0E5] leading-tight">
+            DOMA Create
+          </h2>
+
+          {/* Sub-text */}
+          <p className="text-white/55 text-sm max-w-xs leading-relaxed">
+            Upload a photo of your room and let AI redesign it with beautiful furniture instantly.
+          </p>
+
+          {/* CTA */}
+          <span className="mt-2 inline-flex items-center
+                           bg-[#BB4E2C] text-white px-7 py-3 rounded-full
+                           font-semibold text-sm
+                           group-hover:bg-orange-500 group-hover:shadow-lg group-hover:shadow-[#BB4E2C]/40
+                           transition-all duration-300">
+            Try it
+          </span>
         </div>
+
       </div>
     </Link>
   )

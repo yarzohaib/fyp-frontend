@@ -1,11 +1,10 @@
 import { notFound } from "next/navigation"
 import Link from "next/link"
-import { ChevronLeft } from "lucide-react"
 import { ProductDetails } from "@/components/product-details"
 import { ProductReviews } from "@/components/product-tabs"
-//import { Footer } from "@/components/footer"
 import { ProductGallery } from "@/components/product-gallery"
 import { RelatedProducts } from "@/components/related-products"
+import Navbar from "@/components/navbar"
 import React from "react"
 import { buildImageUrl } from "@/lib/utils"
 import { fetchProductBySlugOrId, fetchRelatedProducts } from "@/lib/payload"
@@ -65,16 +64,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
     return (
         <div className="min-h-screen bg-background">
-            <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
-                {/* Breadcrumb */}
-                <Link
-                    href="/products"
-                    className="inline-flex items-center gap-2 text-sm text-foreground/70 hover:text-foreground mb-6 sm:mb-8 transition-colors"
-                >
-                    <ChevronLeft className="h-4 w-4" />
-                    Back
-                </Link>
-
+            <Navbar />
+            <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-24 pb-8">
                 {/* Product Section */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-12 lg:mb-16">
                     {/* Gallery */}

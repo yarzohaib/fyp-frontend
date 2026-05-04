@@ -5,6 +5,8 @@ import "./globals.css";
 import { AuthProvider } from "@/contexts/auth-context";
 import { Footer } from "@/components/footer";
 import { CartProvider } from '@/contexts/cart-context'
+import { ToastProvider } from '@/components/ui/toast'
+import { DomaSenseButton } from '@/components/doma-sense-button'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,10 +34,13 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
-          <CartProvider> 
-          {children}
-          <Footer />
-          </CartProvider> 
+          <CartProvider>
+            <ToastProvider>
+              {children}
+              <Footer />
+              <DomaSenseButton />
+            </ToastProvider>
+          </CartProvider>
         </AuthProvider>
       </body>
     </html>

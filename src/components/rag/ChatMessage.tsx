@@ -146,7 +146,7 @@ export function ChatMessage({ role, content, products }: ChatMessageProps) {
       <span className={`text-[10px] uppercase tracking-widest mb-2 px-1 ${
         isAssistant ? 'text-[#BB4E2C]' : 'text-[#1a3126]/60'
       }`}>
-        {isAssistant ? 'Genie' : 'You'}
+        {isAssistant ? 'DOMA Sense' : 'You'}
       </span>
 
       <div className={`px-6 py-5 rounded-2xl text-sm md:text-base leading-relaxed shadow-sm ${

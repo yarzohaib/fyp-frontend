@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Menu, X, Search, ShoppingCart, Heart } from "lucide-react";
+import { Menu, X, ShoppingCart, Heart } from "lucide-react";
 import { LogoutButton } from "@/components/logout-button";
 import { useAuth } from "@/contexts/auth-context";
 import { useBackendCart } from "@/hooks/use-backend-cart";
@@ -186,105 +186,100 @@ export default function Navbar() {
 
             {/* Mobile Menu Drawer */}
             <div
-                className={`fixed top-0 right-0 h-full w-64 bg-white z-50 transform transition-transform duration-300 ease-in-out md:hidden ${
+                className={`fixed top-0 right-0 h-full w-72 bg-[#F2F0E5] z-50 transform transition-transform duration-300 ease-in-out md:hidden flex flex-col shadow-2xl ${
                     mobileMenuOpen ? "translate-x-0" : "translate-x-full"
                 }`}
             >
-                <div className="flex flex-col h-full">
-                    {/* Mobile Menu Header */}
-                    <div className="flex items-center justify-between p-6 border-b">
-                        <Image
-                            src="/NavbarLogo.webp"
-                            alt="Doma Logo"
-                            width={40}
-                            height={40}
-                            className="w-10 h-10"
-                        />
-                        <button
-                            onClick={() => setMobileMenuOpen(false)}
-                            className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
-                            aria-label="Close menu"
-                        >
-                            <X className="w-6 h-6 text-gray-700" />
-                        </button>
-                    </div>
+                {/* Header */}
+                <div className="bg-[#1A3126] px-6 py-5 flex items-center justify-between shrink-0">
+                    <span className="text-[#F2F0E5] font-serif text-2xl tracking-widest font-medium">
+                        DOMA
+                    </span>
+                    <button
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="text-[#F2F0E5]/60 hover:text-[#F2F0E5] transition-colors p-1 rounded-lg hover:bg-white/10"
+                        aria-label="Close menu"
+                    >
+                        <X className="w-5 h-5" />
+                    </button>
+                </div>
 
-                    {/* Mobile Menu Links */}
-                    <div className="flex flex-col p-6 space-y-4 flex-1">
-                        <Link 
-                            href="/products" 
-                            onClick={() => setMobileMenuOpen(false)} 
-                            className="text-gray-700 hover:text-[#1a3126] transition-colors font-medium py-2"
-                        >
-                            Products
-                        </Link>
-                        <Link 
-                            href="/profile" 
-                            onClick={() => setMobileMenuOpen(false)} 
-                            className="text-gray-700 hover:text-[#1a3126] transition-colors font-medium py-2"
-                        >
-                            Profile
-                        </Link>
+                {/* Nav Links */}
+                <div className="flex flex-col px-6 pt-6 gap-1 flex-1">
+                    <Link
+                        href="/products"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="flex items-center gap-3 px-4 py-3 rounded-xl text-[#1A3126] font-medium hover:bg-[#1A3126]/8 transition-colors"
+                    >
+                        Products
+                    </Link>
+                    <Link
+                        href="/profile"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="flex items-center gap-3 px-4 py-3 rounded-xl text-[#1A3126] font-medium hover:bg-[#1A3126]/8 transition-colors"
+                    >
+                        Profile
+                    </Link>
 
-                        {/* Mobile Icons */}
-                        <div className="flex items-center gap-4 py-2 border-t border-b">
-                            <button className="text-gray-700 hover:text-[#1a3126] transition-colors">
-                                <Search className="h-5 w-5" />
-                            </button>
-                            {isAuthenticated && (
-                                <>
-                                    <Link 
-                                        href="/wishlist" 
-                                        onClick={() => setMobileMenuOpen(false)}
-                                        className="relative text-gray-700 hover:text-[#1a3126] transition-colors"
-                                    >
-                                        <Heart className="h-5 w-5" />
-                                        {wishlistItemCount > 0 && (
-                                            <span className="absolute -top-2 -right-2 bg-accent text-black text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                                                {wishlistItemCount > 99 ? '99+' : wishlistItemCount}
-                                            </span>
-                                        )}
-                                    </Link>
-                                    <Link 
-                                        href="/cart"
-                                        onClick={() => setMobileMenuOpen(false)}
-                                        className="relative text-gray-700 hover:text-[#1a3126] transition-colors"
-                                    >
-                                        <ShoppingCart className="h-5 w-5" />
-                                        {cartItemCount > 0 && (
-                                            <span className="absolute -top-2 -right-2 bg-accent text-black text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                                                {cartItemCount > 99 ? '99+' : cartItemCount}
-                                            </span>
-                                        )}
-                                    </Link>
-                                </>
-                            )}
+                    {isAuthenticated && (
+                        <>
+                            <div className="h-px bg-[#1A3126]/10 my-3" />
+                            <Link
+                                href="/wishlist"
+                                onClick={() => setMobileMenuOpen(false)}
+                                className="flex items-center justify-between px-4 py-3 rounded-xl text-[#1A3126] font-medium hover:bg-[#1A3126]/8 transition-colors"
+                            >
+                                <span className="flex items-center gap-3">
+                                    <Heart className="h-4 w-4 text-[#BB4E2C]" />
+                                    Wishlist
+                                </span>
+                                {wishlistItemCount > 0 && (
+                                    <span className="bg-[#BB4E2C] text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                                        {wishlistItemCount > 99 ? '99+' : wishlistItemCount}
+                                    </span>
+                                )}
+                            </Link>
+                            <Link
+                                href="/cart"
+                                onClick={() => setMobileMenuOpen(false)}
+                                className="flex items-center justify-between px-4 py-3 rounded-xl text-[#1A3126] font-medium hover:bg-[#1A3126]/8 transition-colors"
+                            >
+                                <span className="flex items-center gap-3">
+                                    <ShoppingCart className="h-4 w-4 text-[#BB4E2C]" />
+                                    Cart
+                                </span>
+                                {cartItemCount > 0 && (
+                                    <span className="bg-[#BB4E2C] text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                                        {cartItemCount > 99 ? '99+' : cartItemCount}
+                                    </span>
+                                )}
+                            </Link>
+                        </>
+                    )}
+                </div>
+
+                {/* Auth Section */}
+                <div className="px-6 pb-8 pt-4 border-t border-[#1A3126]/10 shrink-0">
+                    {isAuthenticated ? (
+                        <LogoutButton />
+                    ) : (
+                        <div className="flex flex-col gap-3">
+                            <Link
+                                href="/login"
+                                onClick={() => setMobileMenuOpen(false)}
+                                className="w-full text-center py-3 rounded-xl border-2 border-[#1A3126] text-[#1A3126] font-semibold hover:bg-[#1A3126] hover:text-[#F2F0E5] transition-all"
+                            >
+                                Login
+                            </Link>
+                            <Link
+                                href="/signup"
+                                onClick={() => setMobileMenuOpen(false)}
+                                className="w-full text-center py-3 rounded-xl bg-[#BB4E2C] text-white font-semibold hover:bg-orange-500 transition-colors"
+                            >
+                                Sign Up
+                            </Link>
                         </div>
-
-                        {/* Auth Section */}
-                        {isAuthenticated ? (
-                            <div className="mt-auto">
-                                <LogoutButton />
-                            </div>
-                        ) : (
-                            <>
-                                <Link 
-                                    href="/login" 
-                                    onClick={() => setMobileMenuOpen(false)} 
-                                    className="text-gray-700 hover:text-[#1a3126] transition-colors font-medium py-2"
-                                >
-                                    Login
-                                </Link>
-                                <Link 
-                                    href="/signup" 
-                                    onClick={() => setMobileMenuOpen(false)} 
-                                    className="bg-[#1a3126] text-white px-5 py-3 rounded-lg font-semibold hover:bg-[#27493a] transition-colors text-center mt-2"
-                                >
-                                    Sign Up
-                                </Link>
-                            </>
-                        )}
-                    </div>
+                    )}
                 </div>
             </div>
         </>

@@ -78,7 +78,7 @@ export function RAGSearch() {
         }]);
       }
     } catch {
-      setError('Failed to connect to Genie. Please try again.');
+      setError('Failed to connect to DOMA Sense. Please try again.');
       setMessages(previousMessages);
       setPrompt(currentPrompt);
     } finally {
@@ -216,7 +216,7 @@ export function RAGSearch() {
 //   }]);
 //       }
 //     } catch {
-//       setError('Failed to connect to Genie. Please try again.');
+//       setError('Failed to connect to DOMA Sense. Please try again.');
 //       setMessages(previousMessages);
 //       setPrompt(currentPrompt);
 //     } finally {
