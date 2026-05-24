@@ -30,15 +30,18 @@ export default async function Home() {
     products = []
   }
 
-  const carouselProducts: CarouselProduct[] = products.map((product) => ({
-    id: product.id,
-    name: product.title,
-    slug: product.slug,
-    price: product.pricing.price,
-    image: buildImageUrl(product.images?.[0]?.image?.url, baseUrl) ?? "/placeholder.svg",
-    inStock: (product.inventory?.quantity ?? 0) > 0,
-    inventory: product.inventory,
-  }))
+  const carouselProducts: CarouselProduct[] = products
+    .filter((product) => product.model3dStatus === "ready")
+    .map((product) => ({
+      id: product.id,
+      name: product.title,
+      slug: product.slug,
+      price: product.pricing.price,
+      discountedPrice: product.pricing.discountedPrice,
+      image: buildImageUrl(product.images?.[0]?.image?.url, baseUrl) ?? "/placeholder.svg",
+      inStock: (product.inventory?.quantity ?? 0) > 0,
+      inventory: product.inventory,
+    }))
 
   return (
     <main className="min-h-screen">
@@ -46,14 +49,14 @@ export default async function Home() {
       <Hero />
 
       {/* AI Redesign Banner */}
-      <section className="bg-[#F2F0E5] pt-8 pb-0">
+      <section className="bg-[#F2F0E5] pt-14 md:pt-20 pb-0">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
           <RedesignBanner />
         </div>
       </section>
 
       {/* Featured Products */}
-      <section className="bg-[#F2F0E5] py-12 md:py-16">
+      <section className="bg-[#F2F0E5] py-14 md:py-20">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
           <FeaturedCarousel products={carouselProducts} />
         </div>
@@ -63,7 +66,7 @@ export default async function Home() {
       <AboutStrip />
 
       {/* About */}
-      <section className="bg-[#F2F0E5] py-12 md:py-16">
+      <section className="bg-[#F2F0E5] py-14 md:py-20">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
           <AboutSection />
         </div>

@@ -16,13 +16,19 @@ const COLOR_ACCENT = "#BB4E2C";
 // Light/Muted versions for status badges.
 const STATUS_COLORS: Record<string, string> = {
   pending: "bg-yellow-50 text-yellow-800 border-yellow-300",
-  delivered: "bg-emerald-50 text-emerald-800 border-emerald-300",cancelled: "bg-blue-50 text-blue-800 border-blue-300",
+  paid: "bg-sky-50 text-sky-800 border-sky-300",
+  processing: "bg-purple-50 text-purple-800 border-purple-300",
+  shipped: "bg-indigo-50 text-indigo-800 border-indigo-300",
+  delivered: "bg-emerald-50 text-emerald-800 border-emerald-300",
+  canceled: "bg-red-50 text-red-800 border-red-300",
 };
 
 const ORDER_STATUS_OPTIONS = [
   { label: "Pending", value: "pending" },
+  { label: "Processing", value: "processing" },
+  { label: "Shipped", value: "shipped" },
   { label: "Delivered", value: "delivered" },
-  { label: "Cancelled", value: "cancelled" },
+  { label: "Canceled", value: "canceled" },
 ] as Array<{ label: string; value: string }>;
 
 export default function VendorOrdersPage() {

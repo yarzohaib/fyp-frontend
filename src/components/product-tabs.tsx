@@ -1,8 +1,8 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { Star } from "lucide-react"
-import type { Review, PublicReviewsApiResponse } from "@/lib/Types"
+import { useEffect, useRef, useState } from "react"
+import { ImagePlus, Star, X } from "lucide-react"
+import type { Review } from "@/lib/Types"
 
 // Payload REST at depth=2 returns nested customer with Name + avatar
 interface RawReview extends Omit<Review, "customer"> {
@@ -270,50 +270,84 @@ function WriteReviewForm({
     const [hovered, setHovered] = useState(0)
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
+    const [photos, setPhotos] = useState<File[]>([])
+    const [photoPreviews, setPhotoPreviews] = useState<string[]>([])
     const [submitting, setSubmitting] = useState(false)
     const [err, setErr] = useState<string | null>(null)
+    const fileInputRef = useRef<HTMLInputElement>(null)
 
-   async function handleSubmit() {
-  if (!rating) return setErr("Please select a rating.")
-  if (!description.trim()) return setErr("Please write a review.")
-  setErr(null)
-  setSubmitting(true)
-
-  try {
-    // Read token from localStorage — same as Flutter's secure storage
-    const token = localStorage.getItem("authToken") || localStorage.getItem("token")
-
-    if (!token) {
-      setErr("You must be logged in to submit a review.")
-      setSubmitting(false)
-      return
+    function handlePhotoSelect(e: React.ChangeEvent<HTMLInputElement>) {
+        const files = Array.from(e.target.files ?? [])
+        const remaining = 5 - photos.length
+        const toAdd = files.slice(0, remaining)
+        setPhotos((prev) => [...prev, ...toAdd])
+        setPhotoPreviews((prev) => [...prev, ...toAdd.map((f) => URL.createObjectURL(f))])
+        e.target.value = ""
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || ""
+    function removePhoto(index: number) {
+        URL.revokeObjectURL(photoPreviews[index])
+        setPhotos((prev) => prev.filter((_, i) => i !== index))
+        setPhotoPreviews((prev) => prev.filter((_, i) => i !== index))
+    }
 
-    const res = await fetch(`${baseUrl}/api/customer/reviews`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `JWT ${token}`,  // ✅ send token in header
-      },
-      body: JSON.stringify({
-        productId,
-        rating,
-        title: title.trim() || undefined,  // ✅ omit if empty (backend rejects empty string)
-        description: description.trim(),
-      }),
-    })
+    async function uploadPhoto(file: File, token: string, baseUrl: string): Promise<string> {
+        const form = new FormData()
+        form.append("file", file)
+        const res = await fetch(`${baseUrl}/api/media`, {
+            method: "POST",
+            headers: { Authorization: `JWT ${token}` },
+            body: form,
+        })
+        const data = await res.json()
+        if (!res.ok) throw new Error(data.errors?.[0]?.message ?? "Photo upload failed")
+        return data.doc.id as string
+    }
 
-    const data = await res.json()
-    if (!res.ok) throw new Error(data.error ?? "Failed to submit review")
-    onSuccess()
-  } catch (e: any) {
-    setErr(e.message)
-  } finally {
-    setSubmitting(false)
-  }
-}
+    async function handleSubmit() {
+        if (!rating) return setErr("Please select a rating.")
+        if (!description.trim()) return setErr("Please write a review.")
+        setErr(null)
+        setSubmitting(true)
+
+        try {
+            const token = localStorage.getItem("authToken") || localStorage.getItem("token")
+            if (!token) {
+                setErr("You must be logged in to submit a review.")
+                setSubmitting(false)
+                return
+            }
+
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || ""
+
+            const photoIds = await Promise.all(
+                photos.map((file) => uploadPhoto(file, token, baseUrl))
+            )
+
+            const res = await fetch(`${baseUrl}/api/customer/reviews`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `JWT ${token}`,
+                },
+                body: JSON.stringify({
+                    productId,
+                    rating,
+                    title: title.trim() || undefined,
+                    description: description.trim(),
+                    photos: photoIds.map((id) => ({ image: id })),
+                }),
+            })
+
+            const data = await res.json()
+            if (!res.ok) throw new Error(data.error ?? "Failed to submit review")
+            onSuccess()
+        } catch (e: any) {
+            setErr(e.message)
+        } finally {
+            setSubmitting(false)
+        }
+    }
 
     return (
         <div className="bg-secondary/20 rounded-2xl p-5 mb-6 space-y-4">
@@ -356,6 +390,46 @@ function WriteReviewForm({
                 rows={3}
                 className="w-full bg-background border border-border/60 rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-yellow-400/40 resize-none"
             />
+
+            {/* Photo upload */}
+            <div className="space-y-2">
+                {photoPreviews.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                        {photoPreviews.map((src, i) => (
+                            <div key={i} className="relative w-20 h-20 rounded-lg overflow-hidden border border-border/60">
+                                <img src={src} alt="" className="w-full h-full object-cover" />
+                                <button
+                                    type="button"
+                                    onClick={() => removePhoto(i)}
+                                    className="absolute top-0.5 right-0.5 bg-black/60 rounded-full p-0.5"
+                                >
+                                    <X className="w-3 h-3 text-white" />
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                )}
+                {photos.length < 5 && (
+                    <>
+                        <input
+                            ref={fileInputRef}
+                            type="file"
+                            accept="image/*"
+                            multiple
+                            className="hidden"
+                            onChange={handlePhotoSelect}
+                        />
+                        <button
+                            type="button"
+                            onClick={() => fileInputRef.current?.click()}
+                            className="flex items-center gap-2 text-sm text-muted-foreground border border-dashed border-border/60 rounded-lg px-3 py-2 hover:border-yellow-400/60 hover:text-foreground transition-colors"
+                        >
+                            <ImagePlus className="w-4 h-4" />
+                            Add photos ({photos.length}/5)
+                        </button>
+                    </>
+                )}
+            </div>
 
             {err && <p className="text-sm text-destructive">{err}</p>}
 

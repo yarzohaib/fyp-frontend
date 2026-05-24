@@ -23,7 +23,7 @@ export interface ProductImage {
 
 export interface ProductPricing {
     price: number;
-    comparePrice?: number;
+    discountedPrice?: number;
     currency?: string;
 }
 
@@ -53,6 +53,7 @@ export interface Product {
     }>
     specifications?: string;
     reviews?: Review[];
+    model3dStatus?: 'none' | 'processing' | 'ready' | 'failed';
 }
 
 // API Response types
@@ -159,6 +160,7 @@ export interface ProductItem {
     id: string | number
     title: string
     price: number
+    discountedPrice?: number
     image: string
     slug?: string
     inStock?: boolean
@@ -190,6 +192,7 @@ export interface CarouselProduct {
     id: string | number
     name: string
     price: number
+    discountedPrice?: number
     image: string
     slug?: string
     inStock: boolean
@@ -205,7 +208,7 @@ export interface ProductDetailsProps {
         id: string
         title: string
         price: number
-        comparePrice?: number
+        discountedPrice?: number
         description: string
         inStock: boolean
         colors?: Array<{
@@ -333,7 +336,7 @@ export interface Customer {
 export interface Order {
     id: string;
     orderNumber: string;
-    orderStatus: 'pending' | 'delivered' | 'cancelled';
+    orderStatus: 'pending' | 'paid' | 'processing' | 'shipped' | 'delivered' | 'canceled';
     paymentStatus: string;
     items: OrderItem[];
     total: number;
@@ -371,8 +374,11 @@ export interface BestSellingItem {
 
 export interface OrderStatusStats {
     pending: number;
+    paid: number;
+    processing: number;
+    shipped: number;
     delivered: number;
-    cancelled: number;
+    canceled: number;
 }
 
 export interface MonthlyRevenuePoint {

@@ -4,7 +4,7 @@ import { Sparkles } from "lucide-react"
 export function RedesignBanner() {
   return (
     <Link href="/redesign">
-      <div className="relative overflow-hidden rounded-2xl cursor-pointer group bg-[#1A3126] min-h-[220px] flex items-center justify-center shadow-xl hover:shadow-2xl transition-shadow duration-500">
+      <div className="relative overflow-hidden rounded-2xl cursor-pointer group bg-[#1A3126] min-h-[300px] md:min-h-[360px] flex items-center justify-center shadow-xl hover:shadow-2xl transition-shadow duration-500">
 
         {/* Always-running shimmer sweep */}
         <div className="absolute inset-y-0 w-1/3 bg-gradient-to-r from-transparent via-white/8 to-transparent animate-shimmer pointer-events-none" />
@@ -34,7 +34,7 @@ export function RedesignBanner() {
           </div>
 
           {/* Heading */}
-          <h2 className="text-4xl md:text-5xl font-serif font-medium text-[#F2F0E5] leading-tight">
+          <h2 className="text-5xl md:text-6xl font-serif font-medium text-[#F2F0E5] leading-tight">
             DOMA Create
           </h2>
 
