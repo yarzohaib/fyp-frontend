@@ -17,12 +17,12 @@ interface ProductDetailsProps {
         id: string
         title: string
         price: number
-        comparePrice?: number
+        discountedPrice?: number
         shortDescription?: string
         Description?: string
         inStock: boolean
         colors?: ProductColor[]
-        category?: string 
+        category?: string
     }
 }
 
@@ -129,14 +129,19 @@ export function ProductDetails({ product }: ProductDetailsProps) {
             </div>
 
             {/* Price */}
-            <div className="flex items-baseline gap-3 pt-4">
+            <div className="flex items-baseline gap-3 pt-4 flex-wrap">
                 <span className="text-3xl font-bold text-foreground">
-                    Rs. {product.price.toLocaleString()}
+                    Rs. {(product.discountedPrice ?? product.price).toLocaleString()}
                 </span>
-                {product.comparePrice && (
-                    <span className="text-lg text-foreground/40 line-through">
-                        Rs. {product.comparePrice.toLocaleString()}
-                    </span>
+                {product.discountedPrice && (
+                    <>
+                        <span className="text-lg text-foreground/40 line-through">
+                            Rs. {product.price.toLocaleString()}
+                        </span>
+                        <span className="text-sm font-semibold text-[#1A3126] bg-[#1A3126]/10 px-2 py-0.5 rounded">
+                            {Math.round((1 - product.discountedPrice / product.price) * 100)}% off
+                        </span>
+                    </>
                 )}
             </div>
 

@@ -3,7 +3,7 @@ import ProductsPageClient from '@/components/products-page-client'
 import type { Product, Category } from "@/lib/Types"
 import { fetchProducts, fetchCategories } from "@/lib/payload"
 export const revalidate = 60;
-// Server Component - fetches data
+
 export default async function ProductsPage() {
    
 

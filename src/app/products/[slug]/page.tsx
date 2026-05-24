@@ -1,11 +1,9 @@
 import { notFound } from "next/navigation"
-import Link from "next/link"
 import { ProductDetails } from "@/components/product-details"
 import { ProductReviews } from "@/components/product-tabs"
 import { ProductGallery } from "@/components/product-gallery"
 import { RelatedProducts } from "@/components/related-products"
 import Navbar from "@/components/navbar"
-import React from "react"
 import { buildImageUrl } from "@/lib/utils"
 import { fetchProductBySlugOrId, fetchRelatedProducts } from "@/lib/payload"
 
@@ -77,7 +75,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                             id: product.id,
                             title: product.title,
                             price: product.pricing.price,
-                            comparePrice: product.pricing.comparePrice,
+                            discountedPrice: product.pricing.discountedPrice,
                             shortDescription: product.shortDescription || "",
                             Description: product.Description || "",
                             inStock: inStock,

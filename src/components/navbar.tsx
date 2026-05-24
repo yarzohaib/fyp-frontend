@@ -3,156 +3,154 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Menu, X, ShoppingCart, Heart } from "lucide-react";
-import { LogoutButton } from "@/components/logout-button";
+import { usePathname, useRouter } from "next/navigation";
+import { Menu, X, ShoppingCart, Heart, LogOut } from "lucide-react";
 import { useAuth } from "@/contexts/auth-context";
 import { useBackendCart } from "@/hooks/use-backend-cart";
 import { useWishlist } from "@/hooks/use-wishlist";
 
+const NAV_LINKS = [
+    { href: "/",          label: "Home"     },
+    { href: "/products",  label: "Products" },
+    { href: "/redesign",  label: "Redesign" },
+    { href: "/profile",   label: "Profile"  },
+];
+
 export default function Navbar() {
-    const [scrollY, setScrollY] = useState(0);
+    const [scrollY, setScrollY]           = useState(0);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const { isAuthenticated } = useAuth();
-    const { cart } = useBackendCart();
+    const pathname   = usePathname();
+    const router     = useRouter();
+    const { isAuthenticated, logout } = useAuth();
+    const { cart }     = useBackendCart();
     const { wishlist } = useWishlist();
 
-    // Calculate total items in cart
-    const cartItemCount = cart?.items?.reduce((total, item) => total + item.quantity, 0) || 0;
-    const wishlistItemCount = wishlist?.length || 0;
+    const cartItemCount     = cart?.items?.reduce((t, i) => t + i.quantity, 0) ?? 0;
+    const wishlistItemCount = wishlist?.length ?? 0;
 
     useEffect(() => {
-        const handleScroll = () => setScrollY(window.scrollY);
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
+        const onScroll = () => setScrollY(window.scrollY);
+        window.addEventListener("scroll", onScroll, { passive: true });
+        return () => window.removeEventListener("scroll", onScroll);
     }, []);
 
-    // Lock body scroll when mobile menu is open
     useEffect(() => {
-        if (mobileMenuOpen) {
-            document.body.style.overflow = "hidden";
-        } else {
-            document.body.style.overflow = "unset";
-        }
-        return () => {
-            document.body.style.overflow = "unset";
-        };
+        document.body.style.overflow = mobileMenuOpen ? "hidden" : "";
+        return () => { document.body.style.overflow = ""; };
     }, [mobileMenuOpen]);
 
-    const isScrolled = scrollY > 50;
+    const isScrolled    = scrollY > 50;
+    // Transparent only over the home-page hero before any scrolling
+    const isTransparent = pathname === "/" && !isScrolled;
+    const logoSrc       = isTransparent ? "/WhiteLogo.png" : "/GreenLogo.png";
+
+    const handleLogout = () => {
+        logout();
+        router.push("/");
+        setMobileMenuOpen(false);
+    };
+
+    // Shared class helpers
+    const iconCls  = `relative transition-colors duration-200 ${isTransparent ? "text-white/80 hover:text-white" : "text-[#1A3126]/60 hover:text-[#1A3126]"}`;
+    const badge    = "absolute -top-1.5 -right-1.5 bg-[#BB4E2C] text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center leading-none";
 
     return (
         <>
-            <nav
-                className={`fixed w-full z-50 transition-all duration-300 ${
-                    isScrolled 
-                        ? "bg-[#F2F0E5] backdrop-blur-sm shadow-md" 
-                        : "bg-linear-to-b from-black/40 to-transparent"
-                }`}
-            >
-                <div className="container mx-auto max-w-7xl px-6 md:px-10 lg:px-12">
-                    <div className="flex items-center justify-between py-4">
-                        {/* Left side - Logo and Navigation Links */}
-                        <div className="flex items-center space-x-8 lg:space-x-12">
-                            {/* Logo */}
-                            <Link href="/" className="flex items-center">
+            {/* ── Desktop / Main nav ─────────────────────────────────────────── */}
+            <nav className={`fixed w-full z-50 transition-all duration-300 ${
+                isTransparent
+                    ? "bg-transparent"
+                    : "bg-[#F2F0E5]/95 backdrop-blur-md border-b border-[#1A3126]/8 shadow-sm"
+            }`}>
+                <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12">
+                    <div className="flex items-center justify-between md:grid md:grid-cols-3 py-3 md:py-3.5">
+
+                        {/* ── Left: Logo ─────────────────────────────────────── */}
+                        <div className="flex items-center">
+                            <Link href="/" className="flex items-center group">
                                 <Image
-                                    src="/logoo.jpg"
-                                    alt="Doma Logo"
-                                    width={80}
-                                    height={80}
-                                    className="w-10 h-10 sm:w-12 sm:h-12 transition-transform hover:scale-105 object-contain"
+                                    src={logoSrc}
+                                    alt="DOMA"
+                                    width={160}
+                                    height={56}
+                                    className="h-11 w-auto transition-opacity duration-200 group-hover:opacity-75"
                                     priority
-                                    sizes="(max-width: 640px) 40px, 48px" 
                                 />
                             </Link>
-
-                            {/* Navigation Links - Desktop */}
-                            <div className="hidden md:flex items-center space-x-8">
-                                <Link 
-                                    href="/profile" 
-                                    className={`transition-colors font-medium ${
-                                        isScrolled 
-                                            ? "text-gray-700 hover:text-[#1a3126]" 
-                                            : "text-white hover:text-white/80"
-                                    }`}
-                                >
-                                    Profile
-                                </Link>
-                                <Link 
-                                    href="/products" 
-                                    className={`transition-colors font-medium ${
-                                        isScrolled 
-                                            ? "text-gray-700 hover:text-[#1a3126]" 
-                                            : "text-white hover:text-white/80"
-                                    }`}
-                                >
-                                    Products
-                                </Link>
-                            </div>
                         </div>
 
-                        {/* Right side - Desktop Menu */}
-                        <div className="hidden md:flex items-center space-x-6">
-                            
+                        {/* ── Centre: Nav links (desktop) ────────────────────── */}
+                        <div className="hidden md:flex items-center justify-center gap-7">
+                            {NAV_LINKS.map(({ href, label }) => {
+                                const active = pathname === href;
+                                return (
+                                    <Link
+                                        key={href}
+                                        href={href}
+                                        className={`relative text-sm font-medium transition-colors duration-200 pb-0.5 ${
+                                            active
+                                                ? isTransparent ? "text-white"      : "text-[#1A3126]"
+                                                : isTransparent ? "text-white/70 hover:text-white" : "text-[#1A3126]/60 hover:text-[#1A3126]"
+                                        }`}
+                                    >
+                                        {label}
+                                        {active && (
+                                            <span className={`absolute -bottom-0.5 left-0 right-0 h-[1.5px] rounded-full ${
+                                                isTransparent ? "bg-white" : "bg-[#BB4E2C]"
+                                            }`} />
+                                        )}
+                                    </Link>
+                                );
+                            })}
+                        </div>
+
+                        {/* ── Right: Icons + auth (desktop) ──────────────────── */}
+                        <div className="hidden md:flex items-center justify-end gap-5">
                             {isAuthenticated ? (
                                 <>
-                                    {/* Wishlist - Show for authenticated users */}
-                                    <Link 
-                                        href="/wishlist" 
-                                        className={`relative transition-colors ${
-                                            isScrolled 
-                                                ? "text-gray-700 hover:text-[#1a3126]" 
-                                                : "text-white hover:text-white/80"
-                                        }`}
-                                    >
-                                        <Heart className="h-5 w-5" />
+                                    <Link href="/wishlist" className={iconCls} aria-label="Wishlist">
+                                        <Heart className="h-[18px] w-[18px]" />
                                         {wishlistItemCount > 0 && (
-                                            <span className="absolute -top-2 -right-2 bg-accent text-black text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                                                {wishlistItemCount > 99 ? '99+' : wishlistItemCount}
-                                            </span>
+                                            <span className={badge}>{wishlistItemCount > 9 ? "9+" : wishlistItemCount}</span>
                                         )}
-                                        <span className="sr-only">Wishlist</span>
                                     </Link>
 
-                                    {/* Cart with Badge */}
-                                    <Link 
-                                        href="/cart"
-                                        className={`relative transition-colors ${
-                                            isScrolled 
-                                                ? "text-gray-700 hover:text-[#1a3126]" 
-                                                : "text-white hover:text-white/80"
+                                    <Link href="/cart" className={iconCls} aria-label="Cart">
+                                        <ShoppingCart className="h-[18px] w-[18px]" />
+                                        {cartItemCount > 0 && (
+                                            <span className={badge}>{cartItemCount > 9 ? "9+" : cartItemCount}</span>
+                                        )}
+                                    </Link>
+
+                                    <button
+                                        onClick={handleLogout}
+                                        className={`flex items-center gap-1.5 text-sm font-medium transition-colors duration-200 ${
+                                            isTransparent
+                                                ? "text-white/70 hover:text-white"
+                                                : "text-[#1A3126]/60 hover:text-[#BB4E2C]"
                                         }`}
                                     >
-                                        <ShoppingCart className="h-5 w-5" />
-                                        {cartItemCount > 0 && (
-                                            <span className="absolute -top-2 -right-2 bg-accent text-black text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                                                {cartItemCount > 99 ? '99+' : cartItemCount}
-                                            </span>
-                                        )}
-                                        <span className="sr-only">Cart</span>
-                                    </Link>
-
-                                    {/* Logout Button */}
-                                    <LogoutButton />
+                                        <LogOut className="h-4 w-4" />
+                                        Logout
+                                    </button>
                                 </>
                             ) : (
                                 <>
-                                    {/* Login & Signup - Show for unauthenticated users */}
-                                    <Link 
-                                        href="/login" 
-                                        className={`transition-colors font-medium ${
-                                            isScrolled 
-                                                ? "text-gray-700 hover:text-[#1a3126]" 
-                                                : "text-white hover:text-white/80"
+                                    <Link
+                                        href="/login"
+                                        className={`text-sm font-medium transition-colors duration-200 ${
+                                            isTransparent
+                                                ? "text-white/80 hover:text-white"
+                                                : "text-[#1A3126]/70 hover:text-[#1A3126]"
                                         }`}
                                     >
                                         Login
                                     </Link>
                                     <Link
                                         href="/signup"
-                                        className="bg-[#BB4E2C] text-white px-5 py-2.5 rounded-lg font-semibold 
-                                                 hover:bg-orange-500 transition-all duration-300 
-                                                 shadow-sm hover:shadow-md transform hover:-translate-y-0.5"
+                                        className="bg-[#BB4E2C] text-white px-4 py-2 rounded-lg text-sm font-semibold
+                                                   hover:bg-orange-500 transition-all duration-200
+                                                   shadow-sm hover:shadow-md hover:-translate-y-0.5"
                                     >
                                         Sign Up
                                     </Link>
@@ -160,121 +158,114 @@ export default function Navbar() {
                             )}
                         </div>
 
-                        {/* Mobile Menu Button */}
-                        <button
-                            className="md:hidden p-2 rounded-lg transition-colors hover:bg-white/10"
-                            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                            aria-label="Toggle menu"
-                        >
-                            {mobileMenuOpen ? (
-                                <X className={`w-6 h-6 ${isScrolled ? "text-gray-700" : "text-white"}`} />
-                            ) : (
-                                <Menu className={`w-6 h-6 ${isScrolled ? "text-gray-700" : "text-white"}`} />
+                        {/* ── Right: Icons + burger (mobile) ─────────────────── */}
+                        <div className="md:hidden flex items-center justify-end gap-3.5">
+                            {isAuthenticated && (
+                                <>
+                                    <Link href="/wishlist" className={iconCls} aria-label="Wishlist">
+                                        <Heart className="h-5 w-5" />
+                                        {wishlistItemCount > 0 && (
+                                            <span className={badge}>{wishlistItemCount > 9 ? "9+" : wishlistItemCount}</span>
+                                        )}
+                                    </Link>
+                                    <Link href="/cart" className={iconCls} aria-label="Cart">
+                                        <ShoppingCart className="h-5 w-5" />
+                                        {cartItemCount > 0 && (
+                                            <span className={badge}>{cartItemCount > 9 ? "9+" : cartItemCount}</span>
+                                        )}
+                                    </Link>
+                                </>
                             )}
-                        </button>
+                            <button
+                                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                                aria-label="Toggle menu"
+                                className={`p-1 transition-colors ${isTransparent ? "text-white/80 hover:text-white" : "text-[#1A3126]/70 hover:text-[#1A3126]"}`}
+                            >
+                                {mobileMenuOpen
+                                    ? <X className="w-5 h-5" />
+                                    : <Menu className="w-5 h-5" />
+                                }
+                            </button>
+                        </div>
+
                     </div>
                 </div>
             </nav>
 
-            {/* Mobile Menu Overlay */}
+            {/* ── Mobile backdrop ─────────────────────────────────────────────── */}
             {mobileMenuOpen && (
-                <div 
-                    className="fixed inset-0 bg-black/50 z-40 md:hidden"
+                <div
+                    className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 md:hidden"
                     onClick={() => setMobileMenuOpen(false)}
                 />
             )}
 
-            {/* Mobile Menu Drawer */}
-            <div
-                className={`fixed top-0 right-0 h-full w-72 bg-[#F2F0E5] z-50 transform transition-transform duration-300 ease-in-out md:hidden flex flex-col shadow-2xl ${
-                    mobileMenuOpen ? "translate-x-0" : "translate-x-full"
-                }`}
-            >
+            {/* ── Mobile drawer ───────────────────────────────────────────────── */}
+            <div className={`fixed top-0 right-0 h-full w-72 bg-[#F2F0E5] z-50 flex flex-col shadow-2xl
+                             transform transition-transform duration-300 ease-in-out md:hidden ${
+                mobileMenuOpen ? "translate-x-0" : "translate-x-full"
+            }`}>
                 {/* Header */}
                 <div className="bg-[#1A3126] px-6 py-5 flex items-center justify-between shrink-0">
-                    <span className="text-[#F2F0E5] font-serif text-2xl tracking-widest font-medium">
-                        DOMA
-                    </span>
+                    <Image src="/WhiteLogo.png" alt="DOMA" width={100} height={32} className="h-7 w-auto" />
                     <button
                         onClick={() => setMobileMenuOpen(false)}
-                        className="text-[#F2F0E5]/60 hover:text-[#F2F0E5] transition-colors p-1 rounded-lg hover:bg-white/10"
                         aria-label="Close menu"
+                        className="text-white/60 hover:text-white transition-colors"
                     >
                         <X className="w-5 h-5" />
                     </button>
                 </div>
 
-                {/* Nav Links */}
-                <div className="flex flex-col px-6 pt-6 gap-1 flex-1">
-                    <Link
-                        href="/products"
-                        onClick={() => setMobileMenuOpen(false)}
-                        className="flex items-center gap-3 px-4 py-3 rounded-xl text-[#1A3126] font-medium hover:bg-[#1A3126]/8 transition-colors"
-                    >
-                        Products
-                    </Link>
-                    <Link
-                        href="/profile"
-                        onClick={() => setMobileMenuOpen(false)}
-                        className="flex items-center gap-3 px-4 py-3 rounded-xl text-[#1A3126] font-medium hover:bg-[#1A3126]/8 transition-colors"
-                    >
-                        Profile
-                    </Link>
-
-                    {isAuthenticated && (
-                        <>
-                            <div className="h-px bg-[#1A3126]/10 my-3" />
+                {/* Links */}
+                <nav className="flex flex-col px-4 pt-5 gap-1 flex-1 overflow-y-auto">
+                    {NAV_LINKS.map(({ href, label }) => {
+                        const active = pathname === href;
+                        return (
                             <Link
-                                href="/wishlist"
+                                key={href}
+                                href={href}
                                 onClick={() => setMobileMenuOpen(false)}
-                                className="flex items-center justify-between px-4 py-3 rounded-xl text-[#1A3126] font-medium hover:bg-[#1A3126]/8 transition-colors"
+                                className={`px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
+                                    active
+                                        ? "bg-[#1A3126] text-[#F2F0E5]"
+                                        : "text-[#1A3126] hover:bg-[#1A3126]/8"
+                                }`}
                             >
-                                <span className="flex items-center gap-3">
-                                    <Heart className="h-4 w-4 text-[#BB4E2C]" />
-                                    Wishlist
-                                </span>
-                                {wishlistItemCount > 0 && (
-                                    <span className="bg-[#BB4E2C] text-white text-xs font-bold px-2 py-0.5 rounded-full">
-                                        {wishlistItemCount > 99 ? '99+' : wishlistItemCount}
-                                    </span>
-                                )}
+                                {label}
                             </Link>
-                            <Link
-                                href="/cart"
-                                onClick={() => setMobileMenuOpen(false)}
-                                className="flex items-center justify-between px-4 py-3 rounded-xl text-[#1A3126] font-medium hover:bg-[#1A3126]/8 transition-colors"
-                            >
-                                <span className="flex items-center gap-3">
-                                    <ShoppingCart className="h-4 w-4 text-[#BB4E2C]" />
-                                    Cart
-                                </span>
-                                {cartItemCount > 0 && (
-                                    <span className="bg-[#BB4E2C] text-white text-xs font-bold px-2 py-0.5 rounded-full">
-                                        {cartItemCount > 99 ? '99+' : cartItemCount}
-                                    </span>
-                                )}
-                            </Link>
-                        </>
-                    )}
-                </div>
+                        );
+                    })}
+                </nav>
 
-                {/* Auth Section */}
-                <div className="px-6 pb-8 pt-4 border-t border-[#1A3126]/10 shrink-0">
+                {/* Auth */}
+                <div className="px-4 pb-8 pt-4 border-t border-[#1A3126]/10 shrink-0">
                     {isAuthenticated ? (
-                        <LogoutButton />
+                        <button
+                            onClick={handleLogout}
+                            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl
+                                       border-2 border-[#BB4E2C] text-[#BB4E2C] text-sm font-semibold
+                                       hover:bg-[#BB4E2C] hover:text-white transition-all"
+                        >
+                            <LogOut className="h-4 w-4" />
+                            Logout
+                        </button>
                     ) : (
                         <div className="flex flex-col gap-3">
                             <Link
                                 href="/login"
                                 onClick={() => setMobileMenuOpen(false)}
-                                className="w-full text-center py-3 rounded-xl border-2 border-[#1A3126] text-[#1A3126] font-semibold hover:bg-[#1A3126] hover:text-[#F2F0E5] transition-all"
+                                className="w-full text-center py-3 rounded-xl border-2 border-[#1A3126]
+                                           text-[#1A3126] text-sm font-semibold
+                                           hover:bg-[#1A3126] hover:text-[#F2F0E5] transition-all"
                             >
                                 Login
                             </Link>
                             <Link
                                 href="/signup"
                                 onClick={() => setMobileMenuOpen(false)}
-                                className="w-full text-center py-3 rounded-xl bg-[#BB4E2C] text-white font-semibold hover:bg-orange-500 transition-colors"
+                                className="w-full text-center py-3 rounded-xl bg-[#BB4E2C]
+                                           text-white text-sm font-semibold hover:bg-orange-500 transition-colors"
                             >
                                 Sign Up
                             </Link>

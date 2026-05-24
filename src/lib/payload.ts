@@ -421,13 +421,16 @@ export async function getOrderStatus(): Promise<OrderStatusStats> {
     const ordersData = await fetchVendorOrdersData();
 
     if (!ordersData?.docs) {
-        return { pending: 0, delivered: 0, cancelled: 0 };
+        return { pending: 0, paid: 0, processing: 0, shipped: 0, delivered: 0, canceled: 0 };
     }
 
     const stats: OrderStatusStats = {
         pending: 0,
+        paid: 0,
+        processing: 0,
+        shipped: 0,
         delivered: 0,
-        cancelled: 0,
+        canceled: 0,
     };
 
     ordersData.docs.forEach((order) => {
@@ -572,10 +575,11 @@ export async function updateOrderStatus(
             clearOrdersCache();
             return true;
         }
-        return false;   
+        const errData = await response.json().catch(() => ({}))
+        throw new Error(errData.error ?? `Failed to update status (${response.status})`)
     } catch (err) {
         console.error("Error updating order status:", err);
-        return false;
+        throw err;
     }
 }
 

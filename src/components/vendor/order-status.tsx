@@ -18,27 +18,15 @@ export default function OrderStatus({ stats }: OrderStatusProps) {
     );
   }
 
-  const total = stats.pending + stats.delivered + stats.cancelled || 1;
+  const total = stats.pending + stats.paid + stats.processing + stats.shipped + stats.delivered + stats.canceled || 1;
 
   const formatted = [
-    { 
-      label: "Pending", 
-      value: (stats.pending / total) * 100,
-      count: stats.pending,
-      color: '#BB4E2C'
-    },
-    { 
-      label: "Delivered", 
-      value: (stats.delivered / total) * 100,
-      count: stats.delivered,
-      color: '#1A3126'
-    },
-    { 
-      label: "Cancelled", 
-      value: (stats.cancelled / total) * 100,
-      count: stats.cancelled,
-      color: '#6B7280'
-    },
+    { label: "Pending",    value: (stats.pending    / total) * 100, count: stats.pending,    color: '#BB4E2C' },
+    { label: "Paid",       value: (stats.paid        / total) * 100, count: stats.paid,        color: '#0EA5E9' },
+    { label: "Processing", value: (stats.processing  / total) * 100, count: stats.processing,  color: '#A855F7' },
+    { label: "Shipped",    value: (stats.shipped     / total) * 100, count: stats.shipped,     color: '#6366F1' },
+    { label: "Delivered",  value: (stats.delivered   / total) * 100, count: stats.delivered,   color: '#1A3126' },
+    { label: "Canceled",   value: (stats.canceled    / total) * 100, count: stats.canceled,    color: '#6B7280' },
   ];
 
   return (

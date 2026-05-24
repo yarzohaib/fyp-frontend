@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react'
 import Navbar from "@/components/navbar"
 import { FilterSidebar } from "@/components/filter-sidebar"
 import { ProductsGrid } from "@/components/product-grid"
+import { HeroSearch } from "@/components/hero-search"
 import type { ProductCardProps, Category, Product, ActiveFilters } from "@/lib/Types"
 
 interface ProductsPageProps {
@@ -11,7 +12,6 @@ interface ProductsPageProps {
     categories: Category[]
 }
 
-// Client Component - handles filtering and state
 export default function ProductsPageClient({ initialProducts, categories }: ProductsPageProps) {
     const [filters, setFilters] = useState<ActiveFilters>({
         onSale: false,
@@ -19,29 +19,35 @@ export default function ProductsPageClient({ initialProducts, categories }: Prod
         selectedCategories: [],
     })
     const [showFilters, setShowFilters] = useState(false)
+    const [searchQuery, setSearchQuery] = useState('')
 
-    // Filter products based on active filters
     const filteredProducts = useMemo(() => {
         return initialProducts.filter((product) => {
-            
-            // ✅ NEW FILTER LOGIC: Filter by 'On Sale'
-            // Assumes a product is 'On Sale' if it has a comparePrice set.
-            if (filters.onSale && !product.pricing.comparePrice) {
+            // Search filter
+            if (searchQuery.trim()) {
+                const q = searchQuery.toLowerCase()
+                const matchesTitle = product.title.toLowerCase().includes(q)
+                const matchesDesc =
+                    product.Description?.toLowerCase().includes(q) ||
+                    product.shortDescription?.toLowerCase().includes(q)
+                if (!matchesTitle && !matchesDesc) return false
+            }
+
+            // On sale filter
+            if (filters.onSale && !product.pricing.discountedPrice) {
                 return false
             }
 
-            // Filter by stock if "In Stock" is checked
+            // In stock filter
             if (filters.inStock && (product.inventory?.quantity ?? 0) <= 0) {
                 return false
             }
 
-            // Filter by category if any categories are selected
+            // Category filter
             if (filters.selectedCategories.length > 0) {
-                const productCategoryId = typeof product.category === 'object' 
-                    ? product.category?.id 
+                const productCategoryId = typeof product.category === 'object'
+                    ? product.category?.id
                     : product.category
-
-                // If product has no category ID, exclude it from filtered results
                 if (!productCategoryId || !filters.selectedCategories.includes(productCategoryId)) {
                     return false
                 }
@@ -49,26 +55,30 @@ export default function ProductsPageClient({ initialProducts, categories }: Prod
 
             return true
         })
-    }, [initialProducts, filters])
+    }, [initialProducts, filters, searchQuery])
 
-    // Transform filtered products to ProductCardProps for display
     const transformedProducts: ProductCardProps[] = filteredProducts.map((product) => ({
         id: product.id,
         title: product.title,
         price: product.pricing.price,
+        discountedPrice: product.pricing.discountedPrice,
         image: product.images?.[0]?.image?.url ?? "/placeholder.svg",
         inStock: (product.inventory?.quantity ?? 0) > 0,
         slug: product.slug,
         shortDescription: product.shortDescription,
-        comparePrice: product.pricing.comparePrice,
     }))
 
     return (
         <div className="min-h-screen bg-background">
             <Navbar />
             <main className="mx-auto w-full max-w-7xl px-2 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8">
+                {/* Hero Search */}
+                <div className="mt-16 sm:mt-20 mb-6 sm:mb-8">
+                    <HeroSearch value={searchQuery} onSearch={setSearchQuery} />
+                </div>
+
                 {/* Main Content */}
-                <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-8 mt-16 sm:mt-20">
+                <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-8">
                     {/* Mobile Filter Toggle */}
                     <button
                         onClick={() => setShowFilters(!showFilters)}
@@ -94,6 +104,11 @@ export default function ProductsPageClient({ initialProducts, categories }: Prod
                             <>
                                 <div className="mb-4 text-xs sm:text-sm text-gray-600 px-2 sm:px-0">
                                     Showing {transformedProducts.length} product{transformedProducts.length !== 1 ? 's' : ''}
+                                    {searchQuery && (
+                                        <span className="ml-1">
+                                            for <span className="font-medium text-gray-900">"{searchQuery}"</span>
+                                        </span>
+                                    )}
                                 </div>
                                 <ProductsGrid products={transformedProducts} />
                             </>
@@ -116,7 +131,9 @@ export default function ProductsPageClient({ initialProducts, categories }: Prod
                                 </div>
                                 <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">No products found</h3>
                                 <p className="text-sm sm:text-base text-gray-500">
-                                    Try adjusting your filters or check back later for new additions to our collection.
+                                    {searchQuery
+                                        ? `No results for "${searchQuery}". Try a different search term.`
+                                        : 'Try adjusting your filters or check back later for new additions to our collection.'}
                                 </p>
                             </div>
                         )}

@@ -72,7 +72,7 @@
 //                             return (
 //                                 <div
 //                                     key={product.id}
-//                                     className="shrink-0 px-2 w-full sm:w-1/2 md:w-1/2 lg:w-1/4 xl:w-1/5"
+//                                     className="shrink-0 px-2 w-1/2 md:w-1/2 lg:w-1/4 xl:w-1/5"
 //                                 >
 //                                     <Link
 //                                         href={`/products/${product.slug || product.id}`}
@@ -180,7 +180,7 @@ function getCardsPerView(width: number): number {
     if (width >= 1280) return 5
     if (width >= 1024) return 4
     if (width >= 768) return 2
-    return 1
+    return 2
 }
 
 export function FeaturedCarousel({ products }: FeaturedCarouselProps) {
@@ -215,10 +215,10 @@ export function FeaturedCarousel({ products }: FeaturedCarouselProps) {
 
     return (
         <div>
-            <h2 className="text-3xl font-bold text-foreground mb-8">Featured Products</h2>
+            <h2 className="text-3xl md:text-6xl font-serif font-medium text-[#1A3126] text-left md:text-center mb-8 md:mb-14">Featured Products</h2>
 
             <div className="relative">
-                <div className="overflow-hidden">
+                <div className="overflow-hidden pb-2">
                     <div
                         className="flex transition-transform duration-500 ease-out"
                         style={{ transform: `translateX(-${currentIndex * translatePct}%)` }}
@@ -229,7 +229,7 @@ export function FeaturedCarousel({ products }: FeaturedCarouselProps) {
                             return (
                                 <div
                                     key={product.id}
-                                    className="shrink-0 px-2 w-full sm:w-1/2 md:w-1/2 lg:w-1/4 xl:w-1/5"
+                                    className="shrink-0 px-2 w-1/2 md:w-1/2 lg:w-1/4 xl:w-1/5"
                                 >
                                     <Link href={`/products/${product.slug || product.id}`} className="block">
                                         <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 h-full border-0 rounded-xl group">
@@ -242,24 +242,40 @@ export function FeaturedCarousel({ products }: FeaturedCarouselProps) {
                                                         sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
                                                         className="object-cover group-hover:scale-105 transition-transform duration-300"
                                                     />
-                                                    {!isInStock && (
-                                                        <div className="absolute top-3 left-3">
+                                                    <div className="absolute top-3 left-3 flex flex-col gap-1">
+                                                        {!isInStock && (
                                                             <Badge
                                                                 className="text-[#F2F0E5]"
                                                                 style={{ backgroundColor: "#BB4E2C" }}
                                                             >
                                                                 Out of Stock
                                                             </Badge>
-                                                        </div>
-                                                    )}
+                                                        )}
+                                                        {!!product.discountedPrice && isInStock && (
+                                                            <Badge className="bg-[#1A3126] text-white text-[10px]">
+                                                                Sale
+                                                            </Badge>
+                                                        )}
+                                                    </div>
                                                 </div>
                                                 <div className="p-4">
                                                     <h3 className="text-base font-semibold mb-2 line-clamp-2 min-h-12">
                                                         {product.name}
                                                     </h3>
-                                                    <p className="text-lg font-bold text-[#1a3126]">
-                                                        Rs. {product.price.toLocaleString()}
-                                                    </p>
+                                                    {product.discountedPrice ? (
+                                                        <div className="flex items-center gap-2 flex-wrap">
+                                                            <span className="text-lg font-bold text-[#1a3126]">
+                                                                Rs. {product.discountedPrice.toLocaleString()}
+                                                            </span>
+                                                            <span className="text-sm text-gray-400 line-through">
+                                                                Rs. {product.price.toLocaleString()}
+                                                            </span>
+                                                        </div>
+                                                    ) : (
+                                                        <p className="text-lg font-bold text-[#1a3126]">
+                                                            Rs. {product.price.toLocaleString()}
+                                                        </p>
+                                                    )}
                                                 </div>
                                             </CardContent>
                                         </Card>

@@ -18,15 +18,16 @@ export function ProductCard({
     id,
     title,
     price,
+    discountedPrice,
     image,
     inStock,
     inventory,
-    onSale = false,
     slug,
 }: ProductCardProps) {
     const href = slug ? `/products/${slug}` : `/products/${id}`
     const displayImage = buildImageUrl(image) ?? "/placeholder.svg"
     const isInStock = calculateInStock(inStock, inventory)
+    const effectivePrice = discountedPrice ?? price
 
     return (
         <Link href={href}>
@@ -38,11 +39,11 @@ export function ProductCard({
                             alt={title}
                             fill
                             loading="lazy"
-                            sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw" 
+                            sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                             className="object-cover group-hover:scale-105 transition-transform duration-300"
                         />
                         <div className="absolute top-3 left-3 right-3 flex justify-between items-start">
-                            <div className="space-y-2">
+                            <div className="space-y-1">
                                 {!isInStock && (
                                     <Badge
                                         className="text-[#F2F0E5]"
@@ -51,22 +52,22 @@ export function ProductCard({
                                         Out of Stock
                                     </Badge>
                                 )}
-                                {onSale && isInStock && (
-                                    <Badge variant="secondary" className="bg-accent text-accent-foreground">
+                                {!!discountedPrice && isInStock && (
+                                    <Badge className="bg-[#1A3126] text-white text-[10px]">
                                         Sale
                                     </Badge>
                                 )}
                             </div>
                             <WishlistButton
-                                item={{ id, title, price, image: displayImage, slug, inStock: isInStock }}
+                                item={{ id, title, price: effectivePrice, image: displayImage, slug, inStock: isInStock }}
                             />
                         </div>
 
-                        <div className="absolute bottom-0 left-0 right-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300 p-3  pt-6">
+                        <div className="absolute bottom-0 left-0 right-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300 p-3 pt-6">
                             <AddToCartButton
                                 id={id}
                                 title={title}
-                                price={price}
+                                price={effectivePrice}
                                 image={displayImage}
                                 slug={slug}
                                 quantity={1}
@@ -77,7 +78,18 @@ export function ProductCard({
                     </div>
                     <div className="p-4">
                         <h3 className="text-sm font-medium text-foreground mb-1 text-balance">{title}</h3>
-                        <p className="text-sm font-semibold text-accent">Rs. {price}</p>
+                        {discountedPrice ? (
+                            <div className="flex items-center gap-2 flex-wrap">
+                                <span className="text-sm font-semibold text-accent">
+                                    Rs. {discountedPrice.toLocaleString()}
+                                </span>
+                                <span className="text-xs text-foreground/40 line-through">
+                                    Rs. {price.toLocaleString()}
+                                </span>
+                            </div>
+                        ) : (
+                            <p className="text-sm font-semibold text-accent">Rs. {price.toLocaleString()}</p>
+                        )}
                     </div>
                 </CardContent>
             </Card>
