@@ -23,24 +23,24 @@ export default function Hero() {
             <div className="relative h-full container mx-auto max-w-7xl px-6 md:px-10 lg:px-8">
                 {/* Mobile: centred layout */}
                 <div className="h-full flex flex-col items-center justify-center text-center md:hidden pb-8">
-                    <h1 className="text-[#F2F0E5] text-5xl font-serif font-medium leading-none mb-4 whitespace-nowrap">
+                    <h1 className="text-[#ffffff] text-5xl font-serif font-medium leading-none mb-4 whitespace-nowrap">
                         Design &amp; Buy
                     </h1>
-                    <p className="text-[#F2F0E5]/80 text-[10px] font-semibold tracking-[0.35em] uppercase mb-7">
+                    <p className="text-[#ffffff]/80 text-[10px] font-semibold tracking-[0.35em] uppercase mb-7">
                         Discover unparalleled designs crafted for you
                     </p>
                     <div className="flex gap-3">
                         <Link
                             href="/products"
-                            className="bg-[#BB4E2C] text-white px-6 py-3 rounded-lg font-semibold text-sm
+                            className="bg-[#BB4E2C] text-white px-6 py-3 font-semibold text-sm
                                        hover:bg-orange-600 transition-all duration-300 shadow-sm"
                         >
                             Shop Now
                         </Link>
                         <Link
                             href="/redesign"
-                            className="bg-white/15 backdrop-blur-sm text-[#F2F0E5] border border-white/40
-                                       px-6 py-3 rounded-lg font-medium text-sm
+                            className="bg-white/15 backdrop-blur-sm text-[#ffffff] border border-white/40
+                                       px-6 py-3 font-medium text-sm
                                        hover:bg-white/25 transition-all duration-300"
                         >
                             Redesign
@@ -51,16 +51,16 @@ export default function Hero() {
                 {/* Desktop: bottom-anchored editorial layout */}
                 <div className="h-full hidden md:flex flex-col justify-end pb-28 lg:pb-36">
                     <div className="max-w-4xl">
-                        <h1 className="text-[#F2F0E5] text-8xl lg:text-[9rem] font-serif font-medium leading-[0.92] mb-5">
+                        <h1 className="text-[#ffffff] text-8xl lg:text-[9rem] font-serif font-medium leading-[0.92] mb-5">
                             Design &amp; Buy
                         </h1>
-                        <p className="text-[#F2F0E5]/80 text-sm font-semibold tracking-[0.4em] uppercase mb-10">
+                        <p className="text-[#ffffff]/80 text-sm font-semibold tracking-[0.4em] uppercase mb-10">
                             Discover unparalleled designs crafted for you
                         </p>
                         <div className="flex flex-wrap gap-4">
                             <Link
                                 href="/products"
-                                className="bg-[#BB4E2C] text-white px-9 py-4 rounded-lg font-semibold text-base
+                                className="bg-[#BB4E2C] text-white px-9 py-4 font-semibold text-base
                                            hover:bg-orange-600 transition-all duration-300
                                            shadow-sm hover:shadow-lg hover:-translate-y-0.5"
                             >
@@ -68,8 +68,8 @@ export default function Hero() {
                             </Link>
                             <Link
                                 href="/redesign"
-                                className="bg-white/15 backdrop-blur-sm text-[#F2F0E5] border border-white/40
-                                           px-9 py-4 rounded-lg font-medium text-base
+                                className="bg-white/15 backdrop-blur-sm text-[#ffffff] border border-white/40
+                                           px-9 py-4 font-medium text-base
                                            hover:bg-white/25 transition-all duration-300"
                             >
                                 Redesign a Room

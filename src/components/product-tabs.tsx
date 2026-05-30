@@ -140,7 +140,7 @@ export function ProductReviews({ productId }: ProductReviewsProps) {
             )}
 
             {/* Rating Summary Card */}
-            <div className="bg-secondary/20 rounded-2xl p-5 mb-6 flex items-center gap-6">
+            <div className="bg-secondary/20 p-5 mb-6 flex items-center gap-6">
                 {/* Left: big number + stars + count */}
                 <div className="flex flex-col items-center min-w-22.5">
                     <span className="text-5xl font-extrabold text-foreground leading-none">
@@ -350,7 +350,7 @@ function WriteReviewForm({
     }
 
     return (
-        <div className="bg-secondary/20 rounded-2xl p-5 mb-6 space-y-4">
+        <div className="bg-secondary/20 p-5 mb-6 space-y-4">
             <h3 className="font-semibold text-foreground">Write a Review</h3>
 
             {/* Star picker */}

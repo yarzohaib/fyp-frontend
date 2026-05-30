@@ -170,6 +170,10 @@ export interface ProductItem {
 // ProductCardProps extends ProductItem with additional display properties
 export interface ProductCardProps extends ProductItem {
     onSale?: boolean
+    rating?: number
+    reviewCount?: number
+    shortDescription?: string
+    secondImage?: string
 }
 
 // WishlistItem uses same structure as ProductItem
@@ -509,6 +513,7 @@ export interface CartSummary {
 export interface FilterSidebarProps {
     categories: Category[];
     onFilterChange?: (filters: ActiveFilters) => void;
+    initialCategoryIds?: string[];
 }
 
 export interface ActiveFilters {

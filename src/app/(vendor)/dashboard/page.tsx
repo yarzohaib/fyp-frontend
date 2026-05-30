@@ -72,7 +72,7 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen" style={{ backgroundColor: '#F2F0E5' }}>
+      <div className="flex items-center justify-center min-h-screen" style={{ backgroundColor: '#ffffff' }}>
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: '#BB4E2C' }}></div>
           <p style={{ color: '#1A3126' }}>Loading dashboard...</p>
@@ -83,7 +83,7 @@ export default function DashboardPage() {
 
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen" style={{ backgroundColor: '#F2F0E5' }}>
+      <div className="flex items-center justify-center min-h-screen" style={{ backgroundColor: '#ffffff' }}>
         <div className="text-center">
           <p className="font-semibold mb-4" style={{ color: '#BB4E2C' }}>{error}</p>
           <button
@@ -100,14 +100,14 @@ export default function DashboardPage() {
 
   if (!stats) {
     return (
-      <div className="flex items-center justify-center min-h-screen" style={{ backgroundColor: '#F2F0E5' }}>
+      <div className="flex items-center justify-center min-h-screen" style={{ backgroundColor: '#ffffff' }}>
         <p style={{ color: '#1A3126' }}>No data available</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-2" style={{ backgroundColor: '#F2F0E5', minHeight: '100vh', padding: '0px' }}>
+    <div className="space-y-2" style={{ backgroundColor: '#ffffff', minHeight: '100vh', padding: '0px' }}>
       <StatsCards stats={stats} />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

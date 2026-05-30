@@ -121,7 +121,7 @@ export default function CartPage() {
             {/* Cart Items */}
             <div className="lg:col-span-2">
               <Card className="border-0 shadow-lg" style={{ backgroundColor: 'white' }}>
-                <CardHeader style={{ borderBottom: '1px solid #F2F0E5' }} className="p-4 sm:p-6">
+                <CardHeader style={{ borderBottom: '1px solid #ffffff' }} className="p-4 sm:p-6">
                   <div className="flex items-center gap-3">
                     <Checkbox
                       checked={selectedItems.size === cart.items.length && cart.items.length > 0}
@@ -135,7 +135,7 @@ export default function CartPage() {
                   </div>
                 </CardHeader>
                 <CardContent className="p-0">
-                  <div className="divide-y" style={{ borderColor: '#F2F0E5' }}>
+                  <div className="divide-y" style={{ borderColor: '#ffffff' }}>
                     {cart.items.map((item, idx) => {
                       const productId = typeof item.product === 'string' ? item.product : item.product.id
                       const productTitle = typeof item.product === 'string' ? 'Product' : item.product.title
@@ -271,11 +271,11 @@ export default function CartPage() {
             {/* Order Summary */}
             <div className="lg:col-span-1">
               <Card className="border-0 shadow-lg lg:sticky lg:top-4" style={{ backgroundColor: 'white' }}>
-                <CardHeader style={{ borderBottom: '1px solid #F2F0E5' }} className="p-4 sm:p-6">
+                <CardHeader style={{ borderBottom: '1px solid #ffffff' }} className="p-4 sm:p-6">
                   <CardTitle className="text-lg sm:text-xl" style={{ color: '#1a3126' }}>Order Summary</CardTitle>
                 </CardHeader>
                 <CardContent className="p-4 sm:p-6 space-y-4 sm:space-y-6">
-                  <div className="space-y-2 sm:space-y-3 pb-4 sm:pb-6" style={{ borderBottom: '1px solid #F2F0E5' }}>
+                  <div className="space-y-2 sm:space-y-3 pb-4 sm:pb-6" style={{ borderBottom: '1px solid #ffffff' }}>
                     <div className="flex justify-between text-sm">
                       <span style={{ color: '#1a3126', opacity: 0.7 }}>Subtotal</span>
                       <span className="font-semibold" style={{ color: '#1a3126' }}>
@@ -296,7 +296,7 @@ export default function CartPage() {
                     </div>
                   </div>
 
-                  <div className="space-y-2 sm:space-y-3 pb-4 sm:pb-6" style={{ borderBottom: '1px solid #F2F0E5' }}>
+                  <div className="space-y-2 sm:space-y-3 pb-4 sm:pb-6" style={{ borderBottom: '1px solid #ffffff' }}>
                     <div className="flex justify-between text-xs sm:text-sm">
                       <span style={{ color: '#1a3126', opacity: 0.7 }}>Shipping</span>
                       <span style={{ color: '#1a3126' }}>Calculated at checkout</span>

@@ -10,7 +10,7 @@ export default function CustomerLayout({
     return (
         <ProtectedRoute requiredRole="customer">
             <Navbar />
-            <div className="pt-10">{children}</div>
+            <div className="pt-28">{children}</div>
         </ProtectedRoute>
     )
 }

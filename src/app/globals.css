@@ -128,7 +128,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #F2F0E5;
+  --background: #ffffff;
   --foreground: #1A3126;
   --accent: #BB4E2C;
   --accent-foreground: #ffffff;
@@ -176,6 +176,16 @@ body {
 }
 .animate-toast-in  { animation: toast-in  0.25s ease-out forwards; }
 .animate-toast-out { animation: toast-out 0.25s ease-in  forwards; }
+
+/* Announcement bar marquee */
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+  display: flex;
+  animation: marquee 28s linear infinite;
+}
 
 /* Custom utility classes */
 .scrollbar-hide {

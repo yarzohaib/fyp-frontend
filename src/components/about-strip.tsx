@@ -20,7 +20,7 @@ const perks = [
 
 export function AboutStrip() {
     return (
-        <section className="bg-[#F2F0E5] py-14 md:py-20">
+        <section className="bg-white py-14 md:py-20">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
                 <h2 className="text-3xl md:text-6xl font-serif font-medium text-[#1A3126] text-left md:text-center mb-10 md:mb-20">
                     Why DOMA

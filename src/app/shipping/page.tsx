@@ -11,7 +11,7 @@ export default function ShippingPage() {
     return (
         <>
             <Navbar />
-            <main className="min-h-screen bg-[#F2F0E5] pt-24 pb-20">
+            <main className="min-h-screen bg-white pt-24 pb-20">
                 <div className="max-w-3xl mx-auto px-6 md:px-8">
 
                     {/* Header */}
@@ -97,8 +97,8 @@ export default function ShippingPage() {
                     {/* CTA */}
                     <div className="mt-6 p-6 bg-[#1A3126] rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                         <div>
-                            <p className="text-[#F2F0E5] font-semibold">Need help with an order?</p>
-                            <p className="text-[#F2F0E5]/60 text-sm mt-1">Our support team is ready to assist you.</p>
+                            <p className="text-white font-semibold">Need help with an order?</p>
+                            <p className="text-white/60 text-sm mt-1">Our support team is ready to assist you.</p>
                         </div>
                         <a
                             href="/contact"

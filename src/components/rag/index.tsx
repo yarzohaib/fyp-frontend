@@ -94,7 +94,7 @@ export function RAGSearch() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F2F0E5] text-[#1a3126] font-sans">
+    <div className="min-h-screen bg-white text-[#1a3126] font-sans">
       <div className="max-w-6xl mx-auto px-4 md:px-8 py-8 md:py-12 flex flex-col h-screen gap-6">
 
         {/* Back button */}
@@ -232,7 +232,7 @@ export function RAGSearch() {
 //   };
 
 //   return (
-//     <div className="min-h-screen bg-[#F2F0E5] text-[#1a3126] font-sans">
+//     <div className="min-h-screen bg-white text-[#1a3126] font-sans">
 //       <div className="max-w-6xl mx-auto px-4 md:px-8 py-8 md:py-12 flex flex-col h-screen gap-6">
 
 //         {/* Back button */}

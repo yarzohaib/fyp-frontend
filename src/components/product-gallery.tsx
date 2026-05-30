@@ -20,7 +20,7 @@ export function ProductGallery({ images }: ProductGalleryProps) {
     return (
         <div className="space-y-4">
             {/* Main Image */}
-            <div className="relative aspect-square overflow-hidden rounded-lg bg-secondary/20">
+            <div className="relative aspect-square overflow-hidden bg-secondary/20">
                 <Image
                     src={images[selectedIndex]?.url || "/placeholder.svg"}
                     alt={images[selectedIndex]?.alt || "Product"}
@@ -57,7 +57,7 @@ export function ProductGallery({ images }: ProductGalleryProps) {
                         <button
                             key={index}
                             onClick={() => setSelectedIndex(index)}
-                            className={`relative h-20 w-20 shrink-0 overflow-hidden rounded-lg border-2 transition-colors ${selectedIndex === index ? "border-accent" : "border-border"
+                            className={`relative h-20 w-20 shrink-0 overflow-hidden border-2 transition-colors ${selectedIndex === index ? "border-accent" : "border-border"
                                 }`}
                         >
                             <Image src={image.url || "/placeholder.svg"} alt={image.alt} fill className="object-cover" />

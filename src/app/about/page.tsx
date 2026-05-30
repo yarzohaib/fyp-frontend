@@ -10,7 +10,7 @@ export default function AboutPage() {
     return (
         <>
             <Navbar />
-            <main className="min-h-screen bg-[#F2F0E5] pt-24 pb-20">
+            <main className="min-h-screen bg-white pt-24 pb-20">
                 <div className="max-w-3xl mx-auto px-6 md:px-8">
 
                     {/* Header */}
@@ -88,8 +88,8 @@ export default function AboutPage() {
                     {/* CTA */}
                     <div className="mt-14 p-8 bg-[#1A3126] rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
                         <div>
-                            <p className="text-[#F2F0E5] font-semibold text-lg">Ready to redesign your space?</p>
-                            <p className="text-[#F2F0E5]/60 text-sm mt-1">Explore our collection or try the AI room redesign tool.</p>
+                            <p className="text-white font-semibold text-lg">Ready to redesign your space?</p>
+                            <p className="text-white/60 text-sm mt-1">Explore our collection or try the AI room redesign tool.</p>
                         </div>
                         <a
                             href="/products"

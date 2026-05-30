@@ -15,10 +15,41 @@ import type {
     Product,
 } from '@/lib/Types'
 import Link from 'next/link'
+import { ShoppingBag } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
+
+function SectionHeading({ n, label }: { n: number; label: string }) {
+    return (
+        <div className="flex items-center gap-3 mb-6">
+            <span className="w-6 h-6 rounded-full bg-[#1A3126] text-white text-xs font-bold flex items-center justify-center shrink-0">
+                {n}
+            </span>
+            <h2 className="text-base font-semibold tracking-wide text-[#1A3126] uppercase">
+                {label}
+            </h2>
+        </div>
+    )
+}
+
+function FieldLabel({ children }: { children: React.ReactNode }) {
+    return (
+        <label className="block text-[10px] font-semibold tracking-[0.12em] uppercase text-[#1A3126]/50 mb-1">
+            {children}
+        </label>
+    )
+}
+
+function TextInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
+    return (
+        <input
+            {...props}
+            className="w-full border-b border-gray-300 py-2.5 text-sm text-[#1A3126] placeholder:text-gray-300 focus:border-[#1A3126] outline-none bg-transparent transition-colors"
+        />
+    )
+}
 
 export default function CheckoutPage() {
     const { isAuthenticated } = useAuth()
@@ -27,6 +58,7 @@ export default function CheckoutPage() {
 
     const [profile, setProfile] = useState<CustomerProfile | null>(null)
     const [cartItems, setCartItems] = useState<CheckoutItem[]>([])
+    const [productImages, setProductImages] = useState<Record<string, string>>({})
     const [loading, setLoading] = useState(true)
     const [processing, setProcessing] = useState(false)
     const [error, setError] = useState<string | null>(null)
@@ -42,7 +74,6 @@ export default function CheckoutPage() {
         phone: '',
     })
 
-    // 'cod' = Cash on Delivery | 'safepay' = Online card/wallet payment
     const [paymentMethod, setPaymentMethod] = useState<'cod' | 'safepay'>('cod')
 
     useEffect(() => {
@@ -53,6 +84,13 @@ export default function CheckoutPage() {
         loadCheckoutData()
     }, [isAuthenticated, router])
 
+    useEffect(() => {
+        try {
+            const map = JSON.parse(localStorage.getItem('doma_product_images') || '{}')
+            setProductImages(map)
+        } catch {}
+    }, [cartItems])
+
     const loadCheckoutData = async () => {
         try {
             setLoading(true)
@@ -61,7 +99,7 @@ export default function CheckoutPage() {
             const itemsParam = searchParams.get('items')
             if (itemsParam) {
                 try {
-                    const decodedItems = JSON.parse(atob(itemsParam))
+                    const decodedItems = JSON.parse(decodeURIComponent(escape(atob(itemsParam))))
                     setCartItems(decodedItems)
                 } catch (e) {
                     console.error('Failed to decode cart items:', e)
@@ -126,7 +164,6 @@ export default function CheckoutPage() {
         }
     }
 
-    // ─── Shared validation ──────────────────────────────────────────────────
     const validate = (): string | null => {
         if (!shippingAddress.firstName?.trim()) return 'Please enter your first name'
         if (!shippingAddress.street?.trim()) return 'Please enter your street address'
@@ -136,7 +173,6 @@ export default function CheckoutPage() {
         return null
     }
 
-    // ─── COD checkout (existing flow) ───────────────────────────────────────
     const handleCodCheckout = async () => {
         const totals = calculateTotals()
         const itemsForBackend = cartItems.map((item) => ({
@@ -146,7 +182,7 @@ export default function CheckoutPage() {
             lineTotal: item.lineTotal,
         }))
 
-        const checkoutData = {
+        const result = await processCheckout({
             items: itemsForBackend,
             shippingAddress: {
                 firstName: shippingAddress.firstName?.trim() || 'Customer',
@@ -161,9 +197,7 @@ export default function CheckoutPage() {
             paymentStatus: 'pending',
             shippingCost: totals.shippingCost,
             tax: totals.tax,
-        }
-
-        const result = await processCheckout(checkoutData)
+        })
 
         if (result.success && result.order) {
             setSuccessMessage('Order placed successfully!')
@@ -173,11 +207,6 @@ export default function CheckoutPage() {
         }
     }
 
-    // ─── Safepay online payment flow ────────────────────────────────────────
-    // Step A: Create the order first (paymentStatus: pending)
-    // Step B: Call /api/payments/safepay/initiate to get a Safepay checkout URL
-    // Step C: Redirect the browser to that URL — Safepay handles card entry
-    // Step D: Safepay redirects back to /payment/success or /payment/cancel
     const handleSafepayCheckout = async () => {
         const totals = calculateTotals()
         const token = typeof window !== 'undefined'
@@ -189,7 +218,6 @@ export default function CheckoutPage() {
             return
         }
 
-        // Step A — Create order in DB with paymentMethod: "safepay"
         const itemsForBackend = cartItems.map((item) => ({
             product: String(typeof item.product === 'object' ? (item.product as Product)?.id : item.product),
             quantity: item.quantity,
@@ -197,7 +225,7 @@ export default function CheckoutPage() {
             lineTotal: item.lineTotal,
         }))
 
-        const checkoutData = {
+        const orderResult = await processCheckout({
             items: itemsForBackend,
             shippingAddress: {
                 firstName: shippingAddress.firstName?.trim() || 'Customer',
@@ -208,23 +236,17 @@ export default function CheckoutPage() {
                 country: 'Pakistan',
                 phone: shippingAddress.phone?.trim() || '',
             },
-            paymentMethod: 'safepay',   // tells the backend this is an online payment
+            paymentMethod: 'safepay',
             paymentStatus: 'pending',
             shippingCost: totals.shippingCost,
             tax: totals.tax,
-        }
-
-        const orderResult = await processCheckout(checkoutData)
+        })
 
         if (!orderResult.success || !orderResult.order) {
             setError(orderResult.message || 'Failed to create order. Please try again.')
             return
         }
 
-        const orderId = orderResult.order.id
-        console.log('✅ Order created:', orderId)
-
-        // Step B — Ask our backend to create a Safepay checkout session
         const initiateResponse = await fetch(`${BASE_URL}/api/payments/safepay/initiate`, {
             method: 'POST',
             headers: {
@@ -234,7 +256,7 @@ export default function CheckoutPage() {
             body: JSON.stringify({
                 amount: totals.total,
                 currency: 'PKR',
-                orderId,
+                orderId: orderResult.order.id,
             }),
         })
 
@@ -251,13 +273,9 @@ export default function CheckoutPage() {
             return
         }
 
-        // Step C — Redirect browser to Safepay's hosted payment page
-        // Customer enters card details THERE, not here (security by design)
-        console.log('🔀 Redirecting to Safepay:', checkoutUrl)
         window.location.href = checkoutUrl
     }
 
-    // ─── Main submit handler ─────────────────────────────────────────────────
     const handleCheckout = async (e: React.FormEvent) => {
         e.preventDefault()
         setProcessing(true)
@@ -287,13 +305,10 @@ export default function CheckoutPage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen relative flex items-center justify-center">
-                <div className="absolute inset-0 z-0">
-                    <Image src="/bgLight.webp" alt="Background" fill className="object-cover" priority sizes="100vw" />
-                </div>
-                <div className="relative z-10 text-center">
-                    <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#BB4E2C]"></div>
-                    <p className="mt-4 text-[#1a3126]">Loading checkout...</p>
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="text-center">
+                    <div className="inline-block animate-spin rounded-full h-10 w-10 border-b-2 border-[#BB4E2C]" />
+                    <p className="mt-4 text-sm text-[#1A3126]/60">Loading checkout...</p>
                 </div>
             </div>
         )
@@ -301,15 +316,12 @@ export default function CheckoutPage() {
 
     if (cartItems.length === 0) {
         return (
-            <div className="min-h-screen relative py-8 px-4 sm:px-6 lg:px-8">
-                <div className="absolute inset-0 z-0">
-                    <Image src="/bgLight.webp" alt="Background" fill className="object-cover" priority sizes="100vw" />
-                </div>
-                <div className="relative z-10 max-w-7xl mx-auto text-center">
-                    <h1 className="text-3xl font-bold text-[#1a3126] mb-4">Your cart is empty</h1>
-                    <p className="text-[#1a3126] opacity-70 mb-8">Please select items from cart before checkout</p>
-                    <Link href="/cart" className="inline-block bg-[#BB4E2C] hover:bg-[#1a3126] text-white font-bold py-3 px-6 rounded-lg transition">
-                        Back to Cart
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="text-center">
+                    <h1 className="text-2xl font-bold text-[#1A3126] mb-3">Your cart is empty</h1>
+                    <p className="text-sm text-[#1A3126]/60 mb-8">Please select items before checkout</p>
+                    <Link href="/products" className="inline-block bg-[#BB4E2C] text-white text-sm font-semibold px-6 py-3 hover:bg-[#1A3126] transition-colors">
+                        Browse Products
                     </Link>
                 </div>
             </div>
@@ -317,222 +329,219 @@ export default function CheckoutPage() {
     }
 
     return (
-        <div className="min-h-screen relative py-8 px-4 sm:px-6 lg:px-8">
-            <div className="absolute inset-0 z-0">
-                <Image src="/bgLight.webp" alt="Background" fill className="object-cover" priority sizes="100vw" />
-            </div>
+        <div className="min-h-screen bg-gray-50 pt-8 pb-16 px-4 sm:px-6 lg:px-8">
 
-            {/* ── COD success popup (same as before) ── */}
+            {/* ── Success overlay ── */}
             {successMessage && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-                    <div className="bg-white rounded-lg shadow-2xl p-8 sm:p-12 max-w-md w-full mx-4">
+                    <div className="bg-white shadow-2xl p-8 sm:p-12 max-w-md w-full mx-4">
                         <div className="flex justify-center mb-6">
-                            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
-                                <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+                                <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                                 </svg>
                             </div>
                         </div>
-                        <h2 className="text-2xl sm:text-3xl font-bold text-center text-[#1a3126] mb-3">Order Placed Successfully!</h2>
-                        <p className="text-center text-[#1a3126] opacity-70 mb-6">
+                        <h2 className="text-2xl font-bold text-center text-[#1A3126] mb-3">Order Placed!</h2>
+                        <p className="text-center text-sm text-[#1A3126]/60 mb-6">
                             Thank you for your purchase. Your order has been confirmed.
                         </p>
-                        <div className="bg-[#F2F0E5] rounded-lg p-4 mb-8 space-y-3">
-                            <div className="flex justify-between text-sm">
-                                <span className="text-[#1a3126] opacity-70">Items:</span>
-                                <span className="font-semibold text-[#1a3126]">{cartItems.length}</span>
+                        <div className="bg-gray-50 p-4 mb-8 space-y-2 text-sm">
+                            <div className="flex justify-between">
+                                <span className="text-[#1A3126]/60">Items</span>
+                                <span className="font-semibold text-[#1A3126]">{cartItems.length}</span>
                             </div>
-                            <div className="flex justify-between text-sm">
-                                <span className="text-[#1a3126] opacity-70">Total:</span>
+                            <div className="flex justify-between">
+                                <span className="text-[#1A3126]/60">Total</span>
                                 <span className="font-semibold text-[#BB4E2C]">Rs. {totals.total.toFixed(2)}</span>
                             </div>
-                            <div className="flex justify-between text-sm">
-                                <span className="text-[#1a3126] opacity-70">Payment:</span>
-                                <span className="font-semibold text-[#1a3126]">Cash on Delivery</span>
-                            </div>
                         </div>
-                        <button onClick={() => router.push('/products')} className="w-full bg-[#BB4E2C] hover:bg-[#1a3126] text-white font-bold py-3 px-4 rounded-lg transition">
+                        <button onClick={() => router.push('/products')} className="w-full bg-[#BB4E2C] hover:bg-[#1A3126] text-white font-semibold py-3 transition-colors text-sm">
                             Continue Shopping
                         </button>
                     </div>
                 </div>
             )}
 
-            <div className="relative z-10 max-w-7xl mx-auto">
+            <div className="max-w-6xl mx-auto">
+
+                {/* ── Page header ── */}
                 <div className="mb-8">
-                    <Link href="/cart" className="text-[#BB4E2C] hover:text-[#1a3126] font-semibold mb-4 inline-block">
-                        ← Back to Cart
+                    <Link href="/products" className="text-xs font-semibold text-[#BB4E2C] hover:text-[#1A3126] transition-colors tracking-wide uppercase">
+                        ← Back to Products
                     </Link>
-                    <h1 className="text-3xl sm:text-4xl font-bold text-[#1a3126]">Checkout</h1>
-                    <p className="text-[#1a3126] opacity-70 mt-2">Complete your order</p>
                 </div>
 
                 {error && (
-                    <div className="mb-6 p-4 bg-red-50 border-2 border-red-200 rounded-lg">
-                        <p className="text-red-800 font-medium">{error}</p>
+                    <div className="mb-6 p-4 bg-red-50 border border-red-200 text-sm text-red-700">
+                        {error}
                     </div>
                 )}
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <div className="lg:col-span-2">
-                        <form onSubmit={handleCheckout} className="space-y-6">
+                <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-8 items-start">
 
-                            {/* ── Shipping Address ── */}
-                            <div className="bg-white rounded-lg shadow-md p-6 sm:p-8">
-                                <h2 className="text-2xl font-bold text-[#1a3126] mb-6">Shipping Address</h2>
-                                <div className="space-y-4">
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                        <div>
-                                            <label htmlFor="firstName" className="block text-sm font-medium text-[#1a3126] mb-2">First Name *</label>
-                                            <input type="text" id="firstName" name="firstName" value={shippingAddress.firstName} onChange={handleAddressChange}
-                                                className="w-full px-4 py-3 border-2 border-[#1a3126]/20 rounded-lg focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent outline-none transition"
-                                                placeholder="John" required />
-                                        </div>
-                                        <div>
-                                            <label htmlFor="lastName" className="block text-sm font-medium text-[#1a3126] mb-2">Last Name</label>
-                                            <input type="text" id="lastName" name="lastName" value={shippingAddress.lastName} onChange={handleAddressChange}
-                                                className="w-full px-4 py-3 border-2 border-[#1a3126]/20 rounded-lg focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent outline-none transition"
-                                                placeholder="Doe" />
-                                        </div>
+                    {/* ── Left: form ── */}
+                    <form onSubmit={handleCheckout} className="space-y-6">
+
+                        {/* Section 1 — Shipping Information */}
+                        <div className="bg-white border border-gray-100 p-6 sm:p-8">
+                            <SectionHeading n={1} label="Shipping Information" />
+                            <div className="space-y-5">
+                                <div className="grid grid-cols-2 gap-6">
+                                    <div>
+                                        <FieldLabel>First Name *</FieldLabel>
+                                        <TextInput type="text" name="firstName" value={shippingAddress.firstName} onChange={handleAddressChange} placeholder="John" required />
                                     </div>
                                     <div>
-                                        <label htmlFor="street" className="block text-sm font-medium text-[#1a3126] mb-2">Street Address *</label>
-                                        <input type="text" id="street" name="street" value={shippingAddress.street} onChange={handleAddressChange}
-                                            className="w-full px-4 py-3 border-2 border-[#1a3126]/20 rounded-lg focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent outline-none transition"
-                                            placeholder="123 Main Street" required />
-                                    </div>
-                                    <div>
-                                        <label htmlFor="state" className="block text-sm font-medium text-[#1a3126] mb-2">Area/Colony/Block</label>
-                                        <input type="text" id="state" name="state" value={shippingAddress.state} onChange={handleAddressChange}
-                                            className="w-full px-4 py-3 border-2 border-[#1a3126]/20 rounded-lg focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent outline-none transition"
-                                            placeholder="DHA Phase 5" />
-                                    </div>
-                                    <div>
-                                        <label htmlFor="city" className="block text-sm font-medium text-[#1a3126] mb-2">City *</label>
-                                        <input type="text" id="city" name="city" value={shippingAddress.city} onChange={handleAddressChange}
-                                            className="w-full px-4 py-3 border-2 border-[#1a3126]/20 rounded-lg focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent outline-none transition"
-                                            placeholder="Karachi" required />
-                                    </div>
-                                    <div>
-                                        <label htmlFor="phone" className="block text-sm font-medium text-[#1a3126] mb-2">Phone Number *</label>
-                                        <input type="tel" id="phone" name="phone" value={shippingAddress.phone} onChange={handleAddressChange}
-                                            className="w-full px-4 py-3 border-2 border-[#1a3126]/20 rounded-lg focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent outline-none transition"
-                                            placeholder="+92 300 1234567" required />
+                                        <FieldLabel>Last Name</FieldLabel>
+                                        <TextInput type="text" name="lastName" value={shippingAddress.lastName} onChange={handleAddressChange} placeholder="Doe" />
                                     </div>
                                 </div>
-                            </div>
-
-                            {/* ── Payment Method ── */}
-                            <div className="bg-white rounded-lg shadow-md p-6 sm:p-8">
-                                <h2 className="text-2xl font-bold text-[#1a3126] mb-6">Payment Method</h2>
-                                <div className="space-y-3">
-
-                                    {/* Cash on Delivery */}
-                                    <label className={`flex items-start p-4 border-2 rounded-lg cursor-pointer transition ${paymentMethod === 'cod' ? 'border-[#1a3126] bg-[#F2F0E5]' : 'border-[#1a3126]/20 hover:bg-[#F2F0E5]'}`}>
-                                        <input type="radio" name="paymentMethod" value="cod"
-                                            checked={paymentMethod === 'cod'}
-                                            onChange={() => setPaymentMethod('cod')}
-                                            className="w-5 h-5 mt-1 text-[#BB4E2C] focus:ring-2 focus:ring-[#BB4E2C]" />
-                                        <div className="ml-4 flex-1">
-                                            <div className="flex items-center gap-2">
-                                                <p className="font-semibold text-[#1a3126]">Cash on Delivery (COD)</p>
-                                            </div>
-                                            <p className="text-sm text-[#1a3126]/70 mt-1">
-                                                Pay in cash when your order is delivered to your door.
-                                            </p>
-                                        </div>
-                                    </label>
-
-                                    {/* Safepay Online Payment */}
-                                    <label className={`flex items-start p-4 border-2 rounded-lg cursor-pointer transition ${paymentMethod === 'safepay' ? 'border-[#BB4E2C] bg-orange-50' : 'border-[#1a3126]/20 hover:bg-orange-50'}`}>
-                                        <input type="radio" name="paymentMethod" value="safepay"
-                                            checked={paymentMethod === 'safepay'}
-                                            onChange={() => setPaymentMethod('safepay')}
-                                            className="w-5 h-5 mt-1 text-[#BB4E2C] focus:ring-2 focus:ring-[#BB4E2C]" />
-                                        <div className="ml-4 flex-1">
-                                            <div className="flex items-center gap-3">
-                                                <p className="font-semibold text-[#1a3126]">Pay Online</p>
-                                                {/* Accepted cards/wallets badge */}
-                                                <div className="flex gap-1.5">
-                                                    <span className="text-xs font-bold bg-[#1a3126] text-white px-2 py-0.5 rounded">VISA</span>
-                                                    <span className="text-xs font-bold bg-[#BB4E2C] text-white px-2 py-0.5 rounded">MC</span>
-                                                    <span className="text-xs font-bold bg-emerald-700 text-white px-2 py-0.5 rounded">JCB</span>
-                                                </div>
-                                            </div>
-                                            <p className="text-sm text-[#1a3126]/70 mt-1">
-                                                Secure card &amp; wallet payment via Safepay. You will be redirected to complete payment.
-                                            </p>
-                                        </div>
-                                    </label>
-
+                                <div>
+                                    <FieldLabel>Street Address *</FieldLabel>
+                                    <TextInput type="text" name="street" value={shippingAddress.street} onChange={handleAddressChange} placeholder="123 Main Street" required />
                                 </div>
-
-                                {/* Info note when Safepay is selected */}
-                                {paymentMethod === 'safepay' && (
-                                    <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg flex gap-2">
-                                        <svg className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        <p className="text-sm text-blue-800">
-                                            After clicking &quot;Proceed to Payment&quot;, your order will be saved and you&apos;ll be redirected to Safepay&apos;s secure checkout to enter your card details.
-                                        </p>
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* ── Submit button ── */}
-                            <button
-                                type="submit"
-                                disabled={processing || cartItems.length === 0}
-                                className="w-full bg-[#BB4E2C] hover:opacity-90 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-bold py-4 px-6 rounded-full transition text-lg"
-                            >
-                                {processing
-                                    ? (paymentMethod === 'safepay' ? 'Redirecting to Payment...' : 'Processing...')
-                                    : paymentMethod === 'safepay'
-                                        ? `Proceed to Payment — Rs. ${totals.total.toFixed(2)}`
-                                        : `Place Order — Rs. ${totals.total.toFixed(2)}`
-                                }
-                            </button>
-
-                        </form>
-                    </div>
-
-                    {/* ── Order Summary sidebar ── */}
-                    <div className="lg:col-span-1">
-                        <div className="bg-white rounded-lg shadow-md p-6 sm:p-8 sticky top-8">
-                            <h2 className="text-2xl font-bold text-[#1a3126] mb-6">Order Summary</h2>
-                            <div className="mb-6 space-y-4 max-h-64 overflow-y-auto">
-                                {cartItems.map((item, idx) => (
-                                    <div key={idx} className="flex justify-between text-sm border-b border-[#1a3126]/10 pb-4">
-                                        <div className="flex-1">
-                                            <p className="font-semibold text-[#1a3126]">{item.productTitle || 'Product'}</p>
-                                            <p className="text-[#1a3126]/70">Qty: {item.quantity}</p>
-                                        </div>
-                                        <p className="font-semibold text-[#1a3126]">Rs. {item.lineTotal.toFixed(2)}</p>
-                                    </div>
-                                ))}
-                            </div>
-                            <div className="space-y-3 border-t-2 border-[#1a3126]/20 pt-6">
-                                <div className="flex justify-between text-[#1a3126]/70">
-                                    <span>Subtotal</span>
-                                    <span>Rs. {totals.subtotal.toFixed(2)}</span>
+                                <div>
+                                    <FieldLabel>Area / Colony / Block</FieldLabel>
+                                    <TextInput type="text" name="state" value={shippingAddress.state} onChange={handleAddressChange} placeholder="DHA Phase 5" />
                                 </div>
-                                <div className="flex justify-between text-[#1a3126]/70">
-                                    <span>Shipping</span>
-                                    <span className={totals.shippingCost === 0 ? 'text-green-600 font-semibold' : ''}>
-                                        {totals.shippingCost === 0 ? 'FREE' : `Rs. ${totals.shippingCost.toFixed(2)}`}
-                                    </span>
+                                <div>
+                                    <FieldLabel>City *</FieldLabel>
+                                    <TextInput type="text" name="city" value={shippingAddress.city} onChange={handleAddressChange} placeholder="Karachi" required />
                                 </div>
-                                <div className="flex justify-between text-lg font-bold text-[#BB4E2C] pt-3 border-t-2 border-[#1a3126]/20">
-                                    <span>Total</span>
-                                    <span>Rs. {totals.total.toFixed(2)}</span>
+                                <div>
+                                    <FieldLabel>Phone Number *</FieldLabel>
+                                    <TextInput type="tel" name="phone" value={shippingAddress.phone} onChange={handleAddressChange} placeholder="+92 300 1234567" required />
                                 </div>
                             </div>
                         </div>
+
+                        {/* Section 2 — Payment Method */}
+                        <div className="bg-white border border-gray-100 p-6 sm:p-8">
+                            <SectionHeading n={2} label="Payment Method" />
+                            <div className="space-y-3">
+
+                                <label className={`flex items-start p-4 border cursor-pointer transition ${paymentMethod === 'cod' ? 'border-[#1A3126]' : 'border-gray-200 hover:border-gray-300'}`}>
+                                    <input type="radio" name="paymentMethod" value="cod"
+                                        checked={paymentMethod === 'cod'}
+                                        onChange={() => setPaymentMethod('cod')}
+                                        className="mt-0.5 accent-[#BB4E2C]" />
+                                    <div className="ml-3">
+                                        <p className="text-sm font-semibold text-[#1A3126]">Cash on Delivery (COD)</p>
+                                        <p className="text-xs text-[#1A3126]/55 mt-0.5">Pay in cash when your order is delivered to your door.</p>
+                                    </div>
+                                </label>
+
+                                <label className={`flex items-start p-4 border cursor-pointer transition ${paymentMethod === 'safepay' ? 'border-[#BB4E2C]' : 'border-gray-200 hover:border-gray-300'}`}>
+                                    <input type="radio" name="paymentMethod" value="safepay"
+                                        checked={paymentMethod === 'safepay'}
+                                        onChange={() => setPaymentMethod('safepay')}
+                                        className="mt-0.5 accent-[#BB4E2C]" />
+                                    <div className="ml-3 flex-1">
+                                        <div className="flex items-center gap-2">
+                                            <p className="text-sm font-semibold text-[#1A3126]">Pay Online</p>
+                                            <div className="flex gap-1">
+                                                <span className="text-[9px] font-bold bg-[#1A3126] text-white px-1.5 py-0.5">VISA</span>
+                                                <span className="text-[9px] font-bold bg-[#BB4E2C] text-white px-1.5 py-0.5">MC</span>
+                                                <span className="text-[9px] font-bold bg-emerald-700 text-white px-1.5 py-0.5">JCB</span>
+                                            </div>
+                                        </div>
+                                        <p className="text-xs text-[#1A3126]/55 mt-0.5">Secure card &amp; wallet payment via Safepay. You will be redirected to complete payment.</p>
+                                    </div>
+                                </label>
+
+                            </div>
+
+                            {paymentMethod === 'safepay' && (
+                                <div className="mt-4 p-3 bg-blue-50 border border-blue-100 text-xs text-blue-700">
+                                    After clicking &quot;Proceed to Payment&quot;, you&apos;ll be redirected to Safepay&apos;s secure checkout to enter your card details.
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Submit */}
+                        <button
+                            type="submit"
+                            disabled={processing || cartItems.length === 0}
+                            className="w-full bg-[#BB4E2C] hover:bg-[#1A3126] disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-semibold py-4 transition-colors text-sm tracking-wide uppercase"
+                        >
+                            {processing
+                                ? (paymentMethod === 'safepay' ? 'Redirecting...' : 'Processing...')
+                                : paymentMethod === 'safepay'
+                                    ? `Proceed to Payment — Rs. ${totals.total.toLocaleString()}`
+                                    : `Complete Purchase — Rs. ${totals.total.toLocaleString()}`
+                            }
+                        </button>
+
+                    </form>
+
+                    {/* ── Right: Order Summary ── */}
+                    <div className="bg-white border border-gray-100 p-6 sticky top-8">
+                        <h2 className="text-sm font-semibold tracking-[0.1em] uppercase text-[#1A3126] mb-5">
+                            Order Summary
+                        </h2>
+
+                        <div className="space-y-4 mb-6">
+                            {cartItems.map((item, idx) => {
+                                const productId = typeof item.product === 'object'
+                                    ? (item.product as Product)?.id
+                                    : String(item.product)
+                                const imgSrc = productImages[productId]
+
+                                return (
+                                    <div key={idx} className="flex items-start gap-3">
+                                        {/* Thumbnail */}
+                                        <div className="w-14 h-14 shrink-0 bg-gray-50 relative overflow-hidden border border-gray-100">
+                                            {imgSrc ? (
+                                                <Image
+                                                    src={imgSrc}
+                                                    alt={item.productTitle || 'Product'}
+                                                    fill
+                                                    className="object-contain p-1"
+                                                    sizes="56px"
+                                                />
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center">
+                                                    <ShoppingBag className="w-5 h-5 text-gray-300" />
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="flex-1 min-w-0">
+                                            <p className="text-xs font-semibold text-[#1A3126] line-clamp-2 leading-snug">
+                                                {item.productTitle || 'Product'}
+                                            </p>
+                                            <p className="text-[11px] text-[#1A3126]/50 mt-0.5">Qty: {item.quantity}</p>
+                                        </div>
+
+                                        <p className="text-xs font-semibold text-[#1A3126] shrink-0">
+                                            Rs. {item.lineTotal.toLocaleString()}
+                                        </p>
+                                    </div>
+                                )
+                            })}
+                        </div>
+
+                        <div className="border-t border-gray-100 pt-4 space-y-2.5 text-sm">
+                            <div className="flex justify-between text-[#1A3126]/60">
+                                <span>Subtotal</span>
+                                <span>Rs. {totals.subtotal.toLocaleString()}</span>
+                            </div>
+                            <div className="flex justify-between text-[#1A3126]/60">
+                                <span>Shipping</span>
+                                <span className={totals.shippingCost === 0 ? 'text-green-600 font-semibold' : ''}>
+                                    {totals.shippingCost === 0 ? 'FREE' : `Rs. ${totals.shippingCost.toLocaleString()}`}
+                                </span>
+                            </div>
+                            <div className="flex justify-between font-bold text-[#BB4E2C] pt-2 border-t border-gray-100">
+                                <span>Total</span>
+                                <span>Rs. {totals.total.toLocaleString()}</span>
+                            </div>
+                        </div>
                     </div>
+
                 </div>
             </div>
         </div>
     )
 }
-

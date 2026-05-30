@@ -40,14 +40,14 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
                 {toasts.map(toast => (
                     <div
                         key={toast.id}
-                        className={`flex items-center gap-3 bg-[#1A3126] text-[#F2F0E5] px-4 py-3 rounded-xl shadow-xl pointer-events-auto ${
+                        className={`flex items-center gap-3 bg-[#1A3126] text-white px-4 py-3 rounded-xl shadow-xl pointer-events-auto ${
                             toast.exiting ? 'animate-toast-out' : 'animate-toast-in'
                         }`}
                     >
                         {toast.type === 'wishlist' ? (
                             <Heart className="h-4 w-4 fill-[#BB4E2C] text-[#BB4E2C] shrink-0" />
                         ) : (
-                            <ShoppingCart className="h-4 w-4 text-[#F2F0E5] shrink-0" />
+                            <ShoppingCart className="h-4 w-4 text-white shrink-0" />
                         )}
                         <span className="text-sm font-medium whitespace-nowrap">{toast.message}</span>
                     </div>
