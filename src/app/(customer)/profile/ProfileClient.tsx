@@ -1,10 +1,5 @@
 'use client'
 
-// src/app/(customer)/profile/ProfileClient.tsx
-// Receives server-prefetched data as props → zero loading flash on first paint.
-// Falls back to client-side fetch if server data is unavailable (e.g. token in localStorage only).
-
-import Image from 'next/image'
 import React, { useEffect, useState, useTransition } from 'react'
 import { useAuth } from '@/contexts/auth-context'
 import { useRouter } from 'next/navigation'
@@ -16,35 +11,70 @@ import {
 } from '@/lib/payload'
 import type {
   CustomerProfile,
-  UpdateProfileRequest,
   ChangePasswordRequest,
   Order,
 } from '@/lib/Types'
 import Link from 'next/link'
 
-// ─── Skeleton components ──────────────────────────────────────────────────────
+// ─── Shared UI primitives (mirrors checkout page) ─────────────────────────────
+
+function SectionHeading({ n, label }: { n: number; label: string }) {
+  return (
+    <div className="flex items-center gap-3 mb-6">
+      <span className="w-6 h-6 rounded-full bg-[#1A3126] text-white text-xs font-bold flex items-center justify-center shrink-0">
+        {n}
+      </span>
+      <h2 className="text-base font-semibold tracking-wide text-[#1A3126] uppercase">
+        {label}
+      </h2>
+    </div>
+  )
+}
+
+function FieldLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <label className="block text-[10px] font-semibold tracking-[0.12em] uppercase text-[#1A3126]/50 mb-1">
+      {children}
+    </label>
+  )
+}
+
+function TextInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
+  return (
+    <input
+      {...props}
+      className={`w-full border-b py-2.5 text-sm text-[#1A3126] placeholder:text-gray-300 outline-none bg-transparent transition-colors ${
+        props.disabled
+          ? 'border-gray-200 text-[#1A3126]/40 cursor-not-allowed'
+          : 'border-gray-300 focus:border-[#1A3126]'
+      } ${props.className ?? ''}`}
+    />
+  )
+}
+
+// ─── Skeletons ────────────────────────────────────────────────────────────────
 
 function SkeletonLine({ w = 'w-full', h = 'h-4' }: { w?: string; h?: string }) {
-  return <div className={`${w} ${h} bg-gray-200 rounded animate-pulse`} />
+  return <div className={`${w} ${h} bg-gray-100 animate-pulse`} />
 }
 
 function ProfileSkeleton() {
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 sm:p-8 space-y-6">
+    <div className="bg-white border border-gray-100 p-6 sm:p-8 space-y-6">
       {[1, 2, 3, 4].map((i) => (
         <div key={i} className="space-y-2">
-          <SkeletonLine w="w-24" h="h-3" />
-          <SkeletonLine h="h-11" />
+          <SkeletonLine w="w-20" h="h-2" />
+          <SkeletonLine h="h-8" />
         </div>
       ))}
-      <SkeletonLine h="h-11" />
+      <SkeletonLine h="h-12" />
     </div>
   )
 }
 
 function OrdersSkeleton() {
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 sm:p-8">
+    <div className="bg-white border border-gray-100 p-6 sm:p-8">
       <div className="space-y-3">
         {[1, 2, 3].map((i) => (
           <div key={i} className="flex gap-4 py-3 border-b border-gray-100">
@@ -74,7 +104,6 @@ export default function ProfileClient({ initialProfile, initialOrders }: Profile
 
   const [profile, setProfile] = useState<CustomerProfile | null>(initialProfile)
   const [orders, setOrders] = useState<Order[]>(initialOrders)
-  // Only show skeleton if we have NO initial data (token was in localStorage, not cookie)
   const [bootstrapping, setBootstrapping] = useState(!initialProfile)
   const [activeTab, setActiveTab] = useState<'profile' | 'orders' | 'password'>('profile')
   const [isSaving, startSaving] = useTransition()
@@ -92,14 +121,12 @@ export default function ProfileClient({ initialProfile, initialOrders }: Profile
     confirmPassword: '',
   })
 
-  // If server had no token (localStorage-only auth), fall back to client fetch
   useEffect(() => {
     if (!initialProfile) {
       if (!isAuthenticated) {
         router.push('/login')
         return
       }
-      // Client-side fallback: fetch in parallel
       Promise.all([
         fetchCustomerProfile(),
         user?.id ? fetchCustomerOrders(user.id, 1, 10) : Promise.resolve({ docs: [] }),
@@ -116,7 +143,6 @@ export default function ProfileClient({ initialProfile, initialOrders }: Profile
     }
   }, [initialProfile, isAuthenticated, user, router])
 
-  // Keep form in sync if profile updates
   useEffect(() => {
     if (profile) {
       setFormData({ Name: profile.Name ?? '', phone: profile.phone ?? '' })
@@ -183,194 +209,202 @@ export default function ProfileClient({ initialProfile, initialOrders }: Profile
   // ── Render ──────────────────────────────────────────────────────────────────
 
   return (
-    <div className="min-h-screen relative">
-      <div className="absolute inset-0 z-0">
-        <Image src="/bgLight.webp" alt="Background" fill className="object-cover" priority sizes="100vw" />
-      </div>
+    <div className="min-h-screen bg-white pt-8 pb-16 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto">
 
-      <div className="relative z-10 py-8 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
-          {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl sm:text-4xl font-serif font-medium text-gray-900">My Profile</h1>
-            <p className="text-gray-600 mt-2 text-xl">Manage your account settings and view your orders</p>
+        {/* Back link */}
+        <div className="mb-8">
+          <Link
+            href="/products"
+            className="text-xs font-semibold text-[#BB4E2C] hover:text-[#1A3126] transition-colors tracking-wide uppercase"
+          >
+            ← Back to Products
+          </Link>
+        </div>
+
+        {/* Page title */}
+        <div className="mb-8">
+          <h1 className="text-3xl sm:text-4xl font-serif font-medium text-[#1A3126]">My Account</h1>
+        </div>
+
+        {/* Alerts */}
+        {error && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 text-sm text-red-700">
+            {error}
           </div>
-
-          {/* Alerts */}
-          {error && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-red-800 font-medium">{error}</p>
-            </div>
-          )}
-          {successMessage && (
-            <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-              <p className="text-green-800 font-medium">{successMessage}</p>
-            </div>
-          )}
-
-          {/* Tabs */}
-          <div className="mb-8 border-b border-gray-200">
-            <div className="flex flex-wrap gap-2 sm:gap-0">
-              {(['profile', 'orders', 'password'] as const).map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`flex-1 sm:flex-none px-6 py-4 font-bold border-b-2 transition-colors capitalize ${
-                    activeTab === tab
-                      ? 'border-amber-600 text-amber-600'
-                      : 'border-transparent text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  {tab === 'password' ? 'Security' : tab === 'orders' ? 'Orders' : 'Profile Info'}
-                </button>
-              ))}
-            </div>
+        )}
+        {successMessage && (
+          <div className="mb-6 p-4 bg-green-50 border border-green-200 text-sm text-green-700">
+            {successMessage}
           </div>
+        )}
 
-          {/* Profile Tab */}
-          {activeTab === 'profile' && (
-            bootstrapping ? <ProfileSkeleton /> : (
-              <div className="bg-white rounded-lg shadow-md p-6 sm:p-8">
-                <form onSubmit={handleProfileSubmit} className="space-y-6">
+        {/* Tabs */}
+        <div className="mb-8 border-b border-gray-100">
+          <div className="flex">
+            {(['profile', 'orders', 'password'] as const).map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`px-6 py-3 text-xs font-semibold tracking-[0.1em] uppercase border-b-2 transition-colors ${
+                  activeTab === tab
+                    ? 'border-[#BB4E2C] text-[#BB4E2C]'
+                    : 'border-transparent text-[#1A3126]/40 hover:text-[#1A3126]'
+                }`}
+              >
+                {tab === 'password' ? 'Security' : tab === 'orders' ? 'Orders' : 'Profile'}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Profile Tab */}
+        {activeTab === 'profile' && (
+          bootstrapping ? <ProfileSkeleton /> : (
+            <div className="bg-white border border-gray-100 p-6 sm:p-8">
+              <SectionHeading n={1} label="Personal Information" />
+              <form onSubmit={handleProfileSubmit} className="space-y-5">
+                <div>
+                  <FieldLabel>Email Address</FieldLabel>
+                  <TextInput
+                    type="email"
+                    value={profile?.email ?? ''}
+                    disabled
+                    placeholder="—"
+                  />
+                  <p className="text-[10px] text-[#1A3126]/40 mt-1 tracking-wide">Email cannot be changed</p>
+                </div>
+
+                <div>
+                  <FieldLabel>Full Name</FieldLabel>
+                  <TextInput
+                    type="text" name="Name"
+                    value={formData.Name} onChange={handleProfileChange}
+                    placeholder="Enter your full name"
+                  />
+                </div>
+
+                <div>
+                  <FieldLabel>Contact Number</FieldLabel>
+                  <TextInput
+                    type="tel" name="phone"
+                    value={formData.phone} onChange={handleProfileChange}
+                    placeholder="Enter your phone number"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-900 mb-2">Email Address</label>
-                    <input
-                      type="email"
-                      value={profile?.email ?? ''}
-                      disabled
-                      className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-600 cursor-not-allowed"
-                    />
-                    <p className="text-xs text-gray-500 mt-1">Email cannot be changed</p>
+                    <FieldLabel>Account Status</FieldLabel>
+                    <p className="py-2.5 text-sm text-[#1A3126] capitalize border-b border-gray-200">
+                      {profile?.status ?? '—'}
+                    </p>
                   </div>
-
                   <div>
-                    <label htmlFor="Name" className="block text-sm font-medium text-gray-900 mb-2">Full Name</label>
-                    <input
-                      type="text" id="Name" name="Name"
-                      value={formData.Name} onChange={handleProfileChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-600 focus:border-transparent outline-none transition"
-                      placeholder="Enter your full name"
-                    />
+                    <FieldLabel>Member Since</FieldLabel>
+                    <p className="py-2.5 text-sm text-[#1A3126] border-b border-gray-200">
+                      {profile?.createdAt
+                        ? new Date(profile.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+                        : '—'}
+                    </p>
                   </div>
+                </div>
 
-                  <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-gray-900 mb-2">Contact Number</label>
-                    <input
-                      type="tel" id="phone" name="phone"
-                      value={formData.phone} onChange={handleProfileChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-600 focus:border-transparent outline-none transition"
-                      placeholder="Enter your phone number"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-900 mb-2">Account Status</label>
-                    <div className="px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg">
-                      <span className="text-gray-900 capitalize font-medium">{profile?.status}</span>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-900 mb-2">Member Since</label>
-                    <div className="px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg">
-                      <span className="text-gray-900">
-                        {profile?.createdAt
-                          ? new Date(profile.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
-                          : '—'}
-                      </span>
-                    </div>
-                  </div>
-
+                <div className="pt-2">
                   <button
                     type="submit" disabled={isSaving}
-                    className="w-full bg-amber-600 hover:bg-amber-700 disabled:bg-gray-400 text-white font-semibold py-3 px-6 rounded-lg transition"
+                    className="w-full bg-[#BB4E2C] hover:bg-[#1A3126] disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-semibold py-4 transition-colors text-sm tracking-wide uppercase"
                   >
                     {isSaving ? 'Saving…' : 'Save Changes'}
                   </button>
-                </form>
-              </div>
-            )
-          )}
+                </div>
+              </form>
+            </div>
+          )
+        )}
 
-          {/* Orders Tab */}
-          {activeTab === 'orders' && (
-            bootstrapping ? <OrdersSkeleton /> : (
-              <div className="bg-white rounded-lg shadow-md p-6 sm:p-8">
-                {orders.length === 0 ? (
-                  <div className="text-center py-12">
-                    <p className="text-gray-600 mb-4">You haven&#39;t placed any orders yet.</p>
-                    <Link href="/products" className="inline-block bg-amber-600 hover:bg-amber-700 text-white font-semibold py-2 px-6 rounded-lg transition">
-                      Start Shopping
-                    </Link>
-                  </div>
-                ) : (
-                  <div className="overflow-x-auto">
-                    <table className="w-full">
-                      <thead>
-                        <tr className="border-b border-gray-200">
-                          {['Order ID', 'Date', 'Total', 'Status'].map((h) => (
-                            <th key={h} className="text-left py-3 px-4 font-semibold text-gray-900">{h}</th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {orders.map((order) => (
-                          <tr key={order.id} className="border-b border-gray-100 hover:bg-gray-50 transition">
-                            <td className="py-4 px-4 text-gray-900 font-medium">{order.orderNumber}</td>
-                            <td className="py-4 px-4 text-gray-600">
-                              {new Date(order.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
-                            </td>
-                            <td className="py-4 px-4 text-gray-900 font-semibold">Rs. {order.total.toFixed(2)}</td>
-                            <td className="py-4 px-4">
-                              <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${getOrderStatusColor(order.orderStatus)}`}>
-                                {order.orderStatus.charAt(0).toUpperCase() + order.orderStatus.slice(1)}
-                              </span>
-                            </td>
-                          </tr>
+        {/* Orders Tab */}
+        {activeTab === 'orders' && (
+          bootstrapping ? <OrdersSkeleton /> : (
+            <div className="bg-white border border-gray-100 p-6 sm:p-8">
+              <SectionHeading n={2} label="Order History" />
+              {orders.length === 0 ? (
+                <div className="text-center py-12">
+                  <p className="text-sm text-[#1A3126]/50 mb-6">You haven&#39;t placed any orders yet.</p>
+                  <Link
+                    href="/products"
+                    className="inline-block bg-[#BB4E2C] hover:bg-[#1A3126] text-white text-sm font-semibold px-6 py-3 transition-colors tracking-wide uppercase"
+                  >
+                    Start Shopping
+                  </Link>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-gray-100">
+                        {['Order ID', 'Date', 'Total', 'Status'].map((h) => (
+                          <th key={h} className="text-left py-3 px-4 text-[10px] font-semibold tracking-[0.1em] uppercase text-[#1A3126]/50">{h}</th>
                         ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-              </div>
-            )
-          )}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {orders.map((order) => (
+                        <tr key={order.id} className="border-b border-gray-50 hover:bg-gray-50 transition">
+                          <td className="py-4 px-4 text-sm text-[#1A3126] font-medium">{order.orderNumber}</td>
+                          <td className="py-4 px-4 text-sm text-[#1A3126]/55">
+                            {new Date(order.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                          </td>
+                          <td className="py-4 px-4 text-sm font-semibold text-[#BB4E2C]">Rs. {order.total.toFixed(2)}</td>
+                          <td className="py-4 px-4">
+                            <span className={`inline-block px-3 py-1 text-xs font-semibold ${getOrderStatusColor(order.orderStatus)}`}>
+                              {order.orderStatus.charAt(0).toUpperCase() + order.orderStatus.slice(1)}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          )
+        )}
 
-          {/* Password Tab */}
-          {activeTab === 'password' && (
-            <div className="bg-white rounded-lg shadow-md p-6 sm:p-8">
-              <form onSubmit={handlePasswordSubmit} className="space-y-6 max-w-md">
-                {[
-                  { id: 'currentPassword', label: 'Current Password', placeholder: 'Enter your current password' },
-                  { id: 'newPassword',     label: 'New Password',     placeholder: 'Enter your new password' },
-                  { id: 'confirmPassword', label: 'Confirm New Password', placeholder: 'Confirm your new password' },
-                ].map(({ id, label, placeholder }) => (
-                  <div key={id}>
-                    <label htmlFor={id} className="block text-sm font-medium text-gray-900 mb-2">{label}</label>
-                    <input
-                      type="password" id={id} name={id}
-                      value={passwordData[id as keyof typeof passwordData]}
-                      onChange={handlePasswordChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-600 focus:border-transparent outline-none transition"
-                      placeholder={placeholder}
-                      required
-                    />
-                    {id === 'newPassword' && (
-                      <p className="text-xs text-gray-500 mt-1">Must be at least 6 characters</p>
-                    )}
-                  </div>
-                ))}
+        {/* Password Tab */}
+        {activeTab === 'password' && (
+          <div className="bg-white border border-gray-100 p-6 sm:p-8">
+            <SectionHeading n={3} label="Change Password" />
+            <form onSubmit={handlePasswordSubmit} className="space-y-5 max-w-md">
+              {[
+                { id: 'currentPassword', label: 'Current Password', placeholder: 'Enter your current password' },
+                { id: 'newPassword',     label: 'New Password',     placeholder: 'At least 6 characters' },
+                { id: 'confirmPassword', label: 'Confirm New Password', placeholder: 'Repeat new password' },
+              ].map(({ id, label, placeholder }) => (
+                <div key={id}>
+                  <FieldLabel>{label}</FieldLabel>
+                  <TextInput
+                    type="password" name={id}
+                    value={passwordData[id as keyof typeof passwordData]}
+                    onChange={handlePasswordChange}
+                    placeholder={placeholder}
+                    required
+                  />
+                </div>
+              ))}
 
+              <div className="pt-2">
                 <button
                   type="submit" disabled={isSaving}
-                  className="w-full bg-amber-600 hover:bg-amber-700 disabled:bg-gray-400 text-white font-semibold py-3 px-6 rounded-lg transition"
+                  className="w-full bg-[#BB4E2C] hover:bg-[#1A3126] disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-semibold py-4 transition-colors text-sm tracking-wide uppercase"
                 >
                   {isSaving ? 'Updating…' : 'Change Password'}
                 </button>
-              </form>
-            </div>
-          )}
-        </div>
+              </div>
+            </form>
+          </div>
+        )}
+
       </div>
     </div>
   )

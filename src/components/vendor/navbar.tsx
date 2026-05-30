@@ -8,7 +8,7 @@ export default function Navbar() {
       {/* Logo */}
       <Link href="/dashboard" className="flex items-center -my-2">
         <Image
-          src="/logoo.jpg"
+          src="/GreenLogo.png"
           alt="Doma Logo"
           width={250}
           height={200}

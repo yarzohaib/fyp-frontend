@@ -14,7 +14,7 @@ export function AuthSelection() {
                 <Link href="/">
                     <div className="w-48 h-12 relative">
                         <Image
-                            src="/logoo.jpg" // Dark logo variant for light background
+                            src="/GreenLogo.png"
                             alt="Company Logo"
                             fill
                             sizes="50vw"
@@ -33,7 +33,7 @@ export function AuthSelection() {
                 <Link href="/" className="absolute top-8 left-8 hidden lg:block">
                     <div className="w-40 h-10 relative">
                         <Image
-                            src="/logoGreen.jpg" // Light logo variant for dark background
+                            src="/WhiteLogo.png"
                             alt="Company Logo"
                             fill
                             sizes="20vw"

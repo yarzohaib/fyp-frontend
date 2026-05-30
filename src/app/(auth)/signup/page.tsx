@@ -12,7 +12,7 @@ export default function SignupPage() {
                 <Link href="/">
                     <div className="w-48 h-12 relative">
                         <Image
-                            src="/logoo.jpg"
+                            src="/GreenLogo.png"
                             alt="Company Logo"
                             fill
                             sizes="50vw"
@@ -29,7 +29,7 @@ export default function SignupPage() {
                     <Link href="/" className="absolute top-8 left-8">
                         <div className="w-40 h-10 relative">
                             <Image
-                                src="/logoGreen.jpg"
+                                src="/WhiteLogo.png"
                                 alt="Company Logo"
                                 fill
                                 sizes="20vw"
