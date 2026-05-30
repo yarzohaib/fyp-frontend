@@ -78,7 +78,7 @@
 //                                         href={`/products/${product.slug || product.id}`}
 //                                         className="block"
 //                                     >
-//                                         <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 h-full border-0 rounded-xl group">
+//                                         <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 h-full border-0 rounded-none group">
 //                                             <CardContent className="p-0">
 //                                                 <div className="relative aspect-square bg-gray-100 overflow-hidden">
 //                                                     <Image
@@ -90,7 +90,7 @@
 //                                                     {!isInStock && (
 //                                                         <div className="absolute top-3 left-3">
 //                                                             <Badge
-//                                                                 className="text-[#F2F0E5]"
+//                                                                 className="text-[#ffffff]"
 //                                                                 style={{ backgroundColor: '#BB4E2C' }}
 //                                                             >
 //                                                                 Out of Stock
@@ -120,7 +120,7 @@
 //                 {currentIndex > 0 && (
 //                     <button
 //                         onClick={handlePrevious}
-//                         className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 sm:-translate-x-4 z-10 p-2 sm:p-3 rounded-full bg-[#1a3126] text-white shadow-lg hover:bg-[#0f1f16] transition-colors"
+//                         className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 sm:-translate-x-4 z-10 p-2 sm:p-3 bg-[#1a3126] text-white shadow-lg hover:bg-[#0f1f16] transition-colors"
 //                         aria-label="Previous products"
 //                     >
 //                         <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
@@ -130,7 +130,7 @@
 //                 {currentIndex < maxIndex && (
 //                     <button
 //                         onClick={handleNext}
-//                         className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 sm:translate-x-4 z-10 p-2 sm:p-3 rounded-full bg-[#1a3126] text-white shadow-lg hover:bg-[#0f1f16] transition-colors"
+//                         className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 sm:translate-x-4 z-10 p-2 sm:p-3 bg-[#1a3126] text-white shadow-lg hover:bg-[#0f1f16] transition-colors"
 //                         aria-label="Next products"
 //                     >
 //                         <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
@@ -232,7 +232,7 @@ export function FeaturedCarousel({ products }: FeaturedCarouselProps) {
                                     className="shrink-0 px-2 w-1/2 md:w-1/2 lg:w-1/4 xl:w-1/5"
                                 >
                                     <Link href={`/products/${product.slug || product.id}`} className="block">
-                                        <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 h-full border-0 rounded-xl group">
+                                        <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 h-full border-0 rounded-none group">
                                             <CardContent className="p-0">
                                                 <div className="relative aspect-square bg-gray-100 overflow-hidden">
                                                     <Image
@@ -245,7 +245,7 @@ export function FeaturedCarousel({ products }: FeaturedCarouselProps) {
                                                     <div className="absolute top-3 left-3 flex flex-col gap-1">
                                                         {!isInStock && (
                                                             <Badge
-                                                                className="text-[#F2F0E5]"
+                                                                className="text-[#ffffff]"
                                                                 style={{ backgroundColor: "#BB4E2C" }}
                                                             >
                                                                 Out of Stock
@@ -290,7 +290,7 @@ export function FeaturedCarousel({ products }: FeaturedCarouselProps) {
                 {currentIndex > 0 && (
                     <button
                         onClick={handlePrevious}
-                        className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 sm:-translate-x-4 z-10 p-2 sm:p-3 rounded-full bg-[#1a3126] text-white shadow-lg hover:bg-[#0f1f16] transition-colors"
+                        className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 sm:-translate-x-4 z-10 p-2 sm:p-3 bg-[#1a3126] text-white shadow-lg hover:bg-[#0f1f16] transition-colors"
                         aria-label="Previous products"
                     >
                         <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
@@ -301,7 +301,7 @@ export function FeaturedCarousel({ products }: FeaturedCarouselProps) {
                 {currentIndex < maxIndex && (
                     <button
                         onClick={handleNext}
-                        className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 sm:translate-x-4 z-10 p-2 sm:p-3 rounded-full bg-[#1a3126] text-white shadow-lg hover:bg-[#0f1f16] transition-colors"
+                        className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 sm:translate-x-4 z-10 p-2 sm:p-3 bg-[#1a3126] text-white shadow-lg hover:bg-[#0f1f16] transition-colors"
                         aria-label="Next products"
                     >
                         <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
@@ -315,7 +315,7 @@ export function FeaturedCarousel({ products }: FeaturedCarouselProps) {
                             <button
                                 key={i}
                                 onClick={() => setCurrentIndex(i)}
-                                className={`h-2 rounded-full transition-all ${
+                                className={`h-2 transition-all ${
                                     i === currentIndex
                                         ? "bg-[#1a3126] w-8"
                                         : "bg-gray-300 w-2 hover:bg-gray-400"

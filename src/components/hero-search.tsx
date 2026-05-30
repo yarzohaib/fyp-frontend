@@ -9,18 +9,18 @@ interface HeroSearchProps {
 
 export function HeroSearch({ value, onSearch }: HeroSearchProps) {
   return (
-    <div className="relative w-full rounded-xl md:rounded-2xl overflow-hidden">
+    <div className="relative w-full overflow-hidden">
       <div
         className="h-36 sm:h-44 md:h-52 bg-cover bg-center"
         style={{ backgroundImage: `url('/heroGreen2.webp')` }}
       >
-        <div className="absolute inset-0 bg-black/40 rounded-xl md:rounded-2xl" />
+        <div className="absolute inset-0 " />
         <div className="relative flex h-full flex-col items-center justify-center gap-3 px-4 sm:px-6">
           <p className="text-white/80 text-xs font-semibold tracking-[0.3em] uppercase">
             Find your perfect piece
           </p>
           <div className="w-full max-w-xl">
-            <div className="flex items-center gap-3 bg-white rounded-full px-5 py-3 shadow-lg">
+            <div className="flex items-center gap-3 bg-white px-5 py-3 shadow-lg">
               <Search className="h-4 w-4 text-gray-400 shrink-0" />
               <input
                 type="text"

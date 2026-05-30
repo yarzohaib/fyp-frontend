@@ -9,7 +9,7 @@ import { Mail, MapPin, Package, Calendar, Loader2, Phone, User, ChevronDown, Tre
 
 export const dynamic = 'force-dynamic'
 
-const COLOR_BACKGROUND = "#F2F0E5";
+const COLOR_BACKGROUND = "#ffffff";
 const COLOR_PRIMARY = "#1A3126";
 const COLOR_ACCENT = "#BB4E2C";
 
@@ -88,7 +88,7 @@ export default function VendorOrdersPage() {
   };
 
   return (
-    // Background: #F2F0E5
+    // Background: #ffffff
     <div className={`min-h-screen p-3 sm:p-4 md:p-6 lg:p-8`} style={{ backgroundColor: COLOR_BACKGROUND }}>
       <div className="max-w-7xl mx-auto">
         

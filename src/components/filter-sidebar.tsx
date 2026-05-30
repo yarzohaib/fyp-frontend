@@ -5,11 +5,11 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import type { FilterSidebarProps, ActiveFilters, Category } from "@/lib/Types"
 
-export function FilterSidebar({ categories = [], onFilterChange }: FilterSidebarProps) {
+export function FilterSidebar({ categories = [], onFilterChange, initialCategoryIds = [] }: FilterSidebarProps) {
     const [filters, setFilters] = useState<ActiveFilters>({
         onSale: false,
         inStock: false,
-        selectedCategories: [],
+        selectedCategories: initialCategoryIds,
     })
 
     const handleFilterChange = (newFilters: ActiveFilters) => {
@@ -44,7 +44,7 @@ export function FilterSidebar({ categories = [], onFilterChange }: FilterSidebar
 
     return (
         <aside className="w-full lg:w-64 lg:shrink-0">
-            <div className="space-y-4 sm:space-y-6 bg-white lg:bg-transparent p-4 sm:p-6 lg:p-0 rounded-lg lg:rounded-none">
+            <div className="space-y-4 sm:space-y-6 bg-white lg:bg-transparent p-4 sm:p-6 lg:p-0">
                 {/* Quick Filters */}
                 <div className="space-y-3">
                     <h3 className="text-sm font-semibold text-gray-900 lg:hidden">Filters</h3>

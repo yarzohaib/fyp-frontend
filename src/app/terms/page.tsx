@@ -128,7 +128,7 @@ export default function TermsPage() {
     return (
         <>
             <Navbar />
-            <main className="min-h-screen bg-[#F2F0E5] pt-24 pb-20">
+            <main className="min-h-screen bg-white pt-24 pb-20">
                 <div className="max-w-3xl mx-auto px-6 md:px-8">
 
                     {/* Header */}

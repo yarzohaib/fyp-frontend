@@ -206,7 +206,7 @@ export default function VendorProductsPage() {
   // ===========================
 
   return (
-    <div className="min-h-screen p-3 sm:p-4 md:p-6" style={{ backgroundColor: '#F2F0E5' }}>
+    <div className="min-h-screen p-3 sm:p-4 md:p-6" style={{ backgroundColor: '#ffffff' }}>
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 sm:mb-8">
@@ -239,7 +239,7 @@ export default function VendorProductsPage() {
         {!loading && !error && products.length === 0 && (
           <Card className="border-0 shadow-lg" style={{ backgroundColor: 'white' }}>
             <CardContent className="text-center py-12 sm:py-16 px-4">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full mx-auto mb-4 sm:mb-6 flex items-center justify-center" style={{ backgroundColor: '#F2F0E5' }}>
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full mx-auto mb-4 sm:mb-6 flex items-center justify-center" style={{ backgroundColor: '#ffffff' }}>
                 <ShoppingBag className="w-8 h-8 sm:w-10 sm:h-10" style={{ color: '#BB4E2C' }} />
               </div>
               <h2 className="text-xl sm:text-2xl font-bold mb-2" style={{ color: '#1A3126' }}>No products found</h2>
@@ -268,7 +268,7 @@ export default function VendorProductsPage() {
                     height={120}
                     alt={product.title}
                     className="w-24 h-24 sm:w-28 sm:h-28 rounded-lg object-cover"
-                    style={{ backgroundColor: '#F2F0E5' }}
+                    style={{ backgroundColor: '#ffffff' }}
                   />
                 </div>
 

@@ -8,6 +8,7 @@ import type { AddToCartButtonProps } from '@/lib/Types'
 
 export function AddToCartButton({
     id,
+    image,
     quantity,
     inStock,
     variant = 'default',
@@ -20,6 +21,15 @@ export function AddToCartButton({
         e.stopPropagation()
 
         if (inStock && id) {
+            // Persist image so the cart drawer can show it
+            if (image) {
+                try {
+                    const map = JSON.parse(localStorage.getItem('doma_product_images') || '{}')
+                    map[String(id)] = image
+                    localStorage.setItem('doma_product_images', JSON.stringify(map))
+                } catch {}
+            }
+
             const success = await addToCart(String(id), quantity)
             if (success) {
                 showToast('Added to Cart', 'cart')

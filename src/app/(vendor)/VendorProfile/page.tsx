@@ -332,7 +332,7 @@ export default function VendorProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen py-8" style={{ backgroundColor: '#F2F0E5' }}>
+      <div className="min-h-screen py-8" style={{ backgroundColor: '#ffffff' }}>
         <div className="max-w-4xl mx-auto px-4">
           <div className="text-center">
             <div className="animate-spin rounded-full h-16 w-16 border-b-2 mx-auto mb-4" style={{ borderColor: '#BB4E2C' }}></div>
@@ -345,7 +345,7 @@ export default function VendorProfilePage() {
 
   if (error && !vendor) {
     return (
-      <div className="min-h-screen py-8" style={{ backgroundColor: '#F2F0E5' }}>
+      <div className="min-h-screen py-8" style={{ backgroundColor: '#ffffff' }}>
         <div className="max-w-4xl mx-auto px-4">
           <Card className="border-0 shadow-lg" style={{ backgroundColor: 'white' }}>
             <CardContent className="p-8 text-center">
@@ -366,7 +366,7 @@ export default function VendorProfilePage() {
   }
 
   return (
-    <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8" style={{ backgroundColor: '#F2F0E5' }}>
+    <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8" style={{ backgroundColor: '#ffffff' }}>
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
@@ -423,7 +423,7 @@ export default function VendorProfilePage() {
           <CardContent className="p-6">
             <div className="flex flex-col sm:flex-row gap-6 items-start">
               {/* Logo Preview */}
-              <div className="w-full sm:w-40 h-40 rounded-lg border-2 flex items-center justify-center shrink-0" style={{ borderColor: '#F2F0E5', backgroundColor: '#F2F0E5' }}>
+              <div className="w-full sm:w-40 h-40 rounded-lg border-2 flex items-center justify-center shrink-0" style={{ borderColor: '#ffffff', backgroundColor: '#ffffff' }}>
                 {logoPreview ? (
                   <Image
                     src={logoPreview}
@@ -496,7 +496,7 @@ export default function VendorProfilePage() {
                 style={{
                   borderColor: '#e5e5e5',
                   color: '#1a3126',
-                  backgroundColor: isEditing ? 'white' : '#F2F0E5'
+                  backgroundColor: isEditing ? 'white' : '#ffffff'
                 }}
               />
             </div>
@@ -509,7 +509,7 @@ export default function VendorProfilePage() {
                 value={formData.slug}
                 disabled
                 className="w-full px-4 py-3 border rounded-lg cursor-not-allowed"
-                style={{ borderColor: '#e5e5e5', backgroundColor: '#F2F0E5', color: '#1a3126', opacity: 0.7 }}
+                style={{ borderColor: '#e5e5e5', backgroundColor: '#ffffff', color: '#1a3126', opacity: 0.7 }}
               />
             </div>
 
@@ -528,7 +528,7 @@ export default function VendorProfilePage() {
                 style={{
                   borderColor: '#e5e5e5',
                   color: '#1a3126',
-                  backgroundColor: isEditing ? 'white' : '#F2F0E5'
+                  backgroundColor: isEditing ? 'white' : '#ffffff'
                 }}
                 placeholder="Describe your store..."
               />
@@ -566,7 +566,7 @@ export default function VendorProfilePage() {
                 style={{
                   borderColor: '#e5e5e5',
                   color: '#1a3126',
-                  backgroundColor: isEditing ? 'white' : '#F2F0E5'
+                  backgroundColor: isEditing ? 'white' : '#ffffff'
                 }}
               />
             </div>
@@ -587,7 +587,7 @@ export default function VendorProfilePage() {
                 style={{
                   borderColor: '#e5e5e5',
                   color: '#1a3126',
-                  backgroundColor: isEditing ? 'white' : '#F2F0E5'
+                  backgroundColor: isEditing ? 'white' : '#ffffff'
                 }}
               />
             </div>
@@ -609,7 +609,7 @@ export default function VendorProfilePage() {
                   style={{
                     borderColor: '#e5e5e5',
                     color: '#1a3126',
-                    backgroundColor: isEditing ? 'white' : '#F2F0E5'
+                    backgroundColor: isEditing ? 'white' : '#ffffff'
                   }}
                 />
               </div>
@@ -629,7 +629,7 @@ export default function VendorProfilePage() {
                   style={{
                     borderColor: '#e5e5e5',
                     color: '#1a3126',
-                    backgroundColor: isEditing ? 'white' : '#F2F0E5'
+                    backgroundColor: isEditing ? 'white' : '#ffffff'
                   }}
                 />
               </div>
@@ -659,7 +659,7 @@ export default function VendorProfilePage() {
                 style={{
                   borderColor: '#e5e5e5',
                   color: '#1a3126',
-                  backgroundColor: isEditing ? 'white' : '#F2F0E5'
+                  backgroundColor: isEditing ? 'white' : '#ffffff'
                 }}
               />
             </div>
@@ -680,7 +680,7 @@ export default function VendorProfilePage() {
                 style={{
                   borderColor: '#e5e5e5',
                   color: '#1a3126',
-                  backgroundColor: isEditing ? 'white' : '#F2F0E5'
+                  backgroundColor: isEditing ? 'white' : '#ffffff'
                 }}
               />
             </div>
@@ -699,7 +699,7 @@ export default function VendorProfilePage() {
                 style={{
                   borderColor: '#e5e5e5',
                   color: '#1a3126',
-                  backgroundColor: isEditing ? 'white' : '#F2F0E5'
+                  backgroundColor: isEditing ? 'white' : '#ffffff'
                 }}
               >
                 <option value="">Select business type</option>

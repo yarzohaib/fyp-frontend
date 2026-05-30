@@ -139,22 +139,25 @@ export async function fetchRelatedProducts(
  */
 export async function fetchProductReviews(productId: string): Promise<Review[]> {
     try {
+        const controller = new AbortController()
+        const timeout = setTimeout(() => controller.abort(), 5000)
+
         const res = await fetch(
             `${BASE_URL}/api/reviews?where[product][equals]=${productId}`,
             {
-                cache: "no-store",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                next: { revalidate: 300 },
+                headers: { "Content-Type": "application/json" },
+                signal: controller.signal,
             }
         )
+
+        clearTimeout(timeout)
 
         if (!res.ok) return []
 
         const data = await res.json()
         return data.docs || []
-    } catch (error) {
-        console.error("Error fetching reviews:", error)
+    } catch {
         return []
     }
 }

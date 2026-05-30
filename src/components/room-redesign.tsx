@@ -236,7 +236,7 @@ export function RoomRedesign() {
                     onClick={() => setSelectedStyle(style.value)}
                     className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200
                         ${selectedStyle === style.value
-                          ? 'bg-[#BB4E2C] text-[#F2F0E5] shadow-md'
+                          ? 'bg-[#BB4E2C] text-[#ffffff] shadow-md'
                           : 'bg-white text-[#1A3126] border border-[#1A3126]/20 hover:border-[#BB4E2C]/40 hover:text-[#BB4E2C]'
                         }`}
                   >
@@ -271,7 +271,7 @@ export function RoomRedesign() {
               className={`w-full py-4 rounded-xl font-semibold text-base tracking-wide
                 transition-all duration-200
                 ${selectedImage && !isLoading
-                  ? 'bg-[#BB4E2C] hover:bg-[#a8431f] text-[#F2F0E5] shadow-lg'
+                  ? 'bg-[#BB4E2C] hover:bg-[#a8431f] text-[#ffffff] shadow-lg'
                   : 'bg-[#BB4E2C]/20 text-[#BB4E2C]/40 cursor-not-allowed'
                 }`}
             >
@@ -418,7 +418,7 @@ export function RoomRedesign() {
                   href={`/products/${product.productId}`}
                   className="group overflow-hidden rounded-xl transition-shadow duration-300 hover:shadow-md"
                 >
-                  <div className="relative aspect-square overflow-hidden bg-[#F2F0E5]/60">
+                  <div className="relative aspect-square overflow-hidden bg-[#ffffff]/60">
                     <Image
                       src={product.imageUrl}
                       alt={product.name}

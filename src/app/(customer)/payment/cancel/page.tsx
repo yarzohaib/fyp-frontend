@@ -29,7 +29,7 @@ export default function PaymentCancelPage() {
     const message = REASON_MESSAGES[reason] || REASON_MESSAGES['cancelled']
 
     return (
-        <div className="min-h-screen flex items-center justify-center px-4" style={{ backgroundColor: '#F2F0E5' }}>
+        <div className="min-h-screen flex items-center justify-center px-4" style={{ backgroundColor: '#ffffff' }}>
             <div className="max-w-lg w-full">
                 <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
 
@@ -51,7 +51,7 @@ export default function PaymentCancelPage() {
                         <p className="text-gray-500 mb-8">{message}</p>
 
                         {/* Options */}
-                        <div className="rounded-xl p-5 mb-8 text-left space-y-2" style={{ backgroundColor: '#F2F0E5' }}>
+                        <div className="rounded-xl p-5 mb-8 text-left space-y-2" style={{ backgroundColor: '#ffffff' }}>
                             <p className="font-semibold text-sm mb-3" style={{ color: '#1a3126' }}>What would you like to do?</p>
                             <p className="text-sm" style={{ color: '#1a3126', opacity: 0.75 }}>🔄 Go back to checkout and try a different payment method</p>
                             <p className="text-sm" style={{ color: '#1a3126', opacity: 0.75 }}>🛒 Return to your cart to review your items</p>

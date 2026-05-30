@@ -29,7 +29,7 @@ export default function PaymentSuccessPage() {
     }, [countdown, router])
 
     return (
-        <div className="min-h-screen flex items-center justify-center px-4" style={{ backgroundColor: '#F2F0E5' }}>
+        <div className="min-h-screen flex items-center justify-center px-4" style={{ backgroundColor: '#ffffff' }}>
             <div className="max-w-lg w-full">
                 <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
                     <div className="h-2 bg-gradient-to-r from-emerald-400 to-green-500" />
@@ -48,12 +48,12 @@ export default function PaymentSuccessPage() {
                         <p className="text-gray-500 mb-6">Your payment was processed securely via Safepay.</p>
 
                         {orderId && (
-                            <div className="inline-block px-5 py-2 rounded-full text-sm font-semibold mb-8" style={{ backgroundColor: '#F2F0E5', color: '#1a3126' }}>
+                            <div className="inline-block px-5 py-2 rounded-full text-sm font-semibold mb-8" style={{ backgroundColor: '#ffffff', color: '#1a3126' }}>
                                 Order ID: <span style={{ color: '#BB4E2C' }}>{orderId}</span>
                             </div>
                         )}
 
-                        <div className="text-left rounded-xl p-5 mb-8 space-y-3" style={{ backgroundColor: '#F2F0E5' }}>
+                        <div className="text-left rounded-xl p-5 mb-8 space-y-3" style={{ backgroundColor: '#ffffff' }}>
                             <p className="font-semibold text-sm" style={{ color: '#1a3126' }}>What happens next?</p>
                             {['✅ Your order has been confirmed', '📦 Vendor will prepare your items', '🚚 You will receive delivery updates'].map((s) => (
                                 <p key={s} className="text-sm" style={{ color: '#1a3126', opacity: 0.75 }}>{s}</p>

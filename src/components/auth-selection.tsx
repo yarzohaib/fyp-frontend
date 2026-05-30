@@ -73,7 +73,7 @@ export function AuthSelection() {
                 </p>
             </div>
 
-            {/* Right side - Branding (Light Background: bg-background / #F2F0E5) */}
+            {/* Right side - Branding (Light Background: bg-background / #ffffff) */}
             {/* This column is hidden on small screens and shows the welcome message on large screens */}
             <div className="hidden lg:w-1/2 lg:flex bg-background items-center justify-center p-8">
                 <div className="text-center">

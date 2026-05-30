@@ -42,7 +42,7 @@ export default function OrderStatus({ stats }: OrderStatusProps) {
                 {item.count} ({item.value.toFixed(0)}%)
               </span>
             </div>
-            <div className="w-full rounded-full h-2" style={{ backgroundColor: '#F2F0E5' }}>
+            <div className="w-full rounded-full h-2" style={{ backgroundColor: '#ffffff' }}>
               <div 
                 className="h-2 rounded-full transition-all"
                 style={{ 

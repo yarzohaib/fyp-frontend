@@ -11,7 +11,7 @@ export default function ContactPage() {
     return (
         <>
             <Navbar />
-            <main className="min-h-screen bg-[#F2F0E5] pt-24 pb-20">
+            <main className="min-h-screen bg-white pt-24 pb-20">
                 <div className="max-w-3xl mx-auto px-6 md:px-8">
 
                     {/* Header */}
@@ -40,7 +40,7 @@ export default function ContactPage() {
                         {/* Customer Support */}
                         <div className="bg-white rounded-2xl border border-[#1A3126]/10 p-7">
                             <div className="flex items-center gap-3 mb-4">
-                                <div className="w-10 h-10 rounded-xl bg-[#F2F0E5] flex items-center justify-center shrink-0">
+                                <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shrink-0">
                                     <Mail className="w-5 h-5 text-[#1A3126]" />
                                 </div>
                                 <h2 className="text-lg font-bold text-[#1A3126]">Customer Support</h2>
@@ -62,13 +62,13 @@ export default function ContactPage() {
                         <div className="bg-[#1A3126] rounded-2xl p-7">
                             <div className="flex items-center gap-3 mb-4">
                                 <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
-                                    <MapPin className="w-5 h-5 text-[#F2F0E5]" />
+                                    <MapPin className="w-5 h-5 text-white" />
                                 </div>
-                                <h2 className="text-lg font-bold text-[#F2F0E5]">Office Location</h2>
+                                <h2 className="text-lg font-bold text-white">Office Location</h2>
                             </div>
-                            <p className="text-[#F2F0E5] font-semibold mb-1">DOMA Headquarters</p>
-                            <p className="text-[#F2F0E5]/70 text-sm mb-4">Lahore, Pakistan</p>
-                            <p className="text-[#F2F0E5]/60 text-xs leading-relaxed">
+                            <p className="text-white font-semibold mb-1">DOMA Headquarters</p>
+                            <p className="text-white/70 text-sm mb-4">Lahore, Pakistan</p>
+                            <p className="text-white/60 text-xs leading-relaxed">
                                 As a digital-first marketplace, we do not host a public showroom at our corporate office. All
                                 shopping and AR visualization is done directly through the DOMA app and website.
                             </p>

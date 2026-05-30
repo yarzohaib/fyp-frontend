@@ -21,7 +21,7 @@ export default function BestSelling({ products }: BestSellingProps) {
               <div 
                 key={p.productId} 
                 className="flex items-center justify-between p-4 rounded-lg" 
-                style={{ backgroundColor: '#F2F0E5' }}
+                style={{ backgroundColor: '#ffffff' }}
               >
                 <div>
                   <p className="font-semibold" style={{ color: '#1A3126' }}>{p.name}</p>
