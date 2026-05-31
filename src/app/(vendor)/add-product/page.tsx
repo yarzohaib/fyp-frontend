@@ -211,9 +211,9 @@ export default function VendorProductsPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 sm:mb-8">
           <h1 className="text-2xl sm:text-3xl font-bold" style={{ color: '#1A3126' }}>Your Products</h1>
-          <Button className="rounded-none" 
+          <Button
             onClick={() => setShowAddForm(true)}
-            className="font-semibold px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base text-white hover:opacity-90 transition-opacity w-full sm:w-auto"
+            className="rounded-none font-semibold px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base text-white hover:opacity-90 transition-opacity w-full sm:w-auto"
             style={{ backgroundColor: '#BB4E2C' }}
           >
             <Plus size={18} className="mr-2" /> Add Product
@@ -244,9 +244,9 @@ export default function VendorProductsPage() {
               </div>
               <h2 className="text-xl sm:text-2xl font-bold mb-2" style={{ color: '#1A3126' }}>No products found</h2>
               <p className="mb-4 sm:mb-6 text-sm sm:text-base" style={{ color: '#1A3126', opacity: 0.6 }}>Start by adding your first product to your store</p>
-              <Button className="rounded-none" 
+              <Button
                 onClick={() => setShowAddForm(true)}
-                className="font-semibold px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base text-white hover:opacity-90 transition-opacity w-full sm:w-auto"
+                className="rounded-none font-semibold px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base text-white hover:opacity-90 transition-opacity w-full sm:w-auto"
                 style={{ backgroundColor: '#BB4E2C' }}
               >
                 <Plus size={18} className="mr-2" /> Add Your First Product
@@ -289,9 +289,9 @@ export default function VendorProductsPage() {
 
                 {/* Actions */}
                 <div className="flex flex-col sm:flex-col gap-2 sm:gap-3 w-full sm:w-auto">
-                  <Button className="rounded-none"
+                  <Button
                     onClick={() => toggleStock(product.id)}
-                    className="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white hover:opacity-90 transition-opacity whitespace-nowrap w-full sm:w-auto"
+                    className="rounded-none px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white hover:opacity-90 transition-opacity whitespace-nowrap w-full sm:w-auto"
                     style={{
                       backgroundColor: product.inventory.quantity > 0 ? '#1A3126' : '#BB4E2C',
                     }}
@@ -299,9 +299,9 @@ export default function VendorProductsPage() {
                     {product.inventory.quantity > 0 ? 'Mark Out of Stock' : 'Mark In Stock'}
                   </Button>
 
-                  <Button className="rounded-none"
+                  <Button
                     onClick={() => deleteProduct(product.id)}
-                    className="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium hover:opacity-90 transition-opacity whitespace-nowrap w-full sm:w-auto"
+                    className="rounded-none px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium hover:opacity-90 transition-opacity whitespace-nowrap w-full sm:w-auto"
                     style={{ 
                       backgroundColor: '#BB4E2C',
                       color: 'white'

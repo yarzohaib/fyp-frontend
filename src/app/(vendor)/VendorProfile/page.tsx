@@ -372,9 +372,9 @@ export default function VendorProfilePage() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <h1 className="text-3xl sm:text-4xl font-bold" style={{ color: '#1a3126' }}>Store Profile</h1>
           {!isEditing ? (
-            <Button className="rounded-none"
+            <Button
               onClick={() => setIsEditing(true)}
-              className="text-white flex items-center gap-2 px-6 py-3 w-full sm:w-auto justify-center font-medium hover:opacity-90 transition-opacity"
+              className="rounded-none text-white flex items-center gap-2 px-6 py-3 w-full sm:w-auto justify-center font-medium hover:opacity-90 transition-opacity"
               style={{ backgroundColor: '#BB4E2C' }}
             >
               <Edit2 size={18} />
@@ -391,7 +391,7 @@ export default function VendorProfilePage() {
                 <Save size={18} />
                 {isSaving ? "Saving..." : "Save"}
               </Button>
-              <Button className="rounded-none"
+              <Button
                 onClick={() => {
                   setIsEditing(false)
                   setFormData(vendor!)
@@ -399,7 +399,7 @@ export default function VendorProfilePage() {
                   setLogoPreview(vendor?.storeLogo?.url || null)
                   setError(null)
                 }}
-                className="bg-gray-400 hover:bg-gray-500 text-white flex items-center gap-2 px-6 py-3 justify-center flex-1 font-medium transition-opacity"
+                className="rounded-none bg-gray-400 hover:bg-gray-500 text-white flex items-center gap-2 px-6 py-3 justify-center flex-1 font-medium transition-opacity"
               >
                 <X size={18} />
                 Cancel
