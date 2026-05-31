@@ -1,8 +1,9 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { ShoppingCart, Heart } from "lucide-react"
+import { ShoppingCart, Heart, Store } from "lucide-react"
 import { useBackendCart } from "@/hooks/use-backend-cart"
 import { useWishlist } from "@/hooks/use-wishlist"
 import { useToast } from "@/components/ui/toast"
@@ -23,6 +24,7 @@ interface ProductDetailsProps {
         inStock: boolean
         colors?: ProductColor[]
         category?: string
+        vendor?: { id: string; storeName: string; slug: string } | null
     }
 }
 
@@ -63,12 +65,23 @@ export function ProductDetails({ product }: ProductDetailsProps) {
 
     return (
         <div className="space-y-4">
-            {/* Category */}
-            {product.category && (
-                <p className="text-sm text-foreground/60 tracking-wide uppercase">
-                    {product.category}
-                </p>
-            )}
+            {/* Category + Vendor row */}
+            <div className="flex items-center justify-between flex-wrap gap-2">
+                {product.category && (
+                    <p className="text-sm text-foreground/60 tracking-wide uppercase">
+                        {product.category}
+                    </p>
+                )}
+                {product.vendor && (
+                    <Link
+                        href={`/store/${product.vendor.id}`}
+                        className="inline-flex items-center gap-1.5 text-sm text-[#1A3126] hover:text-[#BB4E2C] font-medium transition-colors"
+                    >
+                        <Store className="h-3.5 w-3.5" />
+                        {product.vendor.storeName}
+                    </Link>
+                )}
+            </div>
 
             {/* Title */}
             <h1 className="text-3xl lg:text-4xl font-bold text-foreground leading-tight">

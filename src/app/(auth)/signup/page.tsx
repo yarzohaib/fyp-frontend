@@ -10,9 +10,9 @@ export default function SignupPage() {
             {/* Mobile-Only Logo */}
             <div className="p-6 bg-background lg:hidden flex justify-center">
                 <Link href="/">
-                    <div className="w-48 h-12 relative">
+                    <div className="w-60 h-16 relative">
                         <Image
-                            src="/GreenLogo.png"
+                            src="/DomaG.png"
                             alt="Company Logo"
                             fill
                             sizes="50vw"
@@ -27,9 +27,9 @@ export default function SignupPage() {
                 <div className="fixed left-0 top-0 w-1/2 h-screen flex flex-col items-center justify-center p-8">
                     {/* Desktop Logo */}
                     <Link href="/" className="absolute top-8 left-8">
-                        <div className="w-40 h-10 relative">
+                        <div className="w-56 h-14 relative">
                             <Image
-                                src="/WhiteLogo.png"
+                                src="/DomaW.png"
                                 alt="Company Logo"
                                 fill
                                 sizes="20vw"

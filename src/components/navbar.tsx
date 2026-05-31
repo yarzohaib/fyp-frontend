@@ -82,11 +82,11 @@ export default function Navbar() {
                             <div className="flex items-center">
                                 <Link href="/" className="flex items-center group">
                                     <Image
-                                        src="/WhiteLogo.png"
+                                        src="/DomaW.png"
                                         alt="DOMA"
-                                        width={160}
-                                        height={56}
-                                        className="h-8 md:h-9 w-auto transition-opacity duration-200 group-hover:opacity-75"
+                                        width={220}
+                                        height={72}
+                                        className="h-11 md:h-12 w-auto transition-opacity duration-200 group-hover:opacity-75"
                                         priority
                                     />
                                 </Link>
@@ -202,7 +202,7 @@ export default function Navbar() {
                 mobileMenuOpen ? "translate-x-0" : "translate-x-full"
             }`}>
                 <div className="bg-[#0f1f16] px-6 py-5 flex items-center justify-between shrink-0">
-                    <Image src="/WhiteLogo.png" alt="DOMA" width={90} height={28} className="h-6 w-auto" />
+                    <Image src="/DomaW.png" alt="DOMA" width={120} height={40} className="h-8 w-auto" />
                     <button onClick={() => setMobileMenuOpen(false)} aria-label="Close menu" className="text-white/60 hover:text-white transition-colors">
                         <X className="w-5 h-5" />
                     </button>

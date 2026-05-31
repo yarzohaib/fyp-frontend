@@ -20,7 +20,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "DOMA",
+    default: "DOMA - Design & Buy",
     template: "%s | DOMA",
   },
   description: "Discover our exclusive collection of premium furniture and home decor.",

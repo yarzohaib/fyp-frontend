@@ -15,7 +15,7 @@ export const revalidate = 60;
 
 export async function generateMetadata() {
   return {
-    title: 'DOMA — Premium Furniture & Home Decor',
+    title: 'DOMA - Design & Buy',
     description: 'Discover our exclusive collection of premium furniture and home decor items.',
     keywords: 'furniture, home decor, premium quality, interior design, modern furniture',
   };

@@ -68,10 +68,11 @@ export async function fetchProducts(limit?: number): Promise<ProductsApiResponse
 /**
  * Fetch a single product by slug or ID
  */
-export async function fetchProductBySlugOrId(slugOrId: string): Promise<Product | null> {
+export async function fetchProductBySlugOrId(slugOrId: string, depth: number = 2): Promise<Product | null> {
+    const depthParam = `&depth=${depth}`
     try {
         // Try fetching by slug first
-        let res = await fetch(`${BASE_URL}/api/public-products?where[slug][equals]=${slugOrId}`, {
+        let res = await fetch(`${BASE_URL}/api/public-products?where[slug][equals]=${slugOrId}${depthParam}`, {
             cache: "no-store",
             headers: {
                 "Content-Type": "application/json",
@@ -86,7 +87,7 @@ export async function fetchProductBySlugOrId(slugOrId: string): Promise<Product 
         }
 
         // If slug lookup fails, try fetching by ID
-        res = await fetch(`${BASE_URL}/api/public-products?where[id][equals]=${slugOrId}`, {
+        res = await fetch(`${BASE_URL}/api/public-products?where[id][equals]=${slugOrId}${depthParam}`, {
             cache: "no-store",
             headers: {
                 "Content-Type": "application/json",
@@ -205,6 +206,32 @@ export async function fetchProductBySlugOrIdWithReviews(slugOrId: string): Promi
     } catch (error) {
         console.error("Error fetching product:", error)
         return null
+    }
+}
+
+// ============================================================================
+// Vendor Public Fetch Functions
+// ============================================================================
+
+/**
+ * Fetch all publicly visible products belonging to a vendor.
+ * depth=2 ensures the vendor object is embedded in each product so we can
+ * extract store name, logo, and description from products[0].vendor.
+ */
+export async function fetchPublicVendorProducts(vendorId: string, limit: number = 50): Promise<Product[]> {
+    try {
+        const res = await fetch(
+            `${BASE_URL}/api/public-products?vendor=${vendorId}&limit=${limit}&depth=2`,
+            {
+                cache: "no-store",
+                headers: { "Content-Type": "application/json" },
+            }
+        )
+        if (!res.ok) return []
+        const data = await res.json()
+        return data.docs || []
+    } catch {
+        return []
     }
 }
 

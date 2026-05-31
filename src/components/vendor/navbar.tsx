@@ -8,11 +8,11 @@ export default function Navbar() {
       {/* Logo */}
       <Link href="/dashboard" className="flex items-center -my-2">
         <Image
-          src="/GreenLogo.png"
+          src="/DomaG.png"
           alt="Doma Logo"
           width={250}
           height={200}
-          className="w-24 h-24 sm:w-20 sm:h-20 transition-transform hover:scale-105 object-contain"
+          className="w-32 h-32 sm:w-28 sm:h-28 transition-transform hover:scale-105 object-contain"
           priority
         />
       </Link>

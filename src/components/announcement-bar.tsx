@@ -17,8 +17,7 @@ export function AnnouncementBar() {
                 {double.map((msg, i) => (
                     <span
                         key={i}
-                        className="inline-flex items-center justify-center gap-3 text-white/90 text-[11px] font-semibold tracking-[0.22em] uppercase select-none shrink-0"
-                        style={{ width: "33vw" }}
+                        className="inline-flex items-center justify-center gap-3 text-white/90 text-[11px] font-semibold tracking-[0.22em] uppercase select-none shrink-0 whitespace-nowrap w-[75vw] sm:w-[50vw] md:w-[33vw]"
                     >
                         <span className="text-white/40 text-[8px]"></span>
                         {msg}

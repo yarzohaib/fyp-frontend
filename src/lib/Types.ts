@@ -7,6 +7,25 @@ export interface Category {
     updatedAt?: string;
 }
 
+export interface PublicVendor {
+    id: string;
+    storeName: string;
+    slug: string;
+    storeDescription?: string;
+    status?: string;
+    storeLogo?: {
+        id?: string;
+        url: string;
+        alt?: string;
+    } | null;
+    contactInfo?: {
+        city?: string;
+        country?: string;
+        phone?: string;
+        address?: string;
+    };
+}
+
 export interface ProductImage {
     image: {
         id: string;
@@ -41,6 +60,7 @@ export interface Product {
     pricing: ProductPricing;
     images?: ProductImage[];
     category?: Category;
+    vendor?: PublicVendor | string | null;
     featured?: boolean;
     tags?: string[];
     sku?: string;

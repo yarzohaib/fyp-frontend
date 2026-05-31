@@ -80,7 +80,10 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                             Description: product.Description || "",
                             inStock: inStock,
                             colors: product.colors,
-                            category: product.category?.name, 
+                            category: product.category?.name,
+                            vendor: product.vendor && typeof product.vendor === "object"
+                                ? { id: product.vendor.id, storeName: product.vendor.storeName, slug: product.vendor.slug }
+                                : null,
                         }}
                     />
                 </div>
