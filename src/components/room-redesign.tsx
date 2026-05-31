@@ -426,7 +426,7 @@ export function RoomRedesign() {
                       {product.name}
                     </h3>
                     <p className="text-sm font-semibold text-[#BB4E2C]">
-                      Rs. {product.price.toLocaleString()}
+                      Rs. {(product.price ?? 0).toLocaleString()}
                     </p>
                   </div>
                 </Link>
