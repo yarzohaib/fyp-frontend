@@ -148,18 +148,13 @@ export function RoomRedesign() {
       {/* ── Page Header ── */}
       <div className="bg-brand-green py-12 md:py-16">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 md:px-8 text-center">
-          <div className="inline-flex items-center gap-2 bg-brand-orange/20
-                          border border-brand-orange/30 rounded-full px-4 py-1.5 mb-4">
-            <Sparkles className="w-4 h-4 text-brand-orange" />
-            <span className="text-brand-orange text-sm font-semibold tracking-widest uppercase">
-              AI Powered
-            </span>
-          </div>
+         
+          
           <h1 className="text-brand-offwhite text-4xl md:text-5xl font-serif font-medium mb-4">
-            DOMA Create
+            DOMA Redesign
           </h1>
           <p className="text-brand-offwhite/60 text-lg max-w-2xl mx-auto">
-            Upload a room photo, pick a style — DOMA redesigns it with real
+            Upload a room photo, pick a style, DOMA redesigns it with real
             catalog products and lets you shop the look.
           </p>
         </div>

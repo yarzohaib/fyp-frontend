@@ -44,7 +44,8 @@ export function CartDrawer({
 
     const allItemsEncoded = () => {
         if (!cart?.items) return ''
-        return btoa(unescape(encodeURIComponent(JSON.stringify(cart.items))))
+        const bytes = new TextEncoder().encode(JSON.stringify(cart.items))
+        return btoa(Array.from(bytes, b => String.fromCharCode(b)).join(''))
     }
 
     return (
@@ -67,7 +68,7 @@ export function CartDrawer({
                 {/* ── Header ──────────────────────────────────────────── */}
                 <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100 shrink-0">
                     <div>
-                        <SheetTitle className="text-lg font-semibold text-[#1A3126]">Your Cart</SheetTitle>
+                        <SheetTitle className="text-lg font-medium text-[#1A3126]">Your Cart</SheetTitle>
                         {itemCount > 0 && (
                             <p className="text-xs text-gray-400 mt-0.5">
                                 {itemCount} item{itemCount !== 1 ? 's' : ''}
@@ -136,10 +137,10 @@ export function CartDrawer({
 
                                         {/* Info */}
                                         <div className="flex-1 min-w-0">
-                                            <p className="text-sm font-semibold text-[#1A3126] line-clamp-2 leading-snug">
+                                            <p className="text-sm font-medium text-[#1A3126] line-clamp-2 leading-snug">
                                                 {productTitle}
                                             </p>
-                                            <p className="text-sm font-bold text-[#BB4E2C] mt-0.5">
+                                            <p className="text-sm font-semibold text-[#BB4E2C] mt-0.5">
                                                 Rs. {item.unitPrice.toLocaleString()}
                                             </p>
 
@@ -152,7 +153,7 @@ export function CartDrawer({
                                                 >
                                                     −
                                                 </button>
-                                                <span className="w-8 h-8 flex items-center justify-center text-xs font-semibold text-[#1A3126] border-x border-gray-200">
+                                                <span className="w-8 h-8 flex items-center justify-center text-xs font-medium text-[#1A3126] border-x border-gray-200">
                                                     {item.quantity}
                                                 </span>
                                                 <button
@@ -187,7 +188,7 @@ export function CartDrawer({
                                     Rs. {subtotal.toLocaleString()}
                                 </span>
                             </div>
-                            <div className="flex justify-between text-base font-bold text-[#1A3126]">
+                            <div className="flex justify-between text-base font-semibold text-[#1A3126]">
                                 <span>Total</span>
                                 <span>Rs. {total.toLocaleString()}</span>
                             </div>

@@ -48,14 +48,14 @@ export default function ShippingPage() {
                             by the respective store or vendor you purchase from.
                         </p>
                         <div className="space-y-4">
-                            <div className="flex gap-4 p-4 bg-white rounded-xl border border-[#1A3126]/10">
+                            <div className="flex gap-4 p-4 bg-white  border border-[#1A3126]/10">
                                 <Truck className="w-5 h-5 text-[#BB4E2C] shrink-0 mt-0.5" />
                                 <p className="text-[#212529] text-sm leading-relaxed">
                                     Shipping costs, delivery timelines, and available couriers are determined by the individual vendor
                                     and will be displayed during the checkout process.
                                 </p>
                             </div>
-                            <div className="flex gap-4 p-4 bg-white rounded-xl border border-[#1A3126]/10">
+                            <div className="flex gap-4 p-4 bg-white  border border-[#1A3126]/10">
                                 <Package className="w-5 h-5 text-[#BB4E2C] shrink-0 mt-0.5" />
                                 <p className="text-[#212529] text-sm leading-relaxed">
                                     Once an order is placed, the vendor is solely responsible for safely packaging, dispatching, and
@@ -95,14 +95,14 @@ export default function ShippingPage() {
                     </section>
 
                     {/* CTA */}
-                    <div className="mt-6 p-6 bg-[#1A3126] rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div className="mt-6 p-6 bg-[#1A3126]  flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                         <div>
                             <p className="text-white font-semibold">Need help with an order?</p>
                             <p className="text-white/60 text-sm mt-1">Our support team is ready to assist you.</p>
                         </div>
                         <a
                             href="/contact"
-                            className="shrink-0 bg-[#BB4E2C] text-white px-6 py-3 rounded-lg font-semibold text-sm
+                            className="shrink-0 bg-[#BB4E2C] text-white px-6 py-3  font-semibold text-sm
                                        hover:bg-orange-600 transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5"
                         >
                             Contact Us

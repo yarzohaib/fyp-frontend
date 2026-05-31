@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { Card, CardContent } from "@/components/ui/card";
 import type { BestSellingItem } from "@/lib/Types";
@@ -9,8 +9,8 @@ interface BestSellingProps {
 
 export default function BestSelling({ products }: BestSellingProps) {
   return (
-    <Card className="border-0 shadow-lg" style={{ backgroundColor: 'white' }}>
-      <CardContent className="p-6">
+    <Card className="rounded-none border-0 shadow-lg" style={{ backgroundColor: 'white' }}>
+      <CardContent className="rounded-none p-6">
         <h2 className="text-xl font-semibold mb-6" style={{ color: '#1A3126' }}>Best Selling Products</h2>
 
         {products.length === 0 ? (
@@ -20,7 +20,7 @@ export default function BestSelling({ products }: BestSellingProps) {
             {products.map((p) => (
               <div 
                 key={p.productId} 
-                className="flex items-center justify-between p-4 rounded-lg" 
+                className="flex items-center justify-between p-4"
                 style={{ backgroundColor: '#ffffff' }}
               >
                 <div>
@@ -38,3 +38,4 @@ export default function BestSelling({ products }: BestSellingProps) {
     </Card>
   );
 }
+

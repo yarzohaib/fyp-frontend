@@ -1,6 +1,7 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 import StatsCards from "@/components/vendor/stats-cards";
 import BestSelling from "@/components/vendor/best-selling";
 import OrderStatus from "@/components/vendor/order-status";
@@ -86,13 +87,13 @@ export default function DashboardPage() {
       <div className="flex items-center justify-center min-h-screen" style={{ backgroundColor: '#ffffff' }}>
         <div className="text-center">
           <p className="font-semibold mb-4" style={{ color: '#BB4E2C' }}>{error}</p>
-          <button
+          <Button
             onClick={() => window.location.reload()}
-            className="px-6 py-2 text-white rounded-full font-medium hover:opacity-90 transition-opacity"
+            className="rounded-none px-6 py-2 text-white font-medium hover:opacity-90 transition-opacity"
             style={{ backgroundColor: '#1A3126' }}
           >
             Retry
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -121,3 +122,4 @@ export default function DashboardPage() {
     </div>
   );
 }
+

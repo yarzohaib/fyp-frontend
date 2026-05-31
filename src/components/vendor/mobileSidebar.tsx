@@ -1,4 +1,4 @@
-// mobile-sidebar.tsx
+﻿// mobile-sidebar.tsx
 import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import Sidebar from "./sidebar";
@@ -17,3 +17,4 @@ export default function MobileSidebar() {
     </div>
   );
 }
+

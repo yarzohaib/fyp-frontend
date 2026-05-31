@@ -144,7 +144,7 @@ export default function TermsPage() {
                     </div>
 
                     {/* Intro note */}
-                    <div className="mb-10 p-5 bg-white rounded-xl border border-[#1A3126]/10 text-sm text-[#212529] leading-relaxed">
+                    <div className="mb-10 p-5 bg-white  border border-[#1A3126]/10 text-sm text-[#212529] leading-relaxed">
                         Please read these Terms of Service carefully before using the DOMA platform. These terms govern your access
                         to and use of all DOMA services, including our website, mobile applications, and AI/AR features.
                     </div>

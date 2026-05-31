@@ -1,4 +1,4 @@
-import { Home, BarChart, ShoppingBag, CircleUser } from "lucide-react";
+﻿import { Home, BarChart, ShoppingBag, CircleUser } from "lucide-react";
 import Link from "next/link";
 
 const menu = [
@@ -18,7 +18,7 @@ export default function Sidebar() {
           <Link
             key={item.name}
             href={item.href}
-            className="flex items-center gap-3 p-3 rounded-lg hover:opacity-90 transition-opacity font-medium"
+            className="flex items-center gap-3 p-3 hover:opacity-90 transition-opacity font-medium"
             style={{ 
               backgroundColor: '#1A3126',
               color: 'white'

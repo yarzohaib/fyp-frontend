@@ -38,9 +38,9 @@ export default function ContactPage() {
                     <div className="space-y-5">
 
                         {/* Customer Support */}
-                        <div className="bg-white rounded-2xl border border-[#1A3126]/10 p-7">
+                        <div className="bg-white  border border-[#1A3126]/10 p-7">
                             <div className="flex items-center gap-3 mb-4">
-                                <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shrink-0">
+                                <div className="w-10 h-10  bg-white flex items-center justify-center shrink-0">
                                     <Mail className="w-5 h-5 text-[#1A3126]" />
                                 </div>
                                 <h2 className="text-lg font-bold text-[#1A3126]">Customer Support</h2>
@@ -59,9 +59,9 @@ export default function ContactPage() {
                         </div>
 
                         {/* Office */}
-                        <div className="bg-[#1A3126] rounded-2xl p-7">
+                        {/* <div className="bg-[#1A3126]  p-7">
                             <div className="flex items-center gap-3 mb-4">
-                                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
+                                <div className="w-10 h-10  bg-white/10 flex items-center justify-center shrink-0">
                                     <MapPin className="w-5 h-5 text-white" />
                                 </div>
                                 <h2 className="text-lg font-bold text-white">Office Location</h2>
@@ -72,7 +72,7 @@ export default function ContactPage() {
                                 As a digital-first marketplace, we do not host a public showroom at our corporate office. All
                                 shopping and AR visualization is done directly through the DOMA app and website.
                             </p>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </main>

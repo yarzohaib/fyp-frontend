@@ -18,7 +18,7 @@ export function Footer() {
                             DOMA
                         </p>
                         <p className="text-sm text-background/60 leading-relaxed">
-                            Discover beautiful furniture and home decor for your space — powered by AI.
+                            Discover beautiful furniture and home decor for your space
                         </p>
                         <p className="mt-5 text-xs font-bold tracking-[0.25em] uppercase text-[#BB4E2C]">
                             Design &amp; Buy

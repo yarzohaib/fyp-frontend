@@ -2,6 +2,7 @@ import type {
     Product,
     ProductsApiResponse,
     CategoriesApiResponse,
+    VendorsApiResponse,
     UserRole,
     SignupRequestBody,
     AuthUser,
@@ -48,13 +49,16 @@ const EMPTY_ORDER_RESPONSE: OrderResponse = {
 // ============================================================================
 
 /**
- * Fetch products with optional limit
+ * Fetch products with optional limit and depth
  */
-export async function fetchProducts(limit?: number): Promise<ProductsApiResponse> {
-    const limitParam = limit ? `?limit=${limit}` : ""
+export async function fetchProducts(limit?: number, depth?: number): Promise<ProductsApiResponse> {
+    const params = new URLSearchParams()
+    if (limit) params.set("limit", String(limit))
+    if (depth) params.set("depth", String(depth))
+    const query = params.toString() ? `?${params}` : ""
 
-    const response = await fetch(`${BASE_URL}/api/public-products${limitParam}`, {
-        next: { revalidate: 60 }, // ✅ Changed from cache: "no-store"
+    const response = await fetch(`${BASE_URL}/api/public-products${query}`, {
+        next: { revalidate: 60 },
         headers: { "Content-Type": "application/json" },
     })
 
@@ -238,6 +242,24 @@ export async function fetchPublicVendorProducts(vendorId: string, limit: number 
 // ============================================================================
 // Category Fetch Functions
 // ============================================================================
+
+/**
+ * Fetch all public vendors
+ */
+export async function fetchVendors(limit?: number): Promise<VendorsApiResponse> {
+    const limitParam = limit ? `?limit=${limit}` : ""
+
+    const response = await fetch(`${BASE_URL}/api/public-vendors${limitParam}`, {
+        next: { revalidate: 60 },
+        headers: { "Content-Type": "application/json" },
+    })
+
+    if (!response.ok) {
+        throw new Error(`Failed to fetch vendors (${response.status})`)
+    }
+
+    return response.json()
+}
 
 /**
  * Fetch categories with optional limit

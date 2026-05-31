@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { useState, useEffect } from "react"
 import Image from "next/image"
@@ -132,7 +132,7 @@ export default function VendorProfilePage() {
         return
       }
 
-      console.log('🔍 Fetching vendor profile...')
+      console.log('ðŸ” Fetching vendor profile...')
 
       const response: Response = await fetch(`${BACKEND_URL}/api/vendor/profile`, {
         method: 'GET',
@@ -142,16 +142,16 @@ export default function VendorProfilePage() {
         },
       })
 
-      console.log('📡 Response status:', response.status)
+      console.log('ðŸ“¡ Response status:', response.status)
 
       if (!response.ok) {
         const errorData: ErrorResponse = await response.json().catch(() => ({}))
-        console.error('❌ Error response:', errorData)
+        console.error('âŒ Error response:', errorData)
         throw new Error(errorData.error || errorData.message || `HTTP ${response.status}: Failed to fetch profile`)
       }
 
       const data: ProfileResponse = await response.json()
-      console.log('✅ Profile fetched:', data)
+      console.log('âœ… Profile fetched:', data)
       
       const profileData: VendorProfile = data.vendor || data
       
@@ -162,7 +162,7 @@ export default function VendorProfilePage() {
         setLogoPreview(profileData.storeLogo.url)
       }
     } catch (err) {
-      console.error('❌ Failed to fetch profile:', err)
+      console.error('âŒ Failed to fetch profile:', err)
       setError(err instanceof Error ? err.message : "Failed to load profile")
     } finally {
       setLoading(false)
@@ -257,7 +257,7 @@ export default function VendorProfilePage() {
 
       // Upload logo if new file selected
       if (logoFile) {
-        console.log('📤 Uploading logo...')
+        console.log('ðŸ“¤ Uploading logo...')
         
         const formDataLogo: FormData = new FormData()
         formDataLogo.append("file", logoFile)
@@ -273,14 +273,14 @@ export default function VendorProfilePage() {
         if (uploadRes.ok) {
           const uploadData: UploadResponse = await uploadRes.json()
           logoData = uploadData.media
-          console.log('✅ Logo uploaded:', logoData)
+          console.log('âœ… Logo uploaded:', logoData)
         } else {
           const errorData: ErrorResponse = await uploadRes.json().catch(() => ({}))
           throw new Error(errorData.error || "Failed to upload logo")
         }
       }
 
-      console.log('📝 Updating profile...')
+      console.log('ðŸ“ Updating profile...')
 
       // Prepare update data
       const updatePayload: UpdatePayload = {
@@ -311,7 +311,7 @@ export default function VendorProfilePage() {
       }
 
       const updatedData: ProfileResponse = await response.json()
-      console.log('✅ Profile updated successfully')
+      console.log('âœ… Profile updated successfully')
       
       const profileData: VendorProfile = updatedData.vendor || updatedData
       setVendor(profileData)
@@ -323,7 +323,7 @@ export default function VendorProfilePage() {
       await fetchVendorProfile()
       
     } catch (err) {
-      console.error('❌ Failed to save profile:', err)
+      console.error('âŒ Failed to save profile:', err)
       setError(err instanceof Error ? err.message : "Failed to save profile")
     } finally {
       setIsSaving(false)
@@ -347,13 +347,13 @@ export default function VendorProfilePage() {
     return (
       <div className="min-h-screen py-8" style={{ backgroundColor: '#ffffff' }}>
         <div className="max-w-4xl mx-auto px-4">
-          <Card className="border-0 shadow-lg" style={{ backgroundColor: 'white' }}>
-            <CardContent className="p-8 text-center">
+          <Card className="rounded-none border-0 shadow-lg" style={{ backgroundColor: 'white' }}>
+            <CardContent className="rounded-none p-8 text-center">
               <p className="font-semibold text-lg mb-2" style={{ color: '#BB4E2C' }}>Failed to load profile</p>
               <p className="text-sm mb-6" style={{ color: '#1a3126', opacity: 0.7 }}>{error}</p>
               <Button 
                 onClick={fetchVendorProfile}
-                className="px-6 py-2 text-white rounded-full font-medium hover:opacity-90 transition-opacity"
+                className="rounded-none px-6 py-2 text-white font-medium hover:opacity-90 transition-opacity"
                 style={{ backgroundColor: '#BB4E2C' }}
               >
                 Retry
@@ -372,9 +372,9 @@ export default function VendorProfilePage() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <h1 className="text-3xl sm:text-4xl font-bold" style={{ color: '#1a3126' }}>Store Profile</h1>
           {!isEditing ? (
-            <Button
+            <Button className="rounded-none"
               onClick={() => setIsEditing(true)}
-              className="text-white rounded-full flex items-center gap-2 px-6 py-3 w-full sm:w-auto justify-center font-medium hover:opacity-90 transition-opacity"
+              className="text-white flex items-center gap-2 px-6 py-3 w-full sm:w-auto justify-center font-medium hover:opacity-90 transition-opacity"
               style={{ backgroundColor: '#BB4E2C' }}
             >
               <Edit2 size={18} />
@@ -385,13 +385,13 @@ export default function VendorProfilePage() {
               <Button
                 onClick={handleSave}
                 disabled={isSaving}
-                className="text-white rounded-full flex items-center gap-2 px-6 py-3 justify-center flex-1 font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
+                className="rounded-none text-white flex items-center gap-2 px-6 py-3 justify-center flex-1 font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
                 style={{ backgroundColor: '#1a3126' }}
               >
                 <Save size={18} />
                 {isSaving ? "Saving..." : "Save"}
               </Button>
-              <Button
+              <Button className="rounded-none"
                 onClick={() => {
                   setIsEditing(false)
                   setFormData(vendor!)
@@ -399,7 +399,7 @@ export default function VendorProfilePage() {
                   setLogoPreview(vendor?.storeLogo?.url || null)
                   setError(null)
                 }}
-                className="bg-gray-400 hover:bg-gray-500 text-white rounded-full flex items-center gap-2 px-6 py-3 justify-center flex-1 font-medium transition-opacity"
+                className="bg-gray-400 hover:bg-gray-500 text-white flex items-center gap-2 px-6 py-3 justify-center flex-1 font-medium transition-opacity"
               >
                 <X size={18} />
                 Cancel
@@ -410,20 +410,20 @@ export default function VendorProfilePage() {
 
         {/* Error Message */}
         {error && (
-          <div className="mb-6 p-4 rounded-lg text-white font-medium" style={{ backgroundColor: '#BB4E2C' }}>
+          <div className="mb-6 p-4 text-white font-medium" style={{ backgroundColor: '#BB4E2C' }}>
             {error}
           </div>
         )}
 
         {/* Store Logo Section */}
-        <Card className="mb-6 rounded-lg border-0 shadow-lg" style={{ backgroundColor: 'white' }}>
-          <CardHeader className="rounded-t-lg" style={{ backgroundColor: '#1a3126' }}>
-            <CardTitle className="text-white">Store Logo</CardTitle>
+        <Card className="rounded-none mb-6 border-0 shadow-lg" style={{ backgroundColor: 'white' }}>
+          <CardHeader className="rounded-none " style={{ backgroundColor: '#1a3126' }}>
+            <CardTitle className="rounded-none text-white">Store Logo</CardTitle>
           </CardHeader>
-          <CardContent className="p-6">
+          <CardContent className="rounded-none p-6">
             <div className="flex flex-col sm:flex-row gap-6 items-start">
               {/* Logo Preview */}
-              <div className="w-full sm:w-40 h-40 rounded-lg border-2 flex items-center justify-center shrink-0" style={{ borderColor: '#ffffff', backgroundColor: '#ffffff' }}>
+              <div className="w-full sm:w-40 h-40 border-2 flex items-center justify-center shrink-0" style={{ borderColor: '#ffffff', backgroundColor: '#ffffff' }}>
                 {logoPreview ? (
                   <Image
                     src={logoPreview}
@@ -443,7 +443,7 @@ export default function VendorProfilePage() {
               {/* Upload Section */}
               {isEditing && (
                 <div className="flex-1 space-y-3">
-                  <label className="flex items-center justify-center w-full px-4 py-8 border-2 border-dashed rounded-lg cursor-pointer transition-colors" style={{ borderColor: '#1a3126' }}>
+                  <label className="flex items-center justify-center w-full px-4 py-8 border-2 border-dashed cursor-pointer transition-colors" style={{ borderColor: '#1a3126' }}>
                     <div className="text-center">
                       <Upload className="mx-auto h-8 w-8 mb-2" style={{ color: '#BB4E2C' }} />
                       <p className="text-sm font-medium" style={{ color: '#1a3126' }}>Click to upload logo</p>
@@ -460,7 +460,7 @@ export default function VendorProfilePage() {
                   {logoPreview && (
                     <Button
                       onClick={handleRemoveLogo}
-                      className="w-full text-white rounded-full flex items-center gap-2 justify-center py-3 font-medium hover:opacity-90 transition-opacity"
+                      className="rounded-none w-full text-white flex items-center gap-2 justify-center py-3 font-medium hover:opacity-90 transition-opacity"
                       style={{ backgroundColor: '#BB4E2C' }}
                     >
                       <Trash2 size={18} />
@@ -474,11 +474,11 @@ export default function VendorProfilePage() {
         </Card>
 
         {/* Store Information */}
-        <Card className="mb-6 rounded-lg border-0 shadow-lg" style={{ backgroundColor: 'white' }}>
-          <CardHeader className="rounded-t-lg" style={{ backgroundColor: '#1a3126' }}>
-            <CardTitle className="text-white">Store Information</CardTitle>
+        <Card className="rounded-none mb-6 border-0 shadow-lg" style={{ backgroundColor: 'white' }}>
+          <CardHeader className="rounded-none " style={{ backgroundColor: '#1a3126' }}>
+            <CardTitle className="rounded-none text-white">Store Information</CardTitle>
           </CardHeader>
-          <CardContent className="p-6 space-y-4">
+          <CardContent className="rounded-none p-6 space-y-4">
             {/* Store Name */}
             <div>
               <label className="block text-sm font-medium mb-2" style={{ color: '#1a3126' }}>Store Name</label>
@@ -488,7 +488,7 @@ export default function VendorProfilePage() {
                 value={formData.storeName}
                 onChange={handleInputChange}
                 disabled={!isEditing}
-                className={`w-full px-4 py-3 border rounded-lg ${
+                className={`w-full px-4 py-3 border ${
                   isEditing
                     ? "bg-white focus:ring-2 focus:outline-none"
                     : "cursor-not-allowed"
@@ -508,7 +508,7 @@ export default function VendorProfilePage() {
                 type="text"
                 value={formData.slug}
                 disabled
-                className="w-full px-4 py-3 border rounded-lg cursor-not-allowed"
+                className="w-full px-4 py-3 border cursor-not-allowed"
                 style={{ borderColor: '#e5e5e5', backgroundColor: '#ffffff', color: '#1a3126', opacity: 0.7 }}
               />
             </div>
@@ -522,7 +522,7 @@ export default function VendorProfilePage() {
                 onChange={handleInputChange}
                 disabled={!isEditing}
                 rows={4}
-                className={`w-full px-4 py-3 border rounded-lg resize-none ${
+                className={`w-full px-4 py-3 border resize-none ${
                   isEditing ? "bg-white focus:ring-2 focus:outline-none" : "cursor-not-allowed"
                 }`}
                 style={{
@@ -537,7 +537,7 @@ export default function VendorProfilePage() {
             {/* Status (Read-only) */}
             <div>
               <label className="block text-sm font-medium mb-2" style={{ color: '#1a3126' }}>Account Status</label>
-              <div className="px-4 py-3 rounded-lg font-semibold inline-block capitalize" style={{ backgroundColor: '#1a3126', color: 'white' }}>
+              <div className="px-4 py-3 font-semibold inline-block capitalize" style={{ backgroundColor: '#1a3126', color: 'white' }}>
                 {formData.status}
               </div>
             </div>
@@ -545,11 +545,11 @@ export default function VendorProfilePage() {
         </Card>
 
         {/* Contact Information */}
-        <Card className="mb-6 rounded-lg border-0 shadow-lg" style={{ backgroundColor: 'white' }}>
-          <CardHeader className="rounded-t-lg" style={{ backgroundColor: '#1a3126' }}>
-            <CardTitle className="text-white">Contact Information</CardTitle>
+        <Card className="rounded-none mb-6 border-0 shadow-lg" style={{ backgroundColor: 'white' }}>
+          <CardHeader className="rounded-none " style={{ backgroundColor: '#1a3126' }}>
+            <CardTitle className="rounded-none text-white">Contact Information</CardTitle>
           </CardHeader>
-          <CardContent className="p-6 space-y-4">
+          <CardContent className="rounded-none p-6 space-y-4">
             {/* Phone */}
             <div>
               <label className="block text-sm font-medium mb-2" style={{ color: '#1a3126' }}>Phone Number</label>
@@ -560,7 +560,7 @@ export default function VendorProfilePage() {
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(e, "contactInfo")}
                 disabled={!isEditing}
                 placeholder="Enter phone number"
-                className={`w-full px-4 py-3 border rounded-lg ${
+                className={`w-full px-4 py-3 border ${
                   isEditing ? "bg-white focus:ring-2 focus:outline-none" : "cursor-not-allowed"
                 }`}
                 style={{
@@ -581,7 +581,7 @@ export default function VendorProfilePage() {
                 disabled={!isEditing}
                 rows={3}
                 placeholder="Enter your business address"
-                className={`w-full px-4 py-3 border rounded-lg resize-none ${
+                className={`w-full px-4 py-3 border resize-none ${
                   isEditing ? "bg-white focus:ring-2 focus:outline-none" : "cursor-not-allowed"
                 }`}
                 style={{
@@ -603,7 +603,7 @@ export default function VendorProfilePage() {
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(e, "contactInfo")}
                   disabled={!isEditing}
                   placeholder="Enter city"
-                  className={`w-full px-4 py-3 border rounded-lg ${
+                  className={`w-full px-4 py-3 border ${
                     isEditing ? "bg-white focus:ring-2 focus:outline-none" : "cursor-not-allowed"
                   }`}
                   style={{
@@ -623,7 +623,7 @@ export default function VendorProfilePage() {
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(e, "contactInfo")}
                   disabled={!isEditing}
                   placeholder="Enter country"
-                  className={`w-full px-4 py-3 border rounded-lg ${
+                  className={`w-full px-4 py-3 border ${
                     isEditing ? "bg-white focus:ring-2 focus:outline-none" : "cursor-not-allowed"
                   }`}
                   style={{
@@ -638,11 +638,11 @@ export default function VendorProfilePage() {
         </Card>
 
         {/* Business Information */}
-        <Card className="rounded-lg border-0 shadow-lg" style={{ backgroundColor: 'white' }}>
-          <CardHeader className="rounded-t-lg" style={{ backgroundColor: '#1a3126' }}>
-            <CardTitle className="text-white">Business Information</CardTitle>
+        <Card className="rounded-none border-0 shadow-lg" style={{ backgroundColor: 'white' }}>
+          <CardHeader className="rounded-none " style={{ backgroundColor: '#1a3126' }}>
+            <CardTitle className="rounded-none text-white">Business Information</CardTitle>
           </CardHeader>
-          <CardContent className="p-6 space-y-4">
+          <CardContent className="rounded-none p-6 space-y-4">
             {/* Business License */}
             <div>
               <label className="block text-sm font-medium mb-2" style={{ color: '#1a3126' }}>Business License</label>
@@ -653,7 +653,7 @@ export default function VendorProfilePage() {
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(e, "businessInfo")}
                 disabled={!isEditing}
                 placeholder="Enter business license number"
-                className={`w-full px-4 py-3 border rounded-lg ${
+                className={`w-full px-4 py-3 border ${
                   isEditing ? "bg-white focus:ring-2 focus:outline-none" : "cursor-not-allowed"
                 }`}
                 style={{
@@ -674,7 +674,7 @@ export default function VendorProfilePage() {
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(e, "businessInfo")}
                 disabled={!isEditing}
                 placeholder="Enter tax ID"
-                className={`w-full px-4 py-3 border rounded-lg ${
+                className={`w-full px-4 py-3 border ${
                   isEditing ? "bg-white focus:ring-2 focus:outline-none" : "cursor-not-allowed"
                 }`}
                 style={{
@@ -693,7 +693,7 @@ export default function VendorProfilePage() {
                 value={formData.businessInfo.businessType}
                 onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleInputChange(e, "businessInfo")}
                 disabled={!isEditing}
-                className={`w-full px-4 py-3 border rounded-lg ${
+                className={`w-full px-4 py-3 border ${
                   isEditing ? "bg-white focus:ring-2 focus:outline-none" : "cursor-not-allowed"
                 }`}
                 style={{
@@ -714,3 +714,5 @@ export default function VendorProfilePage() {
     </div>
   )
 }
+
+

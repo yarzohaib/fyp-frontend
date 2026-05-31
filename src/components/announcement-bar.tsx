@@ -12,7 +12,7 @@ const double = [...MESSAGES, ...MESSAGES]
 
 export function AnnouncementBar() {
     return (
-        <div className="bg-[#BB4E2C] overflow-hidden h-9 flex items-center">
+        <div className="bg-[#BB4E2C]/80 backdrop-blur-sm overflow-hidden h-9 flex items-center shadow-[0_2px_12px_rgba(0,0,0,0.18)]">
             <div className="animate-marquee">
                 {double.map((msg, i) => (
                     <span

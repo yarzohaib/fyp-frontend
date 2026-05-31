@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Package, ShoppingCart, DollarSign, TrendingUp } from "lucide-react";
@@ -71,10 +71,10 @@ export default function StatsCards({ stats }: StatsCardsProps) {
           // Apply custom background color and simplified border/shadow
           <Card 
             key={c.title} 
-            className="border-0 shadow-lg rounded-xl transition-transform duration-300 hover:scale-[1.02]" 
+            className="rounded-none border-0 shadow-lg transition-transform duration-300 hover:scale-[1.02]"
             style={{ backgroundColor: theme.bg }}
           >
-            <CardContent className="p-6 flex items-center justify-between">
+            <CardContent className="rounded-none p-6 flex items-center justify-between">
               <div>
                 {/* Text color set to theme.text, slightly muted */}
                 <p 
@@ -100,3 +100,4 @@ export default function StatsCards({ stats }: StatsCardsProps) {
     </div>
   );
 }
+

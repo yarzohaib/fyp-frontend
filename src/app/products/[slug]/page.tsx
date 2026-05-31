@@ -63,7 +63,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     return (
         <div className="min-h-screen bg-background">
             <Navbar />
-            <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-24 pb-8">
+            <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-28 pb-8">
                 {/* Product Section */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-12 lg:mb-16">
                     {/* Gallery */}

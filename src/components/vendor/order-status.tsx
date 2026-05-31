@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { Card, CardContent } from "@/components/ui/card";
 import type { OrderStatusStats } from "@/lib/Types";
@@ -10,8 +10,8 @@ interface OrderStatusProps {
 export default function OrderStatus({ stats }: OrderStatusProps) {
   if (!stats) {
     return (
-      <Card className="border-0 shadow-lg" style={{ backgroundColor: 'white' }}>
-        <CardContent className="p-6">
+      <Card className="rounded-none border-0 shadow-lg" style={{ backgroundColor: 'white' }}>
+        <CardContent className="rounded-none p-6">
           <p style={{ color: '#1A3126', opacity: 0.6 }}>No data available</p>
         </CardContent>
       </Card>
@@ -30,8 +30,8 @@ export default function OrderStatus({ stats }: OrderStatusProps) {
   ];
 
   return (
-    <Card className="border-0 shadow-lg" style={{ backgroundColor: 'white' }}>
-      <CardContent className="p-6 space-y-6">
+    <Card className="rounded-none border-0 shadow-lg" style={{ backgroundColor: 'white' }}>
+      <CardContent className="rounded-none p-6 space-y-6">
         <h2 className="text-xl font-semibold" style={{ color: '#1A3126' }}>Order Status</h2>
 
         {formatted.map((item) => (
@@ -42,9 +42,9 @@ export default function OrderStatus({ stats }: OrderStatusProps) {
                 {item.count} ({item.value.toFixed(0)}%)
               </span>
             </div>
-            <div className="w-full rounded-full h-2" style={{ backgroundColor: '#ffffff' }}>
+            <div className="w-full h-2" style={{ backgroundColor: '#ffffff' }}>
               <div 
-                className="h-2 rounded-full transition-all"
+                className="h-2 transition-all"
                 style={{ 
                   width: `${item.value}%`,
                   backgroundColor: item.color
@@ -57,3 +57,5 @@ export default function OrderStatus({ stats }: OrderStatusProps) {
     </Card>
   );
 }
+
+

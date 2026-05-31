@@ -43,29 +43,29 @@ export function AuthSelection() {
                 </Link>
 
                 {/* Main Content */}
-                <h1 className="text-4xl font-medium font-serif mb-12 mt-12 lg:mt-0">Login As</h1>
+                <h1 className="text-5xl font-medium font-serif mb-12 mt-12 lg:mt-0">Login As</h1>
 
-                <div className="space-y-6 w-full max-w-xs">
+                <div className="space-y-6 w-full max-w-sm">
                     {/* Vendor */}
                     <Link
                         href="/login/vendor"
-                        className="flex items-center justify-center gap-4 bg-accent hover:bg-accent/90 text-background rounded-2xl p-8 transition-colors"
+                        className="flex items-center justify-center gap-5 bg-accent hover:bg-accent/90 text-background p-9 transition-colors"
                     >
-                        <Store className="w-12 h-12" />
-                        <span className="text-2xl font-semibold">Vendor</span>
+                        {/* <Store className="w-14 h-14" /> */}
+                        <span className="text-3xl font-medium font-serif">Vendor</span>
                     </Link>
 
                     {/* Customer */}
                     <Link
                         href="/login/customer"
-                        className="flex items-center justify-center gap-4 bg-accent hover:bg-accent/90 text-background rounded-2xl p-8 transition-colors"
+                        className="flex items-center justify-center gap-5 bg-accent hover:bg-accent/90 text-background p-9 transition-colors"
                     >
-                        <ShoppingBag className="w-12 h-12" />
-                        <span className="text-2xl font-semibold">Customer</span>
+                        {/* <ShoppingBag className="w-14 h-14" /> */}
+                        <span className="text-3xl font-medium font-serif">Customer</span>
                     </Link>
                 </div>
 
-                <p className="mt-12 text-center text-background/70">
+                <p className="mt-12 text-center text-lg text-background/70">
                     Don&apos;t have an account?{" "}
                     <Link href="/signup" className="text-accent font-semibold hover:underline">
                         Sign Up
@@ -73,13 +73,17 @@ export function AuthSelection() {
                 </p>
             </div>
 
-            {/* Right side - Branding (Light Background: bg-background / #ffffff) */}
-            {/* This column is hidden on small screens and shows the welcome message on large screens */}
-            <div className="hidden lg:w-1/2 lg:flex bg-background items-center justify-center p-8">
-                <div className="text-center">
-                    {/* Removed large logo from here as per instructions, only keeping text */}
-                    <h2 className="text-5xl font-bold text-foreground mb-4">Welcome back!</h2>
-                    <p className="text-xl text-foreground/70">It&#39;s good to have you back!</p>
+            {/* Right side - Branding */}
+            <div className="hidden lg:w-1/2 lg:flex bg-background items-start justify-center p-12 relative overflow-hidden">
+                <h2 className="text-4xl font-medium font-serif text-foreground relative z-10">Welcome back!</h2>
+                <div className="absolute inset-0 flex items-center justify-center">
+                    <Image
+                        src="/Domaicon.png"
+                        alt=""
+                        fill
+                        sizes="50vw"
+                        className="object-contain opacity-100"
+                    />
                 </div>
             </div>
         </div>

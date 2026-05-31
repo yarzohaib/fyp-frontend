@@ -469,7 +469,7 @@ export default function CheckoutPage() {
                                 ? (paymentMethod === 'safepay' ? 'Redirecting...' : 'Processing...')
                                 : paymentMethod === 'safepay'
                                     ? `Proceed to Payment — Rs. ${totals.total.toLocaleString()}`
-                                    : `Complete Purchase — Rs. ${totals.total.toLocaleString()}`
+                                    : `Complete Purchase`
                             }
                         </button>
 

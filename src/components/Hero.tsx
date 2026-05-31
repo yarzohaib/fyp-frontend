@@ -6,7 +6,7 @@ export default function Hero() {
         <section className="relative h-[60vh] md:h-[110vh] w-full overflow-hidden">
             {/* Background Image — same source for all screens, cropped via object-cover */}
             <Image
-                src="/test.jpg"
+                src="/3.1.jpg"
                 alt="Hero Background"
                 fill
                 priority
@@ -16,8 +16,8 @@ export default function Hero() {
                 className="object-cover object-[center_40%]"
             />
 
-            {/* Gradient overlay — heavier at bottom so text reads cleanly */}
-            <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-black/70" />
+            {/* Gradient overlay — stronger at top/centre where text now sits */}
+            <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/25 to-black/30" />
 
             {/* Hero Content — anchored to bottom for editorial premium feel */}
             <div className="relative h-full container mx-auto max-w-7xl px-6 md:px-10 lg:px-8">
@@ -48,8 +48,8 @@ export default function Hero() {
                     </div>
                 </div>
 
-                {/* Desktop: bottom-anchored editorial layout */}
-                <div className="h-full hidden md:flex flex-col justify-end pb-28 lg:pb-36">
+                {/* Desktop: upper-area layout — above the furniture */}
+                <div className="h-full hidden md:flex flex-col justify-start pt-[30%] lg:pt-[28%]">
                     <div className="max-w-4xl">
                         <h1 className="text-[#ffffff] text-8xl lg:text-[9rem] font-serif font-medium leading-[0.92] mb-5">
                             Design &amp; Buy

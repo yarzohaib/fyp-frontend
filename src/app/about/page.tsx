@@ -86,14 +86,14 @@ export default function AboutPage() {
                     </section>
 
                     {/* CTA */}
-                    <div className="mt-14 p-8 bg-[#1A3126] rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+                    <div className="mt-14 p-8 bg-[#1A3126]  flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
                         <div>
                             <p className="text-white font-semibold text-lg">Ready to redesign your space?</p>
                             <p className="text-white/60 text-sm mt-1">Explore our collection or try the AI room redesign tool.</p>
                         </div>
                         <a
                             href="/products"
-                            className="shrink-0 bg-[#BB4E2C] text-white px-6 py-3 rounded-lg font-semibold text-sm
+                            className="shrink-0 bg-[#BB4E2C] text-white px-6 py-3  font-semibold text-sm
                                        hover:bg-orange-600 transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5"
                         >
                             Shop Now

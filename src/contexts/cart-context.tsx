@@ -276,8 +276,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
       })
       if (!cartItem) return false
 
-      const itemId = cartItem._id ?? cartItem.id
-      if (!itemId) return false
+      const rawItemId = cartItem._id ?? cartItem.id
+      if (!rawItemId) return false
+      // Ensure it's a plain string (guards against MongoDB ObjectId objects
+      // which would serialize as "[object Object]" inside a URL)
+      const itemId = String(rawItemId)
 
       // Optimistic remove
       const nextItems = prevCart.items.filter((item) => {
@@ -305,7 +308,22 @@ export function CartProvider({ children }: { children: ReactNode }) {
           throw new Error(d.error || 'Failed to remove item')
         }
         const data = await res.json()
-        dispatch({ type: 'SET_CART', payload: data.cart })
+        // Guard against stale server responses that still contain the removed
+        // item — always honour the optimistic remove regardless of what the
+        // server echoes back.
+        const serverCart = data.cart as Cart | null
+        if (serverCart?.items) {
+          const safeItems = serverCart.items.filter((item) => {
+            const id = typeof item.product === 'string' ? item.product : item.product.id
+            return id !== productId
+          })
+          dispatch({
+            type: 'SET_CART',
+            payload: { ...serverCart, items: safeItems, ...recomputeTotals(safeItems) },
+          })
+        } else {
+          dispatch({ type: 'SET_CART', payload: serverCart })
+        }
         return true
       } catch (err) {
         dispatch({ type: 'SET_CART', payload: prevCart })

@@ -53,7 +53,7 @@ export default function PrivacyPage() {
                     </div>
 
                     {/* Intro */}
-                    <div className="mb-10 p-5 bg-white rounded-xl border border-[#1A3126]/10 text-sm text-[#212529] leading-relaxed">
+                    <div className="mb-10 p-5 bg-white  border border-[#1A3126]/10 text-sm text-[#212529] leading-relaxed">
                         Your privacy matters to us. This policy explains exactly what information DOMA collects, why we collect it,
                         and how we keep it secure. By using the DOMA platform, you agree to the practices described here.
                     </div>

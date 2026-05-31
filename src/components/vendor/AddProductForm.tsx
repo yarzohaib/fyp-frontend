@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
@@ -210,13 +210,13 @@ export default function AddProductForm({ onClose, onSuccess }: AddProductFormPro
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
-      <Card className="w-full max-w-3xl bg-white rounded-xl shadow-2xl my-8">
+      <Card className="rounded-none w-full max-w-3xl bg-white shadow-2xl my-8">
         {/* Header */}
         <div className="flex justify-between items-center p-6 border-b border-gray-200">
           <h2 className="text-2xl font-bold text-[#1A3126]">Add New Product</h2>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 transition-colors"
+            className="rounded-none text-gray-500 hover:text-gray-700 transition-colors"
           >
             <X size={24} />
           </button>
@@ -225,7 +225,7 @@ export default function AddProductForm({ onClose, onSuccess }: AddProductFormPro
         {/* Form Content */}
         <div className="p-6 space-y-6 max-h-[70vh] overflow-y-auto">
           {error && (
-            <div className="p-4 rounded-xl bg-red-100 text-red-700 border border-red-300">
+            <div className="p-4 bg-red-100 text-red-700 border border-red-300">
               {error}
             </div>
           )}
@@ -239,7 +239,7 @@ export default function AddProductForm({ onClose, onSuccess }: AddProductFormPro
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent"
+              className="w-full px-4 py-2 border border-gray-300 focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent"
               placeholder="Enter product title"
             />
           </div>
@@ -253,7 +253,7 @@ export default function AddProductForm({ onClose, onSuccess }: AddProductFormPro
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={4}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent resize-none"
+              className="w-full px-4 py-2 border border-gray-300 focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent resize-none"
               placeholder="Enter product description"
             />
           </div>
@@ -266,7 +266,7 @@ export default function AddProductForm({ onClose, onSuccess }: AddProductFormPro
             
             {images.length < 10 && (
               <div className="mb-4">
-                <label className="flex items-center justify-center w-full px-4 py-6 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-[#BB4E2C] transition-colors">
+                <label className="flex items-center justify-center w-full px-4 py-6 border-2 border-dashed border-gray-300 cursor-pointer hover:border-[#BB4E2C] transition-colors">
                   <div className="text-center">
                     <Upload className="mx-auto h-12 w-12 text-gray-400" />
                     <p className="mt-2 text-sm text-gray-600">
@@ -297,15 +297,15 @@ export default function AddProductForm({ onClose, onSuccess }: AddProductFormPro
                         src={image.preview}
                         alt={`Preview ${index + 1}`}
                         fill
-                        className="object-cover rounded-lg border border-gray-300"
+                        className="object-cover border border-gray-300"
                       />
                     </div>
-                    <button
+                    <Button
                       onClick={() => removeImage(index)}
-                      className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="rounded-none absolute top-2 right-2 p-1 bg-red-500 text-white opacity-0 group-hover:opacity-100 transition-opacity"
                     >
                       <Trash2 size={16} />
-                    </button>
+                    </Button>
                   </div>
                 ))}
               </div>
@@ -320,7 +320,7 @@ export default function AddProductForm({ onClose, onSuccess }: AddProductFormPro
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent bg-white"
+              className="w-full px-4 py-2 border border-gray-300 focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent bg-white"
               disabled={loadingCategories}
             >
               <option value="">Select a value</option>
@@ -349,7 +349,7 @@ export default function AddProductForm({ onClose, onSuccess }: AddProductFormPro
                   step="0.01"
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent"
                   placeholder="0.00"
                 />
               </div>
@@ -363,7 +363,7 @@ export default function AddProductForm({ onClose, onSuccess }: AddProductFormPro
                   step="0.01"
                   value={discountedPrice}
                   onChange={(e) => setDiscountedPrice(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent"
                   placeholder="0.00"
                 />
               </div>
@@ -379,7 +379,7 @@ export default function AddProductForm({ onClose, onSuccess }: AddProductFormPro
               type="number"
               value={quantity}
               onChange={(e) => setQuantity(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent"
+              className="w-full px-4 py-2 border border-gray-300 focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent"
               placeholder="0"
               min="0"
             />
@@ -396,19 +396,19 @@ export default function AddProductForm({ onClose, onSuccess }: AddProductFormPro
                 type="text"
                 value={colorName}
                 onChange={(e) => setColorName(e.target.value)}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent"
+                className="flex-1 px-4 py-2 border border-gray-300 focus:ring-2 focus:ring-[#BB4E2C] focus:border-transparent"
                 placeholder="Color name (e.g., Silver, Golden)"
               />
               <input
                 type="color"
                 value={colorHex}
                 onChange={(e) => setColorHex(e.target.value)}
-                className="w-16 h-10 border border-gray-300 rounded-lg cursor-pointer"
+                className="w-16 h-10 border border-gray-300 cursor-pointer"
                 title="Color preview (for reference only)"
               />
               <Button
                 onClick={addColor}
-                className="px-4 py-2 bg-[#1A3126] hover:bg-[#2A4136] text-white rounded-lg"
+                className="rounded-none px-4 py-2 bg-[#1A3126] hover:bg-[#2A4136] text-white"
                 type="button"
               >
                 <Plus size={16} />
@@ -420,16 +420,16 @@ export default function AddProductForm({ onClose, onSuccess }: AddProductFormPro
                 {colors.map((color, index) => (
                   <div
                     key={index}
-                    className="flex items-center gap-2 px-3 py-2 bg-gray-100 rounded-lg"
+                    className="flex items-center gap-2 px-3 py-2 bg-gray-100"
                   >
                     <span className="text-sm font-medium">{color.color}</span>
-                    <button
+                    <Button
                       onClick={() => removeColor(index)}
-                      className="text-red-500 hover:text-red-700"
+                      className="rounded-none text-red-500 hover:text-red-700"
                       type="button"
                     >
                       <Trash2 size={14} />
-                    </button>
+                    </Button>
                   </div>
                 ))}
               </div>
@@ -441,14 +441,14 @@ export default function AddProductForm({ onClose, onSuccess }: AddProductFormPro
         <div className="flex gap-3 p-6 border-t border-gray-200">
           <Button
             onClick={onClose}
-            className="flex-1 px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold"
+            className="rounded-none flex-1 px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold"
             disabled={loading}
           >
             Cancel
           </Button>
           <Button
             onClick={handleSubmit}
-            className="flex-1 px-6 py-3 bg-[#BB4E2C] hover:bg-[#A03D1F] text-white rounded-lg font-semibold"
+            className="rounded-none flex-1 px-6 py-3 bg-[#BB4E2C] hover:bg-[#A03D1F] text-white font-semibold"
             disabled={loading}
           >
             {loading ? "Publishing..." : "Publish"}
@@ -458,3 +458,4 @@ export default function AddProductForm({ onClose, onSuccess }: AddProductFormPro
     </div>
   );
 }
+

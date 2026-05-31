@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
@@ -211,9 +211,9 @@ export default function VendorProductsPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 sm:mb-8">
           <h1 className="text-2xl sm:text-3xl font-bold" style={{ color: '#1A3126' }}>Your Products</h1>
-          <Button 
+          <Button className="rounded-none" 
             onClick={() => setShowAddForm(true)}
-            className="font-semibold rounded-full px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base text-white hover:opacity-90 transition-opacity w-full sm:w-auto"
+            className="font-semibold px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base text-white hover:opacity-90 transition-opacity w-full sm:w-auto"
             style={{ backgroundColor: '#BB4E2C' }}
           >
             <Plus size={18} className="mr-2" /> Add Product
@@ -222,7 +222,7 @@ export default function VendorProductsPage() {
 
         {/* Error Message */}
         {error && (
-          <div className="mb-4 sm:mb-6 p-3 sm:p-4 rounded-lg text-white font-medium text-sm sm:text-base" style={{ backgroundColor: '#BB4E2C' }}>
+          <div className="mb-4 sm:mb-6 p-3 sm:p-4 text-white font-medium text-sm sm:text-base" style={{ backgroundColor: '#BB4E2C' }}>
             {error}
           </div>
         )}
@@ -237,16 +237,16 @@ export default function VendorProductsPage() {
 
         {/* Empty State */}
         {!loading && !error && products.length === 0 && (
-          <Card className="border-0 shadow-lg" style={{ backgroundColor: 'white' }}>
-            <CardContent className="text-center py-12 sm:py-16 px-4">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full mx-auto mb-4 sm:mb-6 flex items-center justify-center" style={{ backgroundColor: '#ffffff' }}>
+          <Card className="rounded-none border-0 shadow-lg" style={{ backgroundColor: 'white' }}>
+            <CardContent className="rounded-none text-center py-12 sm:py-16 px-4">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6 flex items-center justify-center" style={{ backgroundColor: '#ffffff' }}>
                 <ShoppingBag className="w-8 h-8 sm:w-10 sm:h-10" style={{ color: '#BB4E2C' }} />
               </div>
               <h2 className="text-xl sm:text-2xl font-bold mb-2" style={{ color: '#1A3126' }}>No products found</h2>
               <p className="mb-4 sm:mb-6 text-sm sm:text-base" style={{ color: '#1A3126', opacity: 0.6 }}>Start by adding your first product to your store</p>
-              <Button 
+              <Button className="rounded-none" 
                 onClick={() => setShowAddForm(true)}
-                className="font-semibold rounded-full px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base text-white hover:opacity-90 transition-opacity w-full sm:w-auto"
+                className="font-semibold px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base text-white hover:opacity-90 transition-opacity w-full sm:w-auto"
                 style={{ backgroundColor: '#BB4E2C' }}
               >
                 <Plus size={18} className="mr-2" /> Add Your First Product
@@ -258,8 +258,8 @@ export default function VendorProductsPage() {
         {/* Product List */}
         <div className="space-y-3 sm:space-y-4">
           {products.map((product) => (
-            <Card key={product.id} className="border-0 shadow-lg" style={{ backgroundColor: 'white' }}>
-              <CardContent className="p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+            <Card key={product.id} className="rounded-none border-0 shadow-lg" style={{ backgroundColor: 'white' }}>
+              <CardContent className="rounded-none p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
                 {/* Product Image */}
                 <div className="shrink-0 w-full sm:w-auto flex justify-center sm:justify-start">
                   <Image
@@ -267,7 +267,7 @@ export default function VendorProductsPage() {
                     width={120}
                     height={120}
                     alt={product.title}
-                    className="w-24 h-24 sm:w-28 sm:h-28 rounded-lg object-cover"
+                    className="w-24 h-24 sm:w-28 sm:h-28 object-cover"
                     style={{ backgroundColor: '#ffffff' }}
                   />
                 </div>
@@ -283,15 +283,15 @@ export default function VendorProductsPage() {
                   <p className="text-xs sm:text-sm font-semibold" style={{ 
                     color: product.inventory.quantity > 0 ? '#1A3126' : '#BB4E2C' 
                   }}>
-                    {product.inventory.quantity > 0 ? '● In Stock' : '● Out of Stock'}
+                    {product.inventory.quantity > 0 ? 'â— In Stock' : 'â— Out of Stock'}
                   </p>
                 </div>
 
                 {/* Actions */}
                 <div className="flex flex-col sm:flex-col gap-2 sm:gap-3 w-full sm:w-auto">
-                  <Button
+                  <Button className="rounded-none"
                     onClick={() => toggleStock(product.id)}
-                    className="px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium text-white hover:opacity-90 transition-opacity whitespace-nowrap w-full sm:w-auto"
+                    className="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white hover:opacity-90 transition-opacity whitespace-nowrap w-full sm:w-auto"
                     style={{
                       backgroundColor: product.inventory.quantity > 0 ? '#1A3126' : '#BB4E2C',
                     }}
@@ -299,9 +299,9 @@ export default function VendorProductsPage() {
                     {product.inventory.quantity > 0 ? 'Mark Out of Stock' : 'Mark In Stock'}
                   </Button>
 
-                  <Button
+                  <Button className="rounded-none"
                     onClick={() => deleteProduct(product.id)}
-                    className="px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium hover:opacity-90 transition-opacity whitespace-nowrap w-full sm:w-auto"
+                    className="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium hover:opacity-90 transition-opacity whitespace-nowrap w-full sm:w-auto"
                     style={{ 
                       backgroundColor: '#BB4E2C',
                       color: 'white'
@@ -328,3 +328,4 @@ export default function VendorProductsPage() {
     </div>
   );
 }
+

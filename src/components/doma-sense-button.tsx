@@ -11,6 +11,7 @@ import { EmptyState } from '@/components/rag/EmptyState'
 const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
 
 const AUTH_ROUTES = ['/login', '/signup', '/forgot-password', '/status']
+const VENDOR_ROUTES = ['/dashboard', '/orders', '/VendorProfile', '/add-product']
 
 interface ChatMessageType {
     role: 'user' | 'assistant'
@@ -44,7 +45,8 @@ export function DomaSenseButton() {
     }, [open])
 
     const isAuth = AUTH_ROUTES.some(r => pathname?.startsWith(r))
-    if (isAuth) return null
+    const isVendor = VENDOR_ROUTES.some(r => pathname?.startsWith(r))
+    if (isAuth || isVendor) return null
 
     const handleGenerate = async (e: FormEvent) => {
         e.preventDefault()

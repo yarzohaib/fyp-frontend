@@ -93,9 +93,9 @@ export default function VendorOrdersPage() {
       <div className="max-w-7xl mx-auto">
         
         {/* Header - Simplified, using Primary/Accent colors */}
-        <div className="mb-4 sm:mb-6 p-4 sm:p-6 bg-white rounded-xl shadow-md border border-gray-200">
+        <div className="mb-4 sm:mb-6 p-4 sm:p-6 bg-white shadow-md border border-gray-200">
           <div className="flex items-center gap-3 sm:gap-4">
-            <div className="p-2 sm:p-3 rounded-lg" style={{ backgroundColor: COLOR_ACCENT }}>
+            <div className="p-2 sm:p-3" style={{ backgroundColor: COLOR_ACCENT }}>
               <Package className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
             </div>
             <div>
@@ -114,7 +114,7 @@ export default function VendorOrdersPage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
           
           {/* Total Orders Card - Accent Primary color mix */}
-          <Card className="rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+          <Card className="rounded-none shadow-sm border border-gray-200 overflow-hidden">
             <div style={{ backgroundColor: COLOR_ACCENT }} className="text-white p-3 sm:p-4 flex items-center justify-between">
                 <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 opacity-80" />
                 <div>
@@ -132,7 +132,7 @@ export default function VendorOrdersPage() {
             const statusLabel = status.label;
 
             return (
-              <Card key={status.value} className="rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+              <Card key={status.value} className="rounded-none shadow-sm border border-gray-200 overflow-hidden">
                 <div className={`${statusBgColor} text-white p-3 sm:p-4 flex items-center justify-between`}>
                     <Package className="w-4 h-4 sm:w-5 sm:h-5 opacity-80" />
                     <div>
@@ -145,10 +145,10 @@ export default function VendorOrdersPage() {
         </div>
         
         {/* Filter Buttons - Accent color for active state */}
-        <div className="mb-6 sm:mb-8 flex gap-2 flex-wrap p-3 sm:p-4 bg-white rounded-xl shadow-sm border border-gray-200">
+        <div className="mb-6 sm:mb-8 flex gap-2 flex-wrap p-3 sm:p-4 bg-white shadow-sm border border-gray-200">
           <Button
             onClick={() => setFilter("all")}
-            className={`rounded-lg font-medium px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm transition-all duration-300 ${
+            className={`rounded-none font-medium px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm transition-all duration-300 ${
               filter === "all"
                 ? `text-white hover:bg-[${COLOR_ACCENT}]/90 shadow-md`
                 : `bg-gray-100 text-gray-700 border border-gray-200 hover:bg-gray-200`
@@ -161,7 +161,7 @@ export default function VendorOrdersPage() {
             <Button
               key={opt.value}
               onClick={() => setFilter(opt.value)}
-              className={`rounded-lg font-medium px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm transition-all duration-300 ${
+              className={`rounded-none font-medium px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm transition-all duration-300 ${
                 filter === opt.value
                   ? `text-white hover:bg-[${COLOR_ACCENT}]/90 shadow-md`
                   : `bg-gray-100 text-gray-700 border border-gray-200 hover:bg-gray-200`
@@ -175,8 +175,8 @@ export default function VendorOrdersPage() {
 
         {/* Loading State */}
         {loading && (
-          <Card className="rounded-xl shadow-md border border-gray-300">
-            <CardContent className="pt-8 sm:pt-12 pb-8 sm:pb-12 flex justify-center">
+          <Card className="rounded-none shadow-md border border-gray-300">
+            <CardContent className="rounded-none pt-8 sm:pt-12 pb-8 sm:pb-12 flex justify-center">
               <div className="text-center">
                 <Loader2 className={`w-6 h-6 sm:w-8 sm:h-8 animate-spin mx-auto mb-3`} style={{ color: COLOR_ACCENT }}/>
                 <p className={`text-gray-700 font-medium text-sm sm:text-base`}>Loading your orders...</p>
@@ -187,8 +187,8 @@ export default function VendorOrdersPage() {
 
         {/* Empty State */}
         {!loading && filteredOrders.length === 0 && (
-          <Card className="rounded-xl shadow-md border border-gray-300">
-            <CardContent className="pt-8 sm:pt-12 pb-8 sm:pb-12 text-center">
+          <Card className="rounded-none shadow-md border border-gray-300">
+            <CardContent className="rounded-none pt-8 sm:pt-12 pb-8 sm:pb-12 text-center">
               <Package className={`w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-3`} style={{ color: COLOR_ACCENT }} />
               <p className={`text-gray-800 font-serif font-medium text-base sm:text-lg mb-1`}>
                 No orders found
@@ -205,14 +205,14 @@ export default function VendorOrdersPage() {
         {/* Orders List */}
         <div className="space-y-4 sm:space-y-5">
           {filteredOrders.map((order) => (
-            <Card key={order.id} className="rounded-xl shadow-lg border-l-4 border-gray-300 hover:shadow-xl transition-shadow duration-300">
+            <Card key={order.id} className="rounded-none shadow-lg border-l-4 border-gray-300 hover:shadow-xl transition-shadow duration-300">
               
               {/* Order Header - Accent line, Primary text */}
-              <CardHeader className="p-3 sm:p-4 bg-gray-50 border-b border-gray-200">
+              <CardHeader className="rounded-none p-3 sm:p-4 bg-gray-50 border-b border-gray-200">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-3">
                   <div>
                     {/* font-serif, Smaller Title, Primary color */}
-                    <CardTitle className="text-lg sm:text-xl font-serif font-medium" style={{ color: COLOR_PRIMARY }}>
+                    <CardTitle className="rounded-none text-lg sm:text-xl font-serif font-medium" style={{ color: COLOR_PRIMARY }}>
                       Order #{order.orderNumber}
                     </CardTitle>
                     <div className="flex items-center gap-2 text-xs text-gray-500">
@@ -224,16 +224,16 @@ export default function VendorOrdersPage() {
                       </span>
                     </div>
                   </div>
-                  <Badge className={`rounded-full px-2.5 sm:px-3 py-0.5 sm:py-1 font-semibold text-xs border ${getStatusColor(order.orderStatus)}`}>
+                  <Badge className={`rounded-none px-2.5 sm:px-3 py-0.5 sm:py-1 font-semibold text-xs border ${getStatusColor(order.orderStatus)}`}>
                     {getStatusLabel(order.orderStatus)}
                   </Badge>
                 </div>
               </CardHeader>
 
-              <CardContent className="pt-4 sm:pt-5 pb-4 sm:pb-5 px-3 sm:px-4 md:px-6 bg-white grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+              <CardContent className="rounded-none pt-4 sm:pt-5 pb-4 sm:pb-5 px-3 sm:px-4 md:px-6 bg-white grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
                 
                 {/* Customer Info Card */}
-                <div className="lg:col-span-1 p-3 sm:p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <div className="lg:col-span-1 p-3 sm:p-4 bg-gray-50 border border-gray-200">
                   <h3 className="font-serif font-medium text-sm sm:text-base text-gray-800 mb-2 sm:mb-3 border-b pb-2">
                     Customer Details
                   </h3>
@@ -279,7 +279,7 @@ export default function VendorOrdersPage() {
                 </div>
 
                 {/* Order Items Card */}
-                <div className="lg:col-span-2 p-3 sm:p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <div className="lg:col-span-2 p-3 sm:p-4 bg-gray-50 border border-gray-200">
                   <h3 className="font-serif font-medium text-sm sm:text-base text-gray-800 mb-2 sm:mb-3 border-b pb-2">
                     Items ({order.items?.length || 0})
                   </h3>
@@ -287,7 +287,7 @@ export default function VendorOrdersPage() {
                     {order.items?.map((item, idx) => (
                       <div
                         key={idx}
-                        className="flex flex-col xs:flex-row justify-between xs:items-center gap-2 p-2.5 sm:p-3 bg-white rounded-md border border-gray-200 text-xs sm:text-sm"
+                        className="flex flex-col xs:flex-row justify-between xs:items-center gap-2 p-2.5 sm:p-3 bg-white border border-gray-200 text-xs sm:text-sm"
                       >
                         <div className="flex-1 min-w-0">
                           <p className="text-gray-900 font-medium truncate">
@@ -309,7 +309,7 @@ export default function VendorOrdersPage() {
                 <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mt-2 sm:mt-4">
                     
                     {/* Status Update Section */}
-                    <div className="p-3 sm:p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
+                    <div className="p-3 sm:p-4 bg-white border border-gray-200 shadow-sm">
                         <label className="block text-gray-800 font-serif font-medium mb-2 text-sm sm:text-base">
                             Update Order Status
                         </label>
@@ -319,7 +319,7 @@ export default function VendorOrdersPage() {
                                     value={order.orderStatus}
                                     onChange={(e) => handleStatusUpdate(order.id, e.target.value)}
                                     disabled={updating === order.id}
-                                    className="w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm rounded-lg border border-gray-300 text-gray-800 font-medium appearance-none bg-white cursor-pointer hover:border-gray-500 focus:border-gray-500 focus:outline-none transition-colors"
+                                    className="w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm border border-gray-300 text-gray-800 font-medium appearance-none bg-white cursor-pointer hover:border-gray-500 focus:border-gray-500 focus:outline-none transition-colors"
                                 >
                                     {ORDER_STATUS_OPTIONS.map((opt) => (
                                     <option key={opt.value} value={opt.value}>
@@ -339,7 +339,7 @@ export default function VendorOrdersPage() {
                     </div>
                 
                     {/* Order Summary */}
-                    <div className="p-3 sm:p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
+                    <div className="p-3 sm:p-4 bg-white border border-gray-200 shadow-sm">
                         <h3 className="font-serif font-medium text-sm sm:text-base text-gray-800 mb-2 sm:mb-3 border-b pb-2">
                             Order Summary
                         </h3>
@@ -374,7 +374,7 @@ export default function VendorOrdersPage() {
             <Button
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
               disabled={currentPage === 1}
-              className={`rounded-lg px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors`}
+              className={`rounded-none px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors`}
             >
               Previous
             </Button>
@@ -382,7 +382,7 @@ export default function VendorOrdersPage() {
               <Button
                 key={page}
                 onClick={() => setCurrentPage(page)}
-                className={`rounded-lg px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold transition-all duration-300 ${
+                className={`rounded-none px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold transition-all duration-300 ${
                   currentPage === page
                     ? `text-white shadow-sm`
                     : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-100"
@@ -395,7 +395,7 @@ export default function VendorOrdersPage() {
             <Button
               onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
-              className={`rounded-lg px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors`}
+              className={`rounded-none px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors`}
             >
               Next
             </Button>

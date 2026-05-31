@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { Card, CardContent } from "@/components/ui/card";
 import type { MonthlyRevenuePoint } from "@/lib/Types";
@@ -16,8 +16,8 @@ type Props = { data: MonthlyRevenuePoint[] };
 
 export default function RevenueChart({ data }: Props) {
     return (
-        <Card className="border-0 shadow-lg" style={{ backgroundColor: 'white' }}>
-            <CardContent className="p-6">
+        <Card className="rounded-none border-0 shadow-lg" style={{ backgroundColor: 'white' }}>
+            <CardContent className="rounded-none p-6">
                 <h2 className="text-xl font-semibold mb-6" style={{ color: '#1A3126' }}>Revenue Overview</h2>
 
                 <ResponsiveContainer width="100%" height={300}>
@@ -54,3 +54,4 @@ export default function RevenueChart({ data }: Props) {
         </Card>
     );
 }
+

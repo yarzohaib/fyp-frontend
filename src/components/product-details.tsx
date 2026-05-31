@@ -64,24 +64,13 @@ export function ProductDetails({ product }: ProductDetailsProps) {
     }
 
     return (
-        <div className="space-y-4">
-            {/* Category + Vendor row */}
-            <div className="flex items-center justify-between flex-wrap gap-2">
-                {product.category && (
-                    <p className="text-sm text-foreground/60 tracking-wide uppercase">
-                        {product.category}
-                    </p>
-                )}
-                {product.vendor && (
-                    <Link
-                        href={`/store/${product.vendor.id}`}
-                        className="inline-flex items-center gap-1.5 text-sm text-[#1A3126] hover:text-[#BB4E2C] font-medium transition-colors"
-                    >
-                        <Store className="h-3.5 w-3.5" />
-                        {product.vendor.storeName}
-                    </Link>
-                )}
-            </div>
+        <div className="space-y-4 pt-2">
+            {/* Category */}
+            {product.category && (
+                <p className="text-sm text-foreground/60 tracking-wide uppercase">
+                    {product.category}
+                </p>
+            )}
 
             {/* Title */}
             <h1 className="text-3xl lg:text-4xl font-bold text-foreground leading-tight">
@@ -92,6 +81,20 @@ export function ProductDetails({ product }: ProductDetailsProps) {
             <p className="text-foreground/70 leading-relaxed text-base">
                 {product.shortDescription || product.Description || 'No description available'}
             </p>
+
+            {/* Vendor link — below description */}
+            {product.vendor && (
+                <div className="flex items-center gap-2 pt-0.5 border-t border-foreground/10">
+                    <Store className="h-3.5 w-3.5 text-foreground/40 shrink-0" />
+                    <span className="text-xs text-foreground/50">Sold by</span>
+                    <Link
+                        href={`/store/${product.vendor.id}`}
+                        className="text-xs font-semibold text-[#1A3126] hover:text-[#BB4E2C] transition-colors underline-offset-2 hover:underline"
+                    >
+                        {product.vendor.storeName}
+                    </Link>
+                </div>
+            )}
 
             {/* Colors */}
             {colorOptions.length > 0 && (
